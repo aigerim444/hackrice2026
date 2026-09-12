@@ -5,7 +5,7 @@ import { SEED_SNAPSHOT } from '../data/mock/seed';
 import { coachReply } from './coach';
 import { shortDate, weeksBetween } from './dates';
 import { cents, money } from './format';
-import { project, projectBaseline } from './runway';
+import { project, projectBaseline, projectWithCharge } from './runway';
 import { categoryBars } from './selectors';
 import type { SemesterSnapshot } from './types';
 
@@ -143,6 +143,27 @@ test('logging a receipt comes out of today, not out of the date', () => {
 
   assert.equal(cents(after.leftToday), '$26.04');
   assert.equal(shortDate(after.runOutDate), shortDate(before.runOutDate));
+});
+
+test('the preview on a confirm sheet is the number you get after confirming', () => {
+  const snapshot = load();
+  const preview = projectWithCharge(snapshot, 23.4);
+
+  // Actually log it, the way `logExpense` does.
+  snapshot.todayExpenses.push({
+    id: 'exp-lunch',
+    merchant: 'Kirby taqueria',
+    amount: 23.4,
+    category: 'Eating out',
+    envelope: 'free',
+    occurredOn: snapshot.semester.today,
+  });
+
+  assert.equal(cents(preview.leftToday), cents(project(snapshot).leftToday));
+  // And it is *not* the naive subtraction, which misses that charging today
+  // shrinks the daily allowance as well as spending it.
+  const before = project(load());
+  assert.notEqual(cents(preview.leftToday), cents(before.leftToday - 23.4));
 });
 
 test('moving money into the trip fund lowers the daily number', () => {
