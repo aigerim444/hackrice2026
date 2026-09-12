@@ -66,11 +66,15 @@ export function fundProgress(fund: Fund, weeksLeft: number): FundProgress {
   };
 }
 
-/** The two challenges the home screen name-checks under the trip fund. */
-export function homeStreaks(snapshot: SemesterSnapshot) {
-  const delivery = snapshot.challenges.find((c) => c.id === 'ch-delivery');
-  const boba = snapshot.challenges.find((c) => c.id === 'ch-boba');
-  return { delivery, boba };
+/**
+ * The streaks the home screen name-checks under the trip fund: the two running
+ * longest, so the line stays short and leads with the one worth protecting.
+ * Empty until you've started a challenge, and the line is dropped when it is.
+ */
+export function homeStreaks(snapshot: SemesterSnapshot): Challenge[] {
+  return [...snapshot.challenges]
+    .sort((a, b) => Number(a.broken) - Number(b.broken) || b.youStreakDays - a.youStreakDays)
+    .slice(0, 2);
 }
 
 /** Who else is in a challenge, best run first. Invitees aren't ranked yet. */

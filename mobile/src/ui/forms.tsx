@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 
+import { suggestedContacts } from '../data/contacts';
 import { addDays, weeksBetween } from '../domain/dates';
 import { money } from '../domain/format';
 import { draftId, weeklyPay } from '../domain/payroll';
@@ -122,19 +123,21 @@ export function PeoplePicker({
   people,
   selected,
   onToggle,
-  emptyNote = 'Just you for now.',
+  emptyNote = 'Add friends in the Friends tab and you can share this with them.',
 }: {
   people: Person[];
   selected: string[];
   onToggle: (id: string) => void;
-  emptyNote?: string;
+  emptyNote?: string | null;
 }) {
+  // Nobody to invite yet — say where friends come from instead of showing an
+  // empty control. `null` hides the line entirely, for onboarding.
   if (!people.length) {
-    return (
+    return emptyNote ? (
       <T w={600} size={13} lh={1.35} color={colors.muted}>
         {emptyNote}
       </T>
-    );
+    ) : null;
   }
 
   return (
@@ -326,11 +329,13 @@ export function GoalForm({
   onSave,
   today,
   people = [],
+  inviteNote,
 }: {
   onCancel: () => void;
   onSave: (draft: FundDraft) => void;
   today: string;
   people?: Person[];
+  inviteNote?: string | null;
 }) {
   const [invites, setInvites] = useState<string[]>([]);
   const [label, setLabel] = useState('');
@@ -395,7 +400,7 @@ export function GoalForm({
             current.includes(id) ? current.filter((x) => x !== id) : [...current, id],
           )
         }
-        emptyNote="Saving on your own — no one else to invite yet."
+        emptyNote={inviteNote}
       />
 
       {canSave && saved < targetNum ? (
@@ -488,11 +493,13 @@ export function ChallengeForm({
   onSave,
   today,
   people = [],
+  inviteNote,
 }: {
   onCancel: () => void;
   onSave: (draft: ChallengeDraft) => void;
   today: string;
   people?: Person[];
+  inviteNote?: string | null;
 }) {
   const [invites, setInvites] = useState<string[]>([]);
   const [label, setLabel] = useState('');
@@ -559,13 +566,87 @@ export function ChallengeForm({
             current.includes(id) ? current.filter((x) => x !== id) : [...current, id],
           )
         }
-        emptyNote="Going it alone — no one else to invite yet."
+        emptyNote={inviteNote}
       />
 
       <T w={600} size={13} lh={1.35} color={colors.muted}>
         {category
           ? `Every day without a ${category.toLowerCase()} charge adds to the streak. One breaks it.`
           : 'No category, so nothing can break this automatically — it runs on the honour system.'}
+      </T>
+    </FormCard>
+  );
+}
+
+/**
+ * Someone new.
+ *
+ * A name is all it takes here. In production this is an invite by handle or
+ * link and the person confirms; the point of the form is that nobody appears
+ * in your list unless you put them there.
+ */
+export function FriendForm({
+  known = [],
+  onCancel,
+  onSave,
+}: {
+  /** Names already added, so the same person isn't suggested twice. */
+  known?: string[];
+  onCancel: () => void;
+  onSave: (name: string) => void;
+}) {
+  const [name, setName] = useState('');
+  const canSave = name.trim().length > 0;
+
+  const suggestions = suggestedContacts().filter(
+    (contact) => !known.some((n) => n.toLowerCase() === contact.name.toLowerCase()),
+  );
+
+  return (
+    <FormCard
+      title="Add a friend"
+      onCancel={onCancel}
+      canSave={canSave}
+      saveLabel="Add friend"
+      onSave={() => onSave(name.trim())}>
+      <Field label="Their name" value={name} onChange={setName} placeholder="Maya" autoFocus />
+
+      {/* Tapping a contact fills the field rather than saving outright, so the
+          same confirm button ends every path through this form. */}
+      {suggestions.length ? (
+        <View>
+          <T w={700} size={12} color={colors.muted} style={{ marginBottom: 6 }}>
+            From your contacts
+          </T>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            {suggestions.map((contact) => {
+              const on = name.trim().toLowerCase() === contact.name.toLowerCase();
+              return (
+                <Pressable
+                  key={contact.id}
+                  onPress={() => setName(contact.name)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Add ${contact.name}`}
+                  style={({ pressed }) => ({
+                    borderWidth: RULE,
+                    borderColor: colors.ink,
+                    backgroundColor: on ? colors.ink : colors.white,
+                    paddingVertical: 6,
+                    paddingHorizontal: 12,
+                    opacity: pressed && !on ? 0.7 : 1,
+                  })}>
+                  <T w={800} size={13} color={on ? colors.cream : colors.ink}>
+                    {contact.name}
+                  </T>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+      ) : null}
+
+      <T w={600} size={13} lh={1.35} color={colors.muted}>
+        Once they&apos;re here you can invite them to a goal or a streak.
       </T>
     </FormCard>
   );

@@ -17,7 +17,7 @@ import { colors, GUTTER, RULE } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
 import { SectionHeading } from '../src/ui/blocks';
 import { OutlineButton, PrimaryButton } from '../src/ui/controls';
-import { AddRow, ChallengeForm, GoalForm, PeoplePicker } from '../src/ui/forms';
+import { AddRow, ChallengeForm, FriendForm, GoalForm, PeoplePicker } from '../src/ui/forms';
 import { Flexible, Row, Screen, Tap } from '../src/ui/primitives';
 import { TabBar } from '../src/ui/TabBar';
 import { Toast } from '../src/ui/Toast';
@@ -42,6 +42,7 @@ export default function FriendsScreen() {
     contributeToFund,
     addFund,
     addChallenge,
+    addPerson,
     inviteToFund,
     inviteToChallenge,
     toast,
@@ -54,6 +55,7 @@ export default function FriendsScreen() {
   const [addingChallenge, setAddingChallenge] = useState(false);
   /** Which fund or challenge has its invite picker open. */
   const [inviting, setInviting] = useState<string | null>(null);
+  const [addingFriend, setAddingFriend] = useState(false);
 
   const featured = primaryFund(snapshot);
   const others = funds.filter((fund) => fund.id !== featured?.id);
@@ -75,8 +77,30 @@ export default function FriendsScreen() {
           Friends
         </T>
 
-        {/* Who these people are, so no name on this screen comes from nowhere. */}
+        {/* Everyone here is someone you added. Nothing arrives on its own. */}
+        <SectionHeading
+          title="Your people"
+          note={people.length ? `${people.length} added` : undefined}
+          style={{ marginTop: 16 }}
+        />
         <PeopleStrip people={people} />
+        <View style={{ marginHorizontal: GUTTER, marginTop: 10 }}>
+          {addingFriend ? (
+            <FriendForm
+              known={people.map((person) => person.name)}
+              onCancel={() => setAddingFriend(false)}
+              onSave={async (name) => {
+                setAddingFriend(false);
+                await addPerson(name);
+              }}
+            />
+          ) : (
+            <AddRow
+              label={people.length ? '+ Add another friend' : '+ Add a friend'}
+              onPress={() => setAddingFriend(true)}
+            />
+          )}
+        </View>
 
         {featured ? (
           <FeaturedFund
@@ -127,6 +151,7 @@ export default function FriendsScreen() {
             <GoalForm
               today={semester.today}
               people={people}
+              inviteNote={people.length ? undefined : 'Add a friend above to split this with someone.'}
               onCancel={() => setAddingGoal(false)}
               onSave={async (draft: FundDraft) => {
                 setAddingGoal(false);
@@ -164,6 +189,7 @@ export default function FriendsScreen() {
             <ChallengeForm
               today={semester.today}
               people={people}
+              inviteNote={people.length ? undefined : 'Add a friend above to run this against someone.'}
               onCancel={() => setAddingChallenge(false)}
               onSave={async (draft: ChallengeDraft) => {
                 setAddingChallenge(false);
@@ -184,7 +210,19 @@ export default function FriendsScreen() {
 
 /** The people you can pull into anything on this screen. */
 function PeopleStrip({ people }: { people: Person[] }) {
-  if (!people.length) return null;
+  if (!people.length) {
+    return (
+      <T
+        w={600}
+        size={14}
+        lh={1.45}
+        color={colors.muted}
+        style={{ marginHorizontal: GUTTER, marginTop: 8 }}>
+        Nobody yet. Add a friend and you can split a goal with them, or run a streak against each
+        other.
+      </T>
+    );
+  }
 
   return (
     <View style={{ marginTop: 12 }}>
@@ -361,12 +399,21 @@ function FeaturedFund({
             onPress={onMove}
             style={{ flex: 1 }}
           />
-          <OutlineButton
-            label={inviteOpen ? 'Close' : 'Invite'}
-            height={44}
-            onPress={onToggleInvite}
-            style={{ flex: 1 }}
-          />
+          {canInvite.length || inviteOpen ? (
+            <OutlineButton
+              label={inviteOpen ? 'Close' : 'Invite'}
+              height={44}
+              onPress={onToggleInvite}
+              style={{ flex: 1 }}
+            />
+          ) : (
+            <OutlineButton
+              label="Ask the coach"
+              height={44}
+              onPress={() => router.push('/chat')}
+              style={{ flex: 1 }}
+            />
+          )}
         </View>
 
         {inviteOpen ? (
@@ -488,11 +535,13 @@ function ChallengeRow({
         </View>
       </Row>
 
-      <Tap onPress={onToggleInvite} hitSlop={8} style={{ marginTop: 8, alignSelf: 'flex-start' }}>
-        <T w={800} size={13} color={colors.green}>
-          {inviteOpen ? 'Close' : '+ Invite someone'}
-        </T>
-      </Tap>
+      {canInvite.length || inviteOpen ? (
+        <Tap onPress={onToggleInvite} hitSlop={8} style={{ marginTop: 8, alignSelf: 'flex-start' }}>
+          <T w={800} size={13} color={colors.green}>
+            {inviteOpen ? 'Close' : '+ Invite someone'}
+          </T>
+        </Tap>
+      ) : null}
 
       {inviteOpen ? (
         <InvitePanel people={canInvite} onCancel={onToggleInvite} onInvite={onInvite} />

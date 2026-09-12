@@ -33,7 +33,7 @@ export default function HomeScreen() {
   const bars = categoryBars(snapshot).slice(0, 4);
   const weeksToTrip = fund ? Math.max(0, weeksBetween(semester.today, fund.occasion)) : 0;
   const progress = fund ? fundProgress(fund, weeksToTrip) : null;
-  const { delivery, boba } = homeStreaks(snapshot);
+  const streaks = homeStreaks(snapshot);
 
   return (
     <Screen>
@@ -142,16 +142,19 @@ export default function HomeScreen() {
             ))}
           </View>
 
-          <T w={600} size={14} color={colors.muted} style={{ marginTop: 12 }}>
-            {delivery?.label}{' '}
-            <T w={800} size={14} color={colors.green}>
-              {delivery?.youStreakDays} days
-            </T>{' '}
-            · {boba?.label.split(' · ')[0]}{' '}
-            <T w={800} size={14} color={boba?.broken ? colors.red : colors.green}>
-              {boba?.youStreakDays} days
+          {streaks.length ? (
+            <T w={600} size={14} color={colors.muted} style={{ marginTop: 12 }}>
+              {streaks.map((streak, index) => (
+                <T key={streak.id} w={600} size={14} color={colors.muted}>
+                  {index ? ' · ' : ''}
+                  {streak.label.split(' · ')[0]}{' '}
+                  <T w={800} size={14} color={streak.broken ? colors.red : colors.green}>
+                    {streak.youStreakDays} days
+                  </T>
+                </T>
+              ))}
             </T>
-          </T>
+          ) : null}
         </Section>
         ) : null}
 

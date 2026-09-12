@@ -21,7 +21,39 @@ import type { SemesterSnapshot } from './types';
  *   npm test
  */
 
-const load = (): SemesterSnapshot => JSON.parse(JSON.stringify(SEED_SNAPSHOT));
+/**
+ * The design's screens are drawn over one shared goal — the Austin trip — so the
+ * figures below are pinned with it in place. The seed itself ships no goals: you
+ * enter them, and share them once you've added someone to share with.
+ */
+const AUSTIN_FUND: SemesterSnapshot['funds'][number] = {
+  id: 'fund-austin',
+  label: 'Austin trip',
+  shared: true,
+  startedBy: 'Maya',
+  occasion: '2026-11-20',
+  targetAmount: 600,
+  weeklyPledge: 20,
+  extraContributed: 0,
+  members: [
+    { id: 'u-priya', name: 'You', isYou: true, contributed: 120, weeklyPledge: 20, status: 'on track' },
+    { id: 'u-maya', name: 'Maya', contributed: 90, weeklyPledge: 20, status: 'behind' },
+    { id: 'u-dev', name: 'Dev', contributed: 50, weeklyPledge: 25, status: 'new' },
+  ],
+};
+
+const load = (): SemesterSnapshot => ({
+  ...(JSON.parse(JSON.stringify(SEED_SNAPSHOT)) as SemesterSnapshot),
+  funds: [JSON.parse(JSON.stringify(AUSTIN_FUND)) as SemesterSnapshot['funds'][number]],
+});
+
+test('a fresh semester starts with nothing of your own in it', () => {
+  assert.deepEqual(SEED_SNAPSHOT.people, []);
+  assert.deepEqual(SEED_SNAPSHOT.jobs, []);
+  assert.deepEqual(SEED_SNAPSHOT.funds, []);
+  assert.deepEqual(SEED_SNAPSHOT.challenges, []);
+  assert.equal(SEED_SNAPSHOT.setupComplete, false);
+});
 
 /** The seed ships no jobs — onboarding collects them — so tests add their own. */
 function withJob(snapshot: SemesterSnapshot, hoursPerWeek: number): SemesterSnapshot {

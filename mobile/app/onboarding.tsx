@@ -6,7 +6,7 @@ import { shortDate } from '../src/domain/dates';
 import { money, rateCompact } from '../src/domain/format';
 import { weeklyPay } from '../src/domain/payroll';
 import { fundReserved, remainingCharges } from '../src/domain/runway';
-import type { BillDraft, FundDraft, JobDraft, Person, SetupInput } from '../src/domain/types';
+import type { BillDraft, FundDraft, JobDraft, SetupInput } from '../src/domain/types';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
 import { colors, GUTTER, HOME_INDICATOR_GAP, RULE } from '../src/theme/tokens';
 import { Kicker, T } from '../src/theme/type';
@@ -120,7 +120,7 @@ export default function OnboardingScreen() {
           {step === 2 ? <JobsStep setup={setup} draftSetup={draftSetup} /> : null}
           {step === 3 ? <BillsStep setup={setup} draftSetup={draftSetup} /> : null}
           {step === 4 ? (
-            <GoalsStep setup={setup} draftSetup={draftSetup} today={today} people={snapshot.people} />
+            <GoalsStep setup={setup} draftSetup={draftSetup} today={today} />
           ) : null}
           {step === 5 ? <ReviewStep /> : null}
         </ScrollView>
@@ -289,12 +289,7 @@ function BillsStep({ setup, draftSetup }: StepProps) {
   );
 }
 
-function GoalsStep({
-  setup,
-  draftSetup,
-  today,
-  people,
-}: StepProps & { today: string; people: Person[] }) {
+function GoalsStep({ setup, draftSetup, today }: StepProps & { today: string }) {
   const [adding, setAdding] = useState(false);
 
   const add = (draft: FundDraft) => {
@@ -325,8 +320,10 @@ function GoalsStep({
           />
         ))}
 
+        {/* No invite picker during setup: you haven't added anyone yet, and a
+            goal can be shared from the Friends tab once you have. */}
         {adding ? (
-          <GoalForm today={today} people={people} onCancel={() => setAdding(false)} onSave={add} />
+          <GoalForm today={today} inviteNote={null} onCancel={() => setAdding(false)} onSave={add} />
         ) : (
           <AddRow
             label={setup.funds.length ? '+ Another goal' : '+ Add a goal'}

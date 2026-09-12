@@ -44,6 +44,9 @@ export interface RunwayApi {
   /** Start cutting something out. No money attached — the payoff is the streak. */
   addChallenge(draft: ChallengeDraft): Promise<SemesterSnapshot>;
 
+  /** Add someone you know, so they can be invited to things. */
+  addPerson(name: string): Promise<SemesterSnapshot>;
+
   /** Ask people to join a fund. They show as invited until they accept. */
   inviteToFund(fundId: string, personIds: string[]): Promise<SemesterSnapshot>;
 

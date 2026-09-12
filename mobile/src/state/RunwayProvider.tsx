@@ -65,6 +65,7 @@ interface RunwayContextValue {
   addJob: (draft: JobDraft) => Promise<void>;
   addFund: (draft: FundDraft) => Promise<void>;
   addChallenge: (draft: ChallengeDraft) => Promise<void>;
+  addPerson: (name: string) => Promise<void>;
   inviteToFund: (fundId: string, personIds: string[]) => Promise<void>;
   inviteToChallenge: (challengeId: string, personIds: string[]) => Promise<void>;
   /** True while the coach is composing, so the thread can show it. */
@@ -246,6 +247,10 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
     setSnapshot(await api.addChallenge(draft));
   }, []);
 
+  const addPerson = useCallback(async (name: string) => {
+    setSnapshot(await api.addPerson(name));
+  }, []);
+
   const inviteToFund = useCallback(async (fundId: string, personIds: string[]) => {
     setSnapshot(await api.inviteToFund(fundId, personIds));
   }, []);
@@ -295,6 +300,7 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
       addJob,
       addFund,
       addChallenge,
+      addPerson,
       inviteToFund,
       inviteToChallenge,
       coachThinking,
@@ -320,6 +326,7 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
       addJob,
       addFund,
       addChallenge,
+      addPerson,
       inviteToFund,
       inviteToChallenge,
       coachThinking,

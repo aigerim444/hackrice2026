@@ -29,15 +29,9 @@ export const SEED_SNAPSHOT: SemesterSnapshot = {
   },
   user: { id: 'u-priya', name: 'Priya N.', initial: 'P' },
 
-  // People you know. In production this is your contacts or a friend graph;
-  // here it's a short list so the invite pickers have something to offer.
-  people: [
-    { id: 'u-maya', name: 'Maya', initial: 'M' },
-    { id: 'u-dev', name: 'Dev', initial: 'D' },
-    { id: 'u-sam', name: 'Sam', initial: 'S' },
-    { id: 'u-ade', name: 'Ade', initial: 'A' },
-    { id: 'u-jun', name: 'Jun', initial: 'J' },
-  ],
+  // Empty on a first run: you haven't added anyone yet. Friends are added in
+  // the Friends tab, and only then can they be invited to anything.
+  people: [],
 
   income: [
     {
@@ -83,63 +77,11 @@ export const SEED_SNAPSHOT: SemesterSnapshot = {
     },
   ],
 
-  funds: [
-    {
-      id: 'fund-austin',
-      label: 'Austin trip',
-      shared: true,
-      startedBy: 'Maya',
-      occasion: '2026-11-20',
-      targetAmount: 600,
-      weeklyPledge: 20,
-      extraContributed: 0,
-      members: [
-        { id: 'u-priya', name: 'You', isYou: true, contributed: 120, weeklyPledge: 20, status: 'on track' },
-        { id: 'u-maya', name: 'Maya', contributed: 90, weeklyPledge: 20, status: 'behind' },
-        { id: 'u-dev', name: 'Dev', contributed: 50, weeklyPledge: 25, status: 'new' },
-      ],
-    },
-  ],
+  // Nothing shared exists until you make it. The Austin trip in the design was
+  // a populated example, not a starting state.
+  funds: [],
 
-  challenges: [
-    {
-      id: 'ch-boba',
-      label: 'No boba · September',
-      category: 'Drinks',
-      until: '2026-09-30',
-      youStreakDays: 11,
-      broken: false,
-      participants: [
-        { id: 'u-priya', name: 'You', isYou: true, streakDays: 11, status: 'joined' },
-        { id: 'u-maya', name: 'Maya', streakDays: 11, status: 'joined' },
-      ],
-    },
-    {
-      id: 'ch-delivery',
-      label: 'No delivery',
-      category: 'Delivery',
-      youStreakDays: 6,
-      broken: false,
-      participants: [
-        { id: 'u-priya', name: 'You', isYou: true, streakDays: 6, status: 'joined' },
-        { id: 'u-dev', name: 'Dev', streakDays: 4, status: 'joined' },
-        { id: 'u-sam', name: 'Sam', streakDays: 3, status: 'joined' },
-        { id: 'u-ade', name: 'Ade', streakDays: 1, status: 'joined' },
-      ],
-    },
-    {
-      id: 'ch-clothes',
-      label: 'No new clothes',
-      sublabel: 'until Thanksgiving',
-      until: '2026-11-26',
-      youStreakDays: 18,
-      broken: false,
-      participants: [
-        { id: 'u-priya', name: 'You', isYou: true, streakDays: 18, status: 'joined' },
-        { id: 'u-maya', name: 'Maya', streakDays: 18, status: 'joined' },
-      ],
-    },
-  ],
+  challenges: [],
 
   todayExpenses: [
     {

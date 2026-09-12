@@ -1,6 +1,6 @@
 import { coachReply, userMessage } from '../../domain/coach';
 import { shortDate } from '../../domain/dates';
-import { completeJob } from '../../domain/payroll';
+import { completeJob, draftId } from '../../domain/payroll';
 import type {
   ChallengeDraft,
   Fund,
@@ -109,6 +109,18 @@ export class MockRunwayApi implements RunwayApi {
         }),
       ],
     };
+  }
+
+  async addPerson(name: string): Promise<SemesterSnapshot> {
+    await wait(LATENCY.write);
+    const trimmed = name.trim();
+    return this.commit({
+      ...this.snapshot,
+      people: [
+        ...this.snapshot.people,
+        { id: draftId('person'), name: trimmed, initial: trimmed.slice(0, 1).toUpperCase() },
+      ],
+    });
   }
 
   async inviteToFund(fundId: string, personIds: string[]): Promise<SemesterSnapshot> {
