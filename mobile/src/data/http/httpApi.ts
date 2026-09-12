@@ -1,4 +1,5 @@
 import type {
+  ChallengeDraft,
   FundDraft,
   JobDraft,
   ParsedReceipt,
@@ -78,6 +79,10 @@ export class HttpRunwayApi implements RunwayApi {
 
   addFund(draft: FundDraft): Promise<SemesterSnapshot> {
     return this.post('/funds', draft);
+  }
+
+  addChallenge(draft: ChallengeDraft): Promise<SemesterSnapshot> {
+    return this.post('/challenges', draft);
   }
 
   setJobHours(jobId: string, hoursPerWeek: number): Promise<SemesterSnapshot> {

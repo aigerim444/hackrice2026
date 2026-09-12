@@ -5,13 +5,13 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { shortDate, weeksBetween } from '../src/domain/dates';
 import { money, pct } from '../src/domain/format';
 import { fundProgress, primaryFund } from '../src/domain/selectors';
-import type { Fund, FundDraft } from '../src/domain/types';
+import type { ChallengeDraft, Fund, FundDraft } from '../src/domain/types';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
 import { colors, GUTTER, RULE } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
 import { ListRow, SectionHeading } from '../src/ui/blocks';
 import { OutlineButton, PrimaryButton } from '../src/ui/controls';
-import { GoalForm } from '../src/ui/forms';
+import { AddRow, ChallengeForm, GoalForm } from '../src/ui/forms';
 import { Flexible, Row, Screen } from '../src/ui/primitives';
 import { TabBar } from '../src/ui/TabBar';
 import { Toast } from '../src/ui/Toast';
@@ -30,11 +30,13 @@ const MOVE_AMOUNT = 20;
  * lists underneath.
  */
 export default function FriendsScreen() {
-  const { snapshot, projection, contributeToFund, addFund, toast, dismissToast } = useLoadedRunway();
+  const { snapshot, projection, contributeToFund, addFund, addChallenge, toast, dismissToast } =
+    useLoadedRunway();
   const { challenges, semester, funds } = snapshot;
 
   const [moving, setMoving] = useState<string | null>(null);
-  const [adding, setAdding] = useState(false);
+  const [addingGoal, setAddingGoal] = useState(false);
+  const [addingChallenge, setAddingChallenge] = useState(false);
 
   const featured = primaryFund(snapshot);
   const others = funds.filter((fund) => fund.id !== featured?.id);
@@ -49,43 +51,22 @@ export default function FriendsScreen() {
     }
   };
 
-  const save = async (draft: FundDraft) => {
-    setAdding(false);
+  const saveGoal = async (draft: FundDraft) => {
+    setAddingGoal(false);
     await addFund(draft);
+  };
+
+  const saveChallenge = async (draft: ChallengeDraft) => {
+    setAddingChallenge(false);
+    await addChallenge(draft);
   };
 
   return (
     <Screen>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
-        <Row style={{ paddingHorizontal: GUTTER, paddingTop: 10 }}>
-          <T w={800} size={22}>
-            Friends
-          </T>
-          <Pressable
-            onPress={() => setAdding((open) => !open)}
-            accessibilityRole="button"
-            accessibilityLabel={adding ? 'Cancel new goal' : 'Add a goal'}
-            style={({ pressed }) => ({
-              width: 36,
-              height: 36,
-              borderWidth: RULE,
-              borderColor: colors.ink,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: adding ? colors.ink : 'transparent',
-              opacity: pressed ? 0.7 : 1,
-            })}>
-            <T w={800} size={22} lh={1} color={adding ? colors.cream : colors.ink}>
-              +
-            </T>
-          </Pressable>
-        </Row>
-
-        {adding ? (
-          <View style={{ marginHorizontal: GUTTER, marginTop: 14 }}>
-            <GoalForm today={semester.today} onCancel={() => setAdding(false)} onSave={save} />
-          </View>
-        ) : null}
+        <T w={800} size={22} style={{ paddingHorizontal: GUTTER, paddingTop: 10 }}>
+          Friends
+        </T>
 
         {featured ? (
           <FeaturedFund
@@ -95,15 +76,15 @@ export default function FriendsScreen() {
             busy={moving === featured.id}
             onMove={() => move(featured.id)}
           />
-        ) : !adding ? (
+        ) : !addingGoal ? (
           <T
             w={600}
             size={15}
             lh={1.45}
             color={colors.muted}
             style={{ marginHorizontal: GUTTER, marginTop: 18 }}>
-            Nothing set aside yet. Tap + to start a goal — a weekly pledge comes out before your daily
-            number, so the money is there when you need it.
+            Nothing set aside yet. A goal takes a weekly pledge out before your daily number, so the
+            money is there when you need it.
           </T>
         ) : null}
 
@@ -124,7 +105,22 @@ export default function FriendsScreen() {
           </>
         ) : null}
 
-        <SectionHeading title="Challenges" note="streaks, not dollars" style={{ marginTop: 22 }} />
+        <View style={{ marginHorizontal: GUTTER, marginTop: 14 }}>
+          {addingGoal ? (
+            <GoalForm today={semester.today} onCancel={() => setAddingGoal(false)} onSave={saveGoal} />
+          ) : (
+            <AddRow
+              label={funds.length ? '+ Another goal' : '+ Add a goal'}
+              onPress={() => setAddingGoal(true)}
+            />
+          )}
+        </View>
+
+        <SectionHeading
+          title="Challenges"
+          note="streaks, not dollars"
+          style={{ marginTop: 22 }}
+        />
 
         <View style={{ marginHorizontal: GUTTER, marginTop: 8, gap: 8 }}>
           {challenges.map((challenge) => (
@@ -141,6 +137,16 @@ export default function FriendsScreen() {
               rightSublabel={challenge.leaderCaption}
             />
           ))}
+
+          {addingChallenge ? (
+            <ChallengeForm
+              today={semester.today}
+              onCancel={() => setAddingChallenge(false)}
+              onSave={saveChallenge}
+            />
+          ) : (
+            <AddRow label="+ Add a challenge" onPress={() => setAddingChallenge(true)} />
+          )}
         </View>
       </ScrollView>
 

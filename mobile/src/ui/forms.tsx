@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 
-import { addDays, shortDate } from '../domain/dates';
+import { addDays, weeksBetween } from '../domain/dates';
 import { money } from '../domain/format';
 import { draftId, weeklyPay } from '../domain/payroll';
-import type { BillDraft, FundDraft, JobDraft, PayCadence } from '../domain/types';
+import type { BillDraft, Category, ChallengeDraft, FundDraft, JobDraft, PayCadence } from '../domain/types';
+import { CATEGORIES } from '../domain/types';
 import { colors, fonts, RULE } from '../theme/tokens';
 import { scaleFont } from '../theme/scale';
 import { T } from '../theme/type';
 import { InkSlider, OutlineButton, PrimaryButton, Segment, SliderAxis } from './controls';
+import { DateField } from './DateField';
 import { Flexible, Row } from './primitives';
 
 /**
@@ -245,12 +247,14 @@ export function GoalForm({
 }) {
   const [label, setLabel] = useState('');
   const [target, setTarget] = useState('');
-  const [weeks, setWeeks] = useState(10);
+  const [occasion, setOccasion] = useState(() => addDays(today, 70));
   const [pledge, setPledge] = useState(20);
 
   const targetNum = Number(target) || 0;
   const canSave = label.trim().length > 0 && targetNum > 0;
-  const occasion = addDays(today, weeks * 7);
+  // What the weekly pledge will actually have put aside by the date chosen.
+  const weeks = Math.max(0, weeksBetween(today, occasion));
+  const saved = pledge * weeks;
 
   return (
     <FormCard
@@ -270,29 +274,10 @@ export function GoalForm({
       }>
       <Field label="What for?" value={label} onChange={setLabel} placeholder="Austin trip" autoFocus />
 
-      <Row gap={14} align="flex-end">
+      <Row gap={14} align="flex-start">
         <Field label="Target" value={target} onChange={setTarget} placeholder="600" keyboardType="number-pad" />
-        <View style={{ flex: 1 }}>
-          <T w={700} size={12} color={colors.muted}>
-            Needed by
-          </T>
-          <T w={800} size={20} style={{ paddingVertical: 6 }} nowrap>
-            {shortDate(occasion)}
-          </T>
-        </View>
+        <DateField label="Needed by" value={occasion} onChange={setOccasion} min={addDays(today, 7)} />
       </Row>
-
-      <View>
-        <Row align="baseline">
-          <T w={700} size={12} color={colors.muted}>
-            In how many weeks?
-          </T>
-          <T w={800} size={16} nowrap>
-            {weeks} weeks
-          </T>
-        </Row>
-        <InkSlider value={weeks} min={1} max={20} step={1} onChange={setWeeks} />
-      </View>
 
       <View>
         <Row align="baseline">
@@ -304,14 +289,18 @@ export function GoalForm({
           </T>
         </Row>
         <InkSlider value={pledge} min={0} max={60} step={5} onChange={setPledge} />
-        <SliderAxis
-          labels={['$0', `${weeks} weeks → ${money(pledge * weeks)}`, '$60']}
-        />
+        <SliderAxis labels={['$0', `${weeks} weeks → ${money(saved)}`, '$60']} />
       </View>
 
-      {canSave && pledge * weeks < targetNum ? (
+      {canSave && saved < targetNum ? (
         <T w={600} size={13} lh={1.35} color={colors.red}>
-          At ${pledge}/wk you&apos;ll have {money(pledge * weeks)} of {money(targetNum)} by then.
+          At ${pledge}/wk you&apos;ll have {money(saved)} of {money(targetNum)} by then — about $
+          {Math.ceil(targetNum / Math.max(1, weeks))}/wk gets you there.
+        </T>
+      ) : null}
+      {canSave && saved >= targetNum ? (
+        <T w={600} size={13} lh={1.35} color={colors.green}>
+          That covers it with {money(saved - targetNum)} to spare.
         </T>
       ) : null}
     </FormCard>
@@ -377,5 +366,85 @@ export function EditableRow({
         </T>
       </Pressable>
     </Row>
+  );
+}
+
+/**
+ * Something you're cutting out.
+ *
+ * No money on this form on purpose. A challenge isn't saving up — there's no
+ * target to hit, so "$600 toward no boba" would be meaningless. The payoff is
+ * the streak, and the category is what makes it checkable: a charge in it is
+ * the only evidence that can break the run.
+ */
+export function ChallengeForm({
+  onCancel,
+  onSave,
+  today,
+}: {
+  onCancel: () => void;
+  onSave: (draft: ChallengeDraft) => void;
+  today: string;
+}) {
+  const [label, setLabel] = useState('');
+  const [category, setCategory] = useState<Category | undefined>('Drinks');
+  const [until, setUntil] = useState(() => addDays(today, 30));
+
+  const canSave = label.trim().length > 0;
+
+  return (
+    <FormCard
+      title="Add a challenge"
+      onCancel={onCancel}
+      canSave={canSave}
+      saveLabel="Start streak"
+      onSave={() => onSave({ id: draftId('ch'), label: label.trim(), category, until })}>
+      <Field
+        label="What are you cutting out?"
+        value={label}
+        onChange={setLabel}
+        placeholder="No boba"
+        autoFocus
+      />
+
+      <View>
+        <T w={700} size={12} color={colors.muted} style={{ marginBottom: 6 }}>
+          Breaks when you spend on
+        </T>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+          {CATEGORIES.map((option) => {
+            const selected = option === category;
+            return (
+              <Pressable
+                key={option}
+                onPress={() => setCategory(selected ? undefined : option)}
+                style={({ pressed }) => ({
+                  borderWidth: RULE,
+                  borderColor: colors.ink,
+                  backgroundColor: selected ? colors.ink : colors.white,
+                  paddingVertical: 6,
+                  paddingHorizontal: 10,
+                  opacity: pressed && !selected ? 0.7 : 1,
+                })}>
+                <T w={800} size={13} color={selected ? colors.cream : colors.ink} nowrap>
+                  {option}
+                </T>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
+
+      <Row gap={14} align="flex-start">
+        <DateField label="Until" value={until} onChange={setUntil} min={addDays(today, 1)} />
+        <View style={{ flex: 1 }} />
+      </Row>
+
+      <T w={600} size={13} lh={1.35} color={colors.muted}>
+        {category
+          ? `Every day without a ${category.toLowerCase()} charge adds to the streak. One breaks it.`
+          : 'No category, so nothing can break this automatically — it runs on the honour system.'}
+      </T>
+    </FormCard>
   );
 }

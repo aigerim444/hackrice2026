@@ -204,6 +204,22 @@ export type JobDraft = Omit<Job, 'nextPayDate' | 'nextPayAmount' | 'baselineHour
 /** A bill as typed in. */
 export type BillDraft = Omit<Bill, 'envelope'> & { envelope?: EnvelopeId };
 
+/**
+ * A challenge as typed in.
+ *
+ * Deliberately has no money on it. A challenge is a habit you're cutting out,
+ * and its payoff is the streak — "$600 toward no boba" would be nonsense, since
+ * you aren't saving up for anything. The category is the useful part: a charge
+ * in it is the only evidence that can break the streak.
+ */
+export interface ChallengeDraft {
+  id: string;
+  label: string;
+  category?: Category;
+  /** Optional end date, so "No boba until Thanksgiving" can say so. */
+  until?: ISODate;
+}
+
 /** A goal as typed in. Yours alone unless someone else is already paying in. */
 export type FundDraft = Omit<Fund, 'members'> & { members?: FundMember[] };
 

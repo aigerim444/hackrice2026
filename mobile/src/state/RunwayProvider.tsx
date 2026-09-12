@@ -16,6 +16,7 @@ import type {
   Category,
   ChatMessage,
   EnvelopeId,
+  ChallengeDraft,
   FundDraft,
   JobDraft,
   ParsedReceipt,
@@ -63,6 +64,7 @@ interface RunwayContextValue {
   contributeToFund: (fundId: string, amount: number) => Promise<void>;
   addJob: (draft: JobDraft) => Promise<void>;
   addFund: (draft: FundDraft) => Promise<void>;
+  addChallenge: (draft: ChallengeDraft) => Promise<void>;
   /** True while the coach is composing, so the thread can show it. */
   coachThinking: boolean;
 }
@@ -238,6 +240,10 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
     setSnapshot(await api.addFund(draft));
   }, []);
 
+  const addChallenge = useCallback(async (draft: ChallengeDraft) => {
+    setSnapshot(await api.addChallenge(draft));
+  }, []);
+
   const contributeToFund = useCallback(async (fundId: string, amount: number) => {
     const next = await api.contributeToFund(fundId, amount);
     setSnapshot(next);
@@ -278,6 +284,7 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
       contributeToFund,
       addJob,
       addFund,
+      addChallenge,
       coachThinking,
     }),
     [
@@ -300,6 +307,7 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
       contributeToFund,
       addJob,
       addFund,
+      addChallenge,
       coachThinking,
     ],
   );

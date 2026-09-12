@@ -1,6 +1,7 @@
 import type { WrappedStats } from '../domain/wrapped';
 import type {
   Category,
+  ChallengeDraft,
   ChatMessage,
   EnvelopeId,
   FundDraft,
@@ -39,6 +40,9 @@ export interface RunwayApi {
 
   /** Start saving for something new. */
   addFund(draft: FundDraft): Promise<SemesterSnapshot>;
+
+  /** Start cutting something out. No money attached — the payoff is the streak. */
+  addChallenge(draft: ChallengeDraft): Promise<SemesterSnapshot>;
 
   /** Drag a job's hours. Persisted, because a schedule change is a real change. */
   setJobHours(jobId: string, hoursPerWeek: number): Promise<SemesterSnapshot>;

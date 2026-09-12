@@ -1,6 +1,8 @@
 import { coachReply, userMessage } from '../../domain/coach';
+import { shortDate } from '../../domain/dates';
 import { completeJob } from '../../domain/payroll';
 import type {
+  ChallengeDraft,
   Fund,
   FundDraft,
   JobDraft,
@@ -100,6 +102,30 @@ export class MockRunwayApi implements RunwayApi {
     return this.commit({
       ...this.snapshot,
       funds: [...this.snapshot.funds, this.hydrateFund(draft)],
+    });
+  }
+
+  async addChallenge(draft: ChallengeDraft): Promise<SemesterSnapshot> {
+    await wait(LATENCY.write);
+    const until = draft.until ? ` · until ${shortDate(draft.until)}` : '';
+    return this.commit({
+      ...this.snapshot,
+      challenges: [
+        ...this.snapshot.challenges,
+        {
+          id: draft.id,
+          label: draft.label,
+          category: draft.category,
+          // Starts at zero and counts up from the absence of a charge.
+          sublabel: `just you${until}`,
+          brokenSublabel: `just you · broken today`,
+          youStreakDays: 0,
+          broken: false,
+          leaderName: 'You',
+          leaderDays: 0,
+          leaderCaption: 'just you',
+        },
+      ],
     });
   }
 
