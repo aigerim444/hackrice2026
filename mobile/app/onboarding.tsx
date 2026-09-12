@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { BackHandler, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 
 import { weeksBetween } from '../src/domain/dates';
 import { money, rateCompact } from '../src/domain/format';
@@ -9,7 +9,7 @@ import { useLoadedRunway } from '../src/state/RunwayProvider';
 import { colors, GUTTER, HOME_INDICATOR_GAP, RULE } from '../src/theme/tokens';
 import { Kicker, T } from '../src/theme/type';
 import { InkSlider, MoneyInput, PrimaryButton, SliderAxis } from '../src/ui/controls';
-import { DashedBox, Flexible, Row, Screen } from '../src/ui/primitives';
+import { DashedBox, Flexible, Row, Screen, Tap } from '../src/ui/primitives';
 
 /**
  * Onboarding — three quick steps, which is what the brief asked for.
@@ -35,6 +35,20 @@ export default function OnboardingScreen() {
   const feesTotal =
     (phoneBill ? remainingCharges(phoneBill, semester.today, semester.endDate) : 0) +
     (feesBill ? remainingCharges(feesBill, semester.today, semester.endDate) : 0);
+
+  const goBack = useCallback(() => setStep((current) => Math.max(0, current - 1)), []);
+
+  // Android's back gesture should walk back through the steps rather than drop
+  // the user out of the app. On the cover there's nowhere to go, so the OS
+  // keeps its default.
+  useEffect(() => {
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (step === 0) return false;
+      goBack();
+      return true;
+    });
+    return () => sub.remove();
+  }, [step, goBack]);
 
   const finish = async () => {
     setSaving(true);
@@ -111,9 +125,7 @@ export default function OnboardingScreen() {
             style={{ flex: 1 }}
             contentContainerStyle={{ paddingHorizontal: GUTTER, paddingTop: 20, paddingBottom: 20 }}
             keyboardShouldPersistTaps="handled">
-            <T w={700} size={12} color={colors.muted}>
-              Step 1 of 2
-            </T>
+            <StepBack step={1} onBack={goBack} />
             <T w={800} size={30} tracking={-0.02} lh={1.05} style={{ marginTop: 4 }}>
               What landed in August?
             </T>
@@ -213,9 +225,7 @@ export default function OnboardingScreen() {
           <ScrollView
             style={{ flex: 1 }}
             contentContainerStyle={{ paddingHorizontal: GUTTER, paddingTop: 20, paddingBottom: 20 }}>
-            <T w={700} size={12} color={colors.muted}>
-              Step 2 of 2
-            </T>
+            <StepBack step={2} onBack={goBack} />
             <T w={800} size={30} tracking={-0.02} lh={1.05} style={{ marginTop: 4 }}>
               Anything you&apos;re saving for?
             </T>
@@ -292,6 +302,29 @@ export default function OnboardingScreen() {
         </>
       ) : null}
     </Screen>
+  );
+}
+
+/**
+ * The step counter doubles as the way back. Onboarding is one route with three
+ * internal steps, so there's no navigation chrome to hang a back button on —
+ * and nothing typed is lost going back, since the draft lives in the store.
+ */
+function StepBack({ step, onBack }: { step: number; onBack: () => void }) {
+  return (
+    <Tap
+      onPress={onBack}
+      hitSlop={12}
+      accessibilityRole="button"
+      accessibilityLabel={step === 1 ? 'Back to the start' : `Back to step ${step - 1}`}
+      style={{ flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start' }}>
+      <T w={800} size={16}>
+        ←
+      </T>
+      <T w={700} size={12} color={colors.muted}>
+        Step {step} of 2
+      </T>
+    </Tap>
   );
 }
 
