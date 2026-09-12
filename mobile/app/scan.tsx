@@ -39,6 +39,9 @@ export default function ScanScreen() {
   const [receipt, setReceipt] = useState<ParsedReceipt | null>(null);
   const [category, setCategory] = useState<Category>('Drinks');
   const [logging, setLogging] = useState(false);
+  const [logError, setLogError] = useState<string | null>(null);
+  const [reading, setReading] = useState(false);
+  const [readError, setReadError] = useState<string | null>(null);
   const camera = useRef<CameraView>(null);
   const started = useRef(false);
 
@@ -49,6 +52,8 @@ export default function ScanScreen() {
   }, [permission, requestPermission]);
 
   const read = useCallback(async () => {
+    setReading(true);
+    setReadError(null);
     let imageUri: string | undefined;
     let base64: string | undefined;
     if (live && cameraReady) {
@@ -63,9 +68,15 @@ export default function ScanScreen() {
         // matters and the fallback doesn't need the bytes.
       }
     }
-    const parsed = await scanReceipt({ imageUri, base64 });
-    setReceipt(parsed);
-    setCategory(parsed.suggestedCategory);
+    try {
+      const parsed = await scanReceipt({ imageUri, base64 });
+      setReceipt(parsed);
+      setCategory(parsed.suggestedCategory);
+    } catch (e) {
+      setReadError(e instanceof Error ? e.message : "Couldn't read that — try again.");
+    } finally {
+      setReading(false);
+    }
   }, [live, cameraReady, scanReceipt]);
 
   // Read once: as soon as the camera is up, or straight away if there isn't one
@@ -77,6 +88,11 @@ export default function ScanScreen() {
       void read();
     }
   }, [permission, live, cameraReady, read]);
+
+  const retry = () => {
+    started.current = true;
+    void read();
+  };
 
   const boba = snapshot.challenges.find((c) => c.category === 'Drinks');
   const breaksStreak = Boolean(receipt && category === 'Drinks' && boba && !boba.broken);
@@ -92,6 +108,7 @@ export default function ScanScreen() {
   const drop = async () => {
     if (!receipt || logging) return;
     setLogging(true);
+    setLogError(null);
     try {
       await logExpense({
         merchant: receipt.merchant,
@@ -109,6 +126,8 @@ export default function ScanScreen() {
               : ' Streak reset.'
             : ' Date unchanged.'),
       );
+    } catch (e) {
+      setLogError(e instanceof Error ? e.message : "Couldn't log that — try again.");
     } finally {
       setLogging(false);
     }
@@ -184,10 +203,65 @@ export default function ScanScreen() {
         </Pressable>
         <View style={{ borderWidth: RULE, borderColor: colors.cream, paddingHorizontal: 10, paddingVertical: 3 }}>
           <T w={800} size={12} color={colors.cream}>
-            {receipt ? (isAiEnabled ? 'Gemini read it ✓' : 'Read ✓') : 'Reading…'}
+            {receipt
+              ? isAiEnabled
+                ? 'Gemini read it ✓'
+                : 'Read ✓'
+              : readError
+                ? "Couldn't read it"
+                : 'Reading…'}
           </T>
         </View>
       </Row>
+
+      {readError && !receipt ? (
+        <FadeIn
+          duration={250}
+          offset={10}
+          style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+          <View
+            style={{
+              backgroundColor: colors.cream,
+              borderTopWidth: RULE,
+              borderColor: colors.ink,
+              paddingHorizontal: GUTTER,
+              paddingTop: 16,
+              paddingBottom: Math.max(insets.bottom, 20) + 24,
+              gap: 12,
+            }}>
+            <T w={800} size={18} lh={1.2}>
+              Couldn&apos;t read that receipt
+            </T>
+            <T w={600} size={13} lh={1.35} color={colors.muted}>
+              {readError}
+            </T>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <PrimaryButton
+                label={reading ? 'Reading…' : 'Try again'}
+                height={52}
+                onPress={retry}
+                style={{ flex: 1 }}
+              />
+              <Pressable
+                onPress={() => router.replace('/log')}
+                style={({ pressed }) => ({
+                  flex: 1,
+                  height: 52,
+                  backgroundColor: colors.white,
+                  borderWidth: RULE,
+                  borderColor: colors.ink,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: pressed ? 0.7 : 1,
+                })}>
+                <T w={800} size={15}>
+                  Log by hand
+                </T>
+              </Pressable>
+            </View>
+          </View>
+        </FadeIn>
+      ) : null}
 
       {receipt ? (
         <FadeIn
@@ -319,6 +393,12 @@ export default function ScanScreen() {
                   streak (day {boba?.youStreakDays}).
                 </T>
               </View>
+            ) : null}
+
+            {logError ? (
+              <T w={600} size={12} lh={1.35} color={colors.red} style={{ marginTop: 10 }}>
+                {logError}
+              </T>
             ) : null}
 
             <View style={{ flexDirection: 'row', gap: 10, marginTop: 14 }}>
