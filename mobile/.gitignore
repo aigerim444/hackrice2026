@@ -30,8 +30,11 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
+# local env files — API keys live here and must never be committed.
+# .env.example is the checked-in template and is re-included below.
+.env
+.env.*
+!.env.example
 
 # typescript
 *.tsbuildinfo

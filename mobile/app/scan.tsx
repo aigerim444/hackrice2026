@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { isAiEnabled } from '../src/data/client';
 import { cents } from '../src/domain/format';
 import { challengeRivals } from '../src/domain/selectors';
 import type { Category, ParsedReceipt } from '../src/domain/types';
@@ -48,16 +49,20 @@ export default function ScanScreen() {
 
   const read = useCallback(async () => {
     let imageUri: string | undefined;
+    let base64: string | undefined;
     if (live && cameraReady) {
       try {
-        const photo = await camera.current?.takePictureAsync({ quality: 0.6, skipProcessing: true });
+        // `base64` is what Gemini needs inline; `uri` is what an upload-based
+        // backend needs. Taking both means neither path has to re-read the file.
+        const photo = await camera.current?.takePictureAsync({ quality: 0.6, base64: true });
         imageUri = photo?.uri;
+        base64 = photo?.base64;
       } catch {
-        // A failed capture still leaves the demo path open; the server-side
-        // parse is what matters and the mock doesn't need the bytes.
+        // A failed capture still leaves the demo path open; the parse is what
+        // matters and the fallback doesn't need the bytes.
       }
     }
-    const parsed = await scanReceipt({ imageUri });
+    const parsed = await scanReceipt({ imageUri, base64 });
     setReceipt(parsed);
     setCategory(parsed.suggestedCategory);
   }, [live, cameraReady, scanReceipt]);
@@ -78,7 +83,10 @@ export default function ScanScreen() {
     ? Math.max(0, projection.safeDaily - projection.todaySpent - receipt.amount)
     : 0;
 
-  const sheetHeight = receipt ? 400 : 220;
+  // The sheet grows with whatever Gemini read off the receipt, and the capture
+  // frame above it has to get out of the way.
+  const sheetHeight = receipt ? Math.min(560, 400 + (receipt.items?.length ?? 0) * 22) : 220;
+  const unsure = Boolean(receipt && receipt.confidence < 0.8);
 
   const drop = async () => {
     if (!receipt || logging) return;
@@ -168,7 +176,7 @@ export default function ScanScreen() {
         </Pressable>
         <View style={{ borderWidth: RULE, borderColor: colors.cream, paddingHorizontal: 10, paddingVertical: 3 }}>
           <T w={800} size={12} color={colors.cream}>
-            {receipt ? 'Read ✓' : 'Reading…'}
+            {receipt ? (isAiEnabled ? 'Gemini read it ✓' : 'Read ✓') : 'Reading…'}
           </T>
         </View>
       </Row>
@@ -200,6 +208,32 @@ export default function ScanScreen() {
                 {cents(receipt.amount)}
               </T>
             </Row>
+
+            {/* What it read, line by line. Evidence that the total came off the
+                paper rather than out of a guess — and where you catch a misread
+                before it becomes a charge. */}
+            {receipt.items?.length ? (
+              <View style={{ marginTop: 10, gap: 2 }}>
+                {receipt.items.slice(0, 6).map((item, index) => (
+                  <Row key={`${item.label}-${index}`} gap={10}>
+                    <Flexible>
+                      <T w={600} size={12} color={colors.muted} numberOfLines={1}>
+                        {item.label}
+                      </T>
+                    </Flexible>
+                    <T w={700} size={12} color={colors.muted} nowrap>
+                      {cents(item.amount)}
+                    </T>
+                  </Row>
+                ))}
+              </View>
+            ) : null}
+
+            {unsure ? (
+              <T w={600} size={12} lh={1.35} color={colors.muted} style={{ marginTop: 10 }}>
+                Hard to read — check the total before you drop it in.
+              </T>
+            ) : null}
 
             <T w={700} size={12} color={colors.muted} style={{ marginTop: 14 }}>
               Envelope

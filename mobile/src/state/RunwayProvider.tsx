@@ -59,7 +59,7 @@ interface RunwayContextValue {
     category: Category;
     envelope: EnvelopeId;
   }) => Promise<void>;
-  scanReceipt: (input: { imageUri?: string }) => Promise<ParsedReceipt>;
+  scanReceipt: (input: { imageUri?: string; base64?: string }) => Promise<ParsedReceipt>;
   askCoach: (text: string) => Promise<void>;
   contributeToFund: (fundId: string, amount: number) => Promise<void>;
   addJob: (draft: JobDraft) => Promise<void>;
@@ -217,7 +217,10 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
     setSnapshot(next);
   }, []);
 
-  const scanReceipt = useCallback((input: { imageUri?: string }) => api.scanReceipt(input), []);
+  const scanReceipt = useCallback(
+    (input: { imageUri?: string; base64?: string }) => api.scanReceipt(input),
+    [],
+  );
 
   const askCoach = useCallback(async (text: string) => {
     // Show the question immediately — waiting on the round trip to echo your own
