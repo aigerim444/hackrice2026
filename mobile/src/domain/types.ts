@@ -182,6 +182,12 @@ export interface ParsedReceipt {
   suggestedCategory: Category;
   /** 0–1. Below ~0.8 the sheet should ask rather than assert. */
   confidence: number;
+  /**
+   * What was on it, when the lines were legible. Shown under the total as
+   * evidence: it's the difference between "a number appeared" and "it read my
+   * receipt", and it's how you catch a misread before it becomes a charge.
+   */
+  items?: { label: string; amount: number }[];
 }
 
 /**

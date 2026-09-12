@@ -65,11 +65,16 @@ export interface RunwayApi {
   }): Promise<SemesterSnapshot>;
 
   /**
-   * Read a receipt. `imageUri` is a local file from the camera; the server does
-   * the OCR and the category guess. The mock returns a fixed result after a
-   * beat, which is also what a slow network looks like.
+   * Read a receipt.
+   *
+   * `imageUri` is a local file from the camera, for the implementations that
+   * upload bytes; `base64` is the same capture inline, for the ones that post
+   * the image in a JSON body (Gemini). Callers pass whatever the camera gave
+   * them and let the implementation choose. With neither, an implementation may
+   * return a demo result — which is what keeps the scanner usable in a
+   * simulator, and what a slow network looks like anyway.
    */
-  scanReceipt(input: { imageUri?: string }): Promise<ParsedReceipt>;
+  scanReceipt(input: { imageUri?: string; base64?: string }): Promise<ParsedReceipt>;
 
   /** Ask the coach a what-if. Appends both turns to the thread. */
   askCoach(text: string): Promise<{ snapshot: SemesterSnapshot; reply: ChatMessage }>;

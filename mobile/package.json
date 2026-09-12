@@ -36,6 +36,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
+    "gemini:doctor": "node scripts/gemini-doctor.mjs",
     "lint": "expo lint",
     "test": "tsc --ignoreConfig --project tsconfig.test.json && node --test \"build-test/**/*.test.js\""
   },
