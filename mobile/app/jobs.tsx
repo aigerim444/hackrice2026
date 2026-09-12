@@ -29,12 +29,22 @@ export default function JobsScreen() {
 
   const [selectedId, setSelectedId] = useState(jobs[0]?.id ?? '');
   const [adding, setAdding] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const selected = jobs.find((job) => job.id === selectedId) ?? jobs[0];
 
   const save = async (draft: JobDraft) => {
-    setAdding(false);
-    await addJob(draft);
-    setSelectedId(draft.id);
+    setSaving(true);
+    setSaveError(null);
+    try {
+      await addJob(draft);
+      setAdding(false);
+      setSelectedId(draft.id);
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Couldn't add that job — try again.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Nothing to drag until there's a job to drag.
@@ -51,7 +61,7 @@ export default function JobsScreen() {
             run-out date.
           </T>
           {adding ? (
-            <JobForm onCancel={() => setAdding(false)} onSave={save} />
+            <JobForm onCancel={() => setAdding(false)} onSave={save} saving={saving} error={saveError} />
           ) : (
             <AddRow label="+ Add a job" onPress={() => setAdding(true)} />
           )}
@@ -104,7 +114,7 @@ export default function JobsScreen() {
 
         {adding ? (
           <View style={{ marginHorizontal: GUTTER, marginTop: 12 }}>
-            <JobForm onCancel={() => setAdding(false)} onSave={save} />
+            <JobForm onCancel={() => setAdding(false)} onSave={save} saving={saving} error={saveError} />
           </View>
         ) : null}
 
