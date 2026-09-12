@@ -6,6 +6,7 @@
     "@expo-google-fonts/baloo-2": "^0.4.2",
     "@expo/metro-runtime": "~57.0.15",
     "@react-native-community/slider": "^5.2.0",
+    "@supabase/supabase-js": "^2.116.0",
     "expo": "~57.0.22",
     "expo-camera": "~57.0.5",
     "expo-constants": "~57.0.18",
