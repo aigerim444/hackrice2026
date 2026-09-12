@@ -174,6 +174,13 @@ export interface ChatMessage {
   role: 'user' | 'coach';
   text: string;
   routes?: ChatRoute[];
+  /**
+   * Which what-ifs the coach ran against the projection engine to answer, in
+   * order. Shown under the reply: the coach isn't allowed to do arithmetic, and
+   * this is the receipt proving it didn't — every figure above came out of one
+   * of these.
+   */
+  trace?: string[];
 }
 
 export interface ParsedReceipt {

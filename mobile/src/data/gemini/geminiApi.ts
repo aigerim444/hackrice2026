@@ -1,6 +1,7 @@
 import type {
   ChallengeDraft,
   Category,
+  ChatMessage,
   EnvelopeId,
   FundDraft,
   JobDraft,
@@ -10,8 +11,23 @@ import type {
 } from '../../domain/types';
 import type { WrappedStats } from '../../domain/wrapped';
 import type { RunwayApi } from '../api';
-import { hasGemini } from './geminiClient';
+import { groundedCoachReply } from './coach';
+import { devWarn, hasGemini } from './geminiClient';
 import { parseReceiptWithGemini } from './receipts';
+
+/**
+ * Swap the coach's turn in the thread for the grounded one.
+ *
+ * The inner API has already appended its own reply; this replaces that entry in
+ * place rather than appending a second, so the transcript reads as one answer.
+ */
+function replaceLastCoachTurn(snapshot: SemesterSnapshot, reply: ChatMessage): SemesterSnapshot {
+  const index = snapshot.chat.map((m) => m.role).lastIndexOf('coach');
+  if (index === -1) return { ...snapshot, chat: [...snapshot.chat, reply] };
+  const chat = [...snapshot.chat];
+  chat[index] = reply;
+  return { ...snapshot, chat };
+}
 
 /**
  * The AI layer, as a decorator over whichever `RunwayApi` holds the state.
@@ -32,16 +48,16 @@ export class GeminiAugmentedApi implements RunwayApi {
 
   /** Whether the AI path is actually live, for the UI to badge honestly. */
   static get enabled() {
-    return hasGemini;
+    return hasGemini();
   }
 
   async scanReceipt(input: { imageUri?: string; base64?: string }): Promise<ParsedReceipt> {
-    if (!hasGemini || !input.base64) return this.inner.scanReceipt(input);
+    if (!hasGemini() || !input.base64) return this.inner.scanReceipt(input);
     try {
       return await parseReceiptWithGemini(input.base64);
     } catch (error) {
       // Log loudly in dev, degrade quietly in front of a judge.
-      if (__DEV__) console.warn('[gemini] receipt scan fell back to the demo parse:', error);
+      devWarn('[gemini] receipt scan fell back to the demo parse:', error);
       return this.inner.scanReceipt(input);
     }
   }
@@ -86,8 +102,25 @@ export class GeminiAugmentedApi implements RunwayApi {
   }): Promise<SemesterSnapshot> {
     return this.inner.logExpense(input);
   }
-  askCoach(text: string) {
-    return this.inner.askCoach(text);
+  /**
+   * The only other method Gemini owns.
+   *
+   * The inner API still records both turns, so the thread and its history stay
+   * where all the other state lives; Gemini only supplies better words for the
+   * coach's turn, swapped into the transcript in place. The reply keeps the id
+   * the inner API minted, so nothing downstream sees two different messages.
+   */
+  async askCoach(text: string) {
+    const asked = await this.inner.askCoach(text);
+    if (!hasGemini()) return asked;
+    try {
+      const grounded = await groundedCoachReply(asked.snapshot, text);
+      const reply = { ...grounded, id: asked.reply.id };
+      return { snapshot: replaceLastCoachTurn(asked.snapshot, reply), reply };
+    } catch (error) {
+      devWarn('[gemini] coach fell back to the offline heuristic:', error);
+      return asked;
+    }
   }
   contributeToFund(fundId: string, amount: number): Promise<SemesterSnapshot> {
     return this.inner.contributeToFund(fundId, amount);

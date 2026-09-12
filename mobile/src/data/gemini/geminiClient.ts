@@ -24,10 +24,23 @@ const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta';
  */
 export const GEMINI_MODEL = process.env.EXPO_PUBLIC_GEMINI_MODEL ?? 'gemini-2.5-flash';
 
-export const geminiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY?.trim() || null;
+/** Read on use, not at import, so tests and tooling can set it up first. */
+export const geminiKey = (): string | null =>
+  process.env.EXPO_PUBLIC_GEMINI_API_KEY?.trim() || null;
 
 /** Whether the AI paths are live. Every one of them degrades without this. */
-export const hasGemini = Boolean(geminiKey);
+export const hasGemini = (): boolean => Boolean(geminiKey());
+
+/**
+ * `__DEV__` is a Metro global: defined in the app on every platform, absent
+ * under `node --test`. Declared module-locally and probed with `typeof` so this
+ * file compiles and runs in both.
+ */
+declare const __DEV__: boolean | undefined;
+
+export function devWarn(...args: unknown[]) {
+  if (typeof __DEV__ !== 'undefined' && __DEV__) console.warn(...args);
+}
 
 /** The subset of OpenAPI schema Gemini accepts for structured output. */
 export interface GeminiSchema {
@@ -84,7 +97,8 @@ export async function generate(
   request: GenerateRequest,
   timeoutMs = TIMEOUT_MS,
 ): Promise<GenerateResponse> {
-  if (!geminiKey) throw new ApiError('No Gemini key: set EXPO_PUBLIC_GEMINI_API_KEY');
+  const key = geminiKey();
+  if (!key) throw new ApiError('No Gemini key: set EXPO_PUBLIC_GEMINI_API_KEY');
 
   const abort = new AbortController();
   const timer = setTimeout(() => abort.abort(), timeoutMs);
@@ -92,7 +106,7 @@ export async function generate(
   try {
     const response = await fetch(`${ENDPOINT}/models/${model}:generateContent`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-goog-api-key': geminiKey },
+      headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify(request),
       signal: abort.signal,
     });

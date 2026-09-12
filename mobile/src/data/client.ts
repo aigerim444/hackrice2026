@@ -22,9 +22,9 @@ const baseUrl = process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, '');
 
 const store: RunwayApi = baseUrl ? new HttpRunwayApi(baseUrl) : new MockRunwayApi();
 
-export const api: RunwayApi = hasGemini ? new GeminiAugmentedApi(store) : store;
+export const api: RunwayApi = hasGemini() ? new GeminiAugmentedApi(store) : store;
 
 export const isMockApi = !baseUrl;
 
 /** True when the AI paths are live. Screens badge themselves honestly with it. */
-export const isAiEnabled = hasGemini;
+export const isAiEnabled = hasGemini();
