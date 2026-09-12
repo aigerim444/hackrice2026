@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics=""><meta name="design_doc_mode" content="canvas"><link rel="stylesheet" href="./ds-styles.css"><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&amp;family=Baloo+2:wght@600;800&amp;display=swap" rel="stylesheet"><style>body{margin:0;background:#f0eee9;font-family:Archivo,system-ui,sans-serif}a{color:#00205B}a:hover{color:#ec3013}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Archivo,system-ui,sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 Archivo,system-ui,sans-serif;color:rgba(0,0,0,.55)}.dv-card{max-width:100%}.dv-opt:target .dv-oid{background:#00205B;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 Archivo,system-ui,sans-serif;color:rgba(0,0,0,.5)}.dv-sub{font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:rgba(0,0,0,.5);margin:36px 0 16px}</style></helmet>
+<section class="dv-turn" id="t5">
+<div class="dv-thd"><a class="dv-tid" href="#t5">5</a><span class="dv-tname">Semester Wrapped — the other six cards (card 3 is <a class="dv-oid" href="#4g">4g</a>)</span></div>
+<div style="max-width:760px;background:#fff;border:2px solid #1E1A17;box-shadow:4px 4px 0 #C9BFAF;padding:16px 20px 6px;margin-bottom:28px;font-size:13px;line-height:1.55;color:#1E1A17">
+<p style="margin:0 0 8px">Seven cards, alternating ink and cream so swiping has rhythm. Every number is something the app actually knows from receipts, shifts and envelope moves — no inferred "skips". Order: 1 the lump → 2 the forecast that moved → 3 envelopes emptied (<a class="dv-oid" href="#4g">4g</a>) → 4 top category → 5 your week rhythm → 6 friends → 7 shareable poster.</p>
+</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="5a"><div class="dv-olabel"><a class="dv-oid" href="#5a">5a</a>Card 1 — the lump</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;gap:4px"><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#C9BFAF"></div><div style="flex:1;height:4px;background:#C9BFAF"></div><div style="flex:1;height:4px;background:#C9BFAF"></div><div style="flex:1;height:4px;background:#C9BFAF"></div><div style="flex:1;height:4px;background:#C9BFAF"></div><div style="flex:1;height:4px;background:#C9BFAF"></div></div>
+<div style="padding:16px 22px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5E554B">Fall 2026 · Wrapped</div>
+<div style="padding:48px 22px 0">
+<div style="font-size:15px;font-weight:600;color:#5E554B">On Aug 24 you had</div>
+<div style="font-size:104px;font-weight:800;letter-spacing:-.05em;line-height:.95">$6,240</div>
+<div style="font-size:15px;font-weight:600;line-height:1.4;margin-top:12px;max-width:300px;color:#5E554B">and 111 days to make it last. No paycheck coming — just this.</div>
+</div>
+<div style="margin:56px 22px 0;display:flex;height:72px;border:2px solid #1E1A17">
+<div style="width:61%;background:#1E1A17;color:#FAF6EE;padding:6px 10px;font-size:12px;font-weight:700;line-height:1.2">Aid refund<br><span style="font-size:16px;font-weight:800">$3,800</span></div>
+<div style="flex:1;background:#fff;padding:6px 10px;font-size:12px;font-weight:700;line-height:1.2;border-left:2px solid #1E1A17">Internship<br><span style="font-size:16px;font-weight:800">$2,440</span></div>
+</div>
+<div style="margin:12px 22px 0;font-size:15px;font-weight:600;color:#5E554B;line-height:1.4">+ two campus jobs that added <b style="color:#2F7A57">$3,024</b> along the way — but you didn’t know that yet.</div>
+<div style="margin:36px 22px 0;border-top:2px solid #1E1A17;padding-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px"><div><div style="font-size:11px;font-weight:700;color:#5E554B">Rent set aside</div><div style="font-size:20px;font-weight:800">$2,080</div></div><div><div style="font-size:11px;font-weight:700;color:#5E554B">Fees</div><div style="font-size:20px;font-weight:800">$330</div></div><div><div style="font-size:11px;font-weight:700;color:#5E554B">Free to spend</div><div style="font-size:20px;font-weight:800">$3,830</div></div></div>
+<div style="flex:1"></div>
+<div style="padding:0 22px 44px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600;color:#5E554B">Tap → 2 of 7: the forecast</span><span style="font-size:13px;font-weight:800;border:2px solid #1E1A17;padding:8px 14px">Share</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="5b"><div class="dv-olabel"><a class="dv-oid" href="#5b">5b</a>Card 2 — the forecast that moved</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#1E1A17;color:#FAF6EE;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;gap:4px"><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div></div>
+<div style="padding:16px 22px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">The date, all semester</div>
+<div style="padding:36px 22px 0">
+<div style="font-size:15px;font-weight:600;opacity:.8">Sep 11 we said you'd run out</div>
+<div style="font-size:80px;font-weight:800;letter-spacing:-.04em;line-height:1;color:#FF9E7A">Nov 14</div>
+<div style="font-size:15px;font-weight:600;opacity:.8;margin-top:26px">You ended with</div>
+<div style="font-size:80px;font-weight:800;letter-spacing:-.04em;line-height:1;color:#9FD3B5">Dec 12</div>
+</div>
+<div style="margin:32px 22px 0">
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.65"><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span></div>
+<div style="margin-top:8px;position:relative;height:96px;border-bottom:2px solid rgba(250,246,238,.35)">
+<div style="position:absolute;left:0;bottom:14px;width:12%;height:2px;background:#FF9E7A"></div>
+<div style="position:absolute;left:12%;bottom:10px;width:16%;height:2px;background:#FF9E7A"></div>
+<div style="position:absolute;left:28%;bottom:26px;width:18%;height:2px;background:#FAF6EE"></div>
+<div style="position:absolute;left:46%;bottom:22px;width:14%;height:2px;background:#FAF6EE"></div>
+<div style="position:absolute;left:60%;bottom:44px;width:20%;height:2px;background:#9FD3B5"></div>
+<div style="position:absolute;left:80%;bottom:58px;width:20%;height:2px;background:#9FD3B5"></div>
+<div style="position:absolute;left:28%;bottom:2px;font-size:10px;font-weight:700;opacity:.8;white-space:nowrap">↑ picked up rec shifts</div>
+<div style="position:absolute;left:60%;bottom:30px;font-size:10px;font-weight:700;opacity:.8;white-space:nowrap">↑ no-delivery October</div>
+</div>
+<div style="margin-top:8px;font-size:12px;font-weight:600;opacity:.7">Forecast run-out date, week by week</div>
+</div>
+<div style="margin:28px 22px 0;font-size:17px;font-weight:600;line-height:1.4;opacity:.9">The date moved 14 times. Twelve of them were shifts you logged.</div>
+<div style="flex:1"></div>
+<div style="padding:0 22px 44px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600;opacity:.75">Tap → 3 of 7: envelopes emptied</span><span style="font-size:13px;font-weight:800;background:#FAF6EE;color:#1E1A17;padding:9px 14px">Share</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="5c"><div class="dv-olabel"><a class="dv-oid" href="#5c">5c</a>Card 4 — top category</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;gap:4px"><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#C9BFAF"></div><div style="flex:1;height:4px;background:#C9BFAF"></div><div style="flex:1;height:4px;background:#C9BFAF"></div></div>
+<div style="padding:16px 22px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5E554B">Where it went</div>
+<div style="padding:32px 22px 0">
+<div style="font-size:15px;font-weight:600;color:#5E554B">Your biggest envelope after rent</div>
+<div style="font-size:56px;font-weight:800;letter-spacing:-.04em;line-height:1">Eating out</div>
+<div style="display:flex;align-items:baseline;gap:10px;margin-top:6px"><div style="font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1">$1,140</div><div style="font-size:14px;font-weight:600;color:#5E554B">· 97 receipts · $11.75 avg</div></div>
+</div>
+<div style="margin:28px 22px 0;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Eating out</span><div style="flex:1;height:22px;background:#1E1A17"></div><span style="width:56px;text-align:right">$1,140</span></div>
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Groceries</span><div style="flex:1;display:flex"><div style="width:76%;height:22px;background:#fff;border:2px solid #1E1A17"></div></div><span style="width:56px;text-align:right">$868</span></div>
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Delivery</span><div style="flex:1;display:flex"><div style="width:38%;height:22px;background:#fff;border:2px solid #1E1A17"></div></div><span style="width:56px;text-align:right">$436</span></div>
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Drinks</span><div style="flex:1;display:flex"><div style="width:27%;height:22px;background:#fff;border:2px solid #1E1A17"></div></div><span style="width:56px;text-align:right">$312</span></div>
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Books + fees</span><div style="flex:1;display:flex"><div style="width:27%;height:22px;background:#fff;border:2px solid #1E1A17"></div></div><span style="width:56px;text-align:right">$313</span></div>
+</div>
+<div style="margin:24px 22px 0;background:#fff;border:2px solid #1E1A17;padding:12px 14px;font-size:14px;font-weight:600;line-height:1.4"><b>Most-visited:</b> the taqueria on Kirby, 23 times. Tuesdays, mostly.</div>
+<div style="flex:1"></div>
+<div style="padding:0 22px 44px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600;color:#5E554B">Tap → 5 of 7: your rhythm</span><span style="font-size:13px;font-weight:800;border:2px solid #1E1A17;padding:8px 14px">Share</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="5d"><div class="dv-olabel"><a class="dv-oid" href="#5d">5d</a>Card 5 — your week, as a rhythm</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#1E1A17;color:#FAF6EE;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;gap:4px"><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div></div>
+<div style="padding:16px 22px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Your week</div>
+<div style="padding:32px 22px 0">
+<div style="font-size:15px;font-weight:600;opacity:.8">Your expensive day is</div>
+<div style="font-size:72px;font-weight:800;letter-spacing:-.04em;line-height:1">Friday</div>
+<div style="font-size:15px;font-weight:600;opacity:.8;margin-top:8px">$71 on average — 2× a Tuesday.</div>
+</div>
+<div style="margin:30px 22px 0;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:130px">
+<div style="background:rgba(250,246,238,.35);height:44%"></div><div style="background:rgba(250,246,238,.35);height:40%"></div><div style="background:rgba(250,246,238,.35);height:52%"></div><div style="background:rgba(250,246,238,.35);height:58%"></div><div style="background:#FAF6EE;height:100%"></div><div style="background:rgba(250,246,238,.35);height:82%"></div><div style="background:rgba(250,246,238,.35);height:48%"></div>
+</div>
+<div style="margin:6px 22px 0;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;font-size:11px;font-weight:700;text-align:center;opacity:.7"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span style="opacity:1">Fr</span><span>Sa</span><span>Su</span></div>
+<div style="margin:26px 22px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="border:2px solid rgba(250,246,238,.35);padding:10px 12px"><div style="font-size:11px;font-weight:700;opacity:.65">Latest receipt</div><div style="font-size:18px;font-weight:800;line-height:1.1">2:41 AM</div><div style="font-size:12px;font-weight:600;opacity:.7">Oct 30 · delivery</div></div>
+<div style="border:2px solid rgba(250,246,238,.35);padding:10px 12px"><div style="font-size:11px;font-weight:700;opacity:.65">Best week</div><div style="font-size:18px;font-weight:800;line-height:1.1">$142</div><div style="font-size:12px;font-weight:600;opacity:.7">Oct 6–12 · midterms</div></div>
+</div>
+<div style="flex:1"></div>
+<div style="padding:0 22px 44px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600;opacity:.75">Tap → 6 of 7: friends</span><span style="font-size:13px;font-weight:800;background:#FAF6EE;color:#1E1A17;padding:9px 14px">Share</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="5e"><div class="dv-olabel"><a class="dv-oid" href="#5e">5e</a>Card 6 — friends</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;gap:4px"><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#1E1A17"></div><div style="flex:1;height:4px;background:#C9BFAF"></div></div>
+<div style="padding:16px 22px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5E554B">With friends</div>
+<div style="padding:32px 22px 0">
+<div style="font-size:15px;font-weight:600;color:#5E554B">Austin trip envelope</div>
+<div style="font-size:64px;font-weight:800;letter-spacing:-.04em;line-height:1">Funded</div>
+<div style="font-size:15px;font-weight:600;color:#5E554B;margin-top:8px">$600 by Nov 18 — two days early. Dev caught up in the last week.</div>
+</div>
+<div style="margin:24px 22px 0;display:flex;height:48px;border:2px solid #1E1A17">
+<div style="width:33.3%;background:#1E1A17;color:#FAF6EE;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">You $200</div>
+<div style="width:33.3%;background:#DDEDE3;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border-left:2px solid #1E1A17">Maya $200</div>
+<div style="flex:1;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border-left:2px solid #1E1A17">Dev $200</div>
+</div>
+<div style="margin:28px 22px 0;font-size:12px;font-weight:700;color:#5E554B">Longest streaks</div>
+<div style="margin:8px 22px 0;display:flex;flex-direction:column;gap:8px">
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="min-width:0"><div style="font-weight:800;font-size:14px">No delivery</div><div style="font-size:12px;font-weight:600;color:#5E554B">you · Oct 1–Nov 3</div></div><div style="flex:none;white-space:nowrap;font-weight:800;font-size:18px;color:#2F7A57">34 days</div></div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="min-width:0"><div style="font-weight:800;font-size:14px">No new clothes</div><div style="font-size:12px;font-weight:600;color:#5E554B">Maya · the whole semester</div></div><div style="flex:none;white-space:nowrap;font-weight:800;font-size:18px;color:#2F7A57">111 days</div></div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="min-width:0"><div style="font-weight:800;font-size:14px">No boba</div><div style="font-size:12px;font-weight:600;color:#5E554B">you · best of 4 tries</div></div><div style="flex:none;white-space:nowrap;font-weight:800;font-size:18px">9 days</div></div>
+</div>
+<div style="flex:1"></div>
+<div style="padding:0 22px 44px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600;color:#5E554B">Tap → 7 of 7: your card</span><span style="font-size:13px;font-weight:800;border:2px solid #1E1A17;padding:8px 14px">Share</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="5f"><div class="dv-olabel"><a class="dv-oid" href="#5f">5f</a>Card 7 — the shareable poster</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#1E1A17;color:#FAF6EE;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;gap:4px"><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div></div>
+<div style="margin:26px 22px 0;background:#FAF6EE;color:#1E1A17;padding:22px 20px 20px;box-shadow:6px 6px 0 #5E554B">
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5E554B;white-space:nowrap"><span>Semester Runway</span><span>Fall 2026</span></div>
+<div style="font-size:15px;font-weight:600;color:#5E554B;margin-top:22px">Priya made $6,240 last</div>
+<div style="font-size:64px;font-weight:800;letter-spacing:-.04em;line-height:.95">111 days</div>
+<div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px 16px">
+<div><div style="font-size:11px;font-weight:700;color:#5E554B">Forecast · Sep 11</div><div style="font-size:20px;font-weight:800;line-height:1.1;color:#C2481F">Nov 14</div></div>
+<div><div style="font-size:11px;font-weight:700;color:#5E554B">Actual</div><div style="font-size:20px;font-weight:800;line-height:1.1;color:#2F7A57">Dec 12</div></div>
+<div><div style="font-size:11px;font-weight:700;color:#5E554B">Earned on campus</div><div style="font-size:20px;font-weight:800;line-height:1.1">$3,024</div></div>
+<div><div style="font-size:11px;font-weight:700;color:#5E554B">Longest streak</div><div style="font-size:20px;font-weight:800;line-height:1.1">34 days</div></div>
+</div>
+<div style="margin-top:20px;display:flex;height:12px;border:2px solid #1E1A17"><div style="width:33%;background:#1E1A17"></div><div style="width:5%;background:#1E1A17;opacity:.6"></div><div style="width:3%;background:#DDEDE3;border-left:2px solid #1E1A17"></div><div style="flex:1;background:#fff;border-left:2px solid #1E1A17"></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;font-weight:700;color:#5E554B;white-space:nowrap"><span>Rent</span><span>Fees</span><span>Trip</span><span>Free to spend</span></div>
+</div>
+<div style="margin:28px 22px 0;font-size:14px;font-weight:600;line-height:1.4;opacity:.85">Spring lump lands Jan 12. Want your envelopes pre-sorted from this semester?</div>
+<div style="flex:1"></div>
+<div style="display:flex;gap:10px;padding:0 22px 14px"><button style="flex:1;height:52px;background:#FAF6EE;color:#1E1A17;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Share card</button><button style="flex:1;height:52px;background:transparent;color:#FAF6EE;border:2px solid #FAF6EE;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Set up spring</button></div>
+<div style="height:30px"></div>
+</div></x-import></div></div>
+</div>
+<p class="dv-next">Try next: "make card 7 a 9:16 export" · "swap card 5 for a 'your top spot' map" · "animate the swipe between cards"</p>
+</section>
+<section class="dv-turn" id="t4">
+<div class="dv-thd"><a class="dv-tid" href="#t4">4</a><span class="dv-tname">Envelopes system — the flow rebuilt on <a class="dv-oid" href="#3b">3b</a></span></div>
+<div style="max-width:760px;background:#fff;border:2px solid #1E1A17;box-shadow:4px 4px 0 #C9BFAF;padding:16px 20px 6px;margin-bottom:28px;font-size:13px;line-height:1.55;color:#1E1A17">
+<p style="margin:0 0 8px"><strong>Rules carried from <a class="dv-oid" href="#3b">3b</a>:</strong> cream paper ground, ink text, white envelopes with 2px ink borders, one ink block per screen for the number that matters, sage only for money coming in / on-track, coral only for run-out, dashed outlines for ghosts and "add". Envelope is the app's core metaphor now — receipts land in an envelope, what-ifs move money between envelopes, friends share a fund envelope, Wrapped is the envelopes emptied out.</p>
+</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="4a"><div class="dv-olabel"><a class="dv-oid" href="#4a">4a</a>Onboarding 2/3 — sort the lump</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;gap:6px"><div style="flex:1;height:6px;background:#1E1A17"></div><div style="flex:1;height:6px;background:#1E1A17"></div><div style="flex:1;height:6px;border:2px dashed #8A7F72"></div></div>
+<div style="padding:22px 22px 0"><div style="font-size:12px;font-weight:700;color:#5E554B">Step 2 of 3</div><h2 style="font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:4px 0 0">What landed in August?</h2><p style="font-size:14px;font-weight:600;color:#5E554B;margin:6px 0 0">One lump, no paycheck. We'll sort it into envelopes.</p></div>
+<div style="margin:18px 22px 0;display:flex;flex-direction:column;gap:10px">
+<div style="background:#fff;border:2px solid #1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Aid refund</div><div style="font-size:12px;font-weight:600;color:#5E554B">Grants after tuition</div></div><div style="font-weight:800;font-size:20px">$3,800</div></div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Summer internship</div><div style="font-size:12px;font-weight:600;color:#5E554B">What's left of it</div></div><div style="font-weight:800;font-size:20px">$2,440</div></div>
+<div style="background:#DDEDE3;border:2px solid #1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Library desk</div><div style="font-size:12px;font-weight:600;color:#5E554B">$15.50/h · ~12 h/wk · paid biweekly</div></div><div style="font-weight:800;font-size:14px;color:#2F7A57">~$186 / wk</div></div>
+<div style="background:#DDEDE3;border:2px solid #1E1A17;border-top:0;margin-top:-10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Rec center</div><div style="font-size:12px;font-weight:600;color:#5E554B">$14/h · ~6 h/wk · paid monthly</div></div><div style="font-weight:800;font-size:14px;color:#2F7A57">~$84 / wk</div></div>
+<div style="border:2px dashed #8A7F72;padding:10px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:15px;color:#5E554B">+ Another job or source</span><span style="font-size:12px;font-weight:700;color:#5E554B">jobs total ~$270 / wk</span></div>
+</div>
+<div style="margin:22px 22px 0;font-size:12px;font-weight:700;color:#5E554B">Bills you already know</div>
+<div style="margin:8px 22px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px"><div style="font-size:12px;font-weight:600;color:#5E554B">Rent · monthly</div><div style="font-weight:800;font-size:22px;line-height:1.1">$520</div></div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px"><div style="font-size:12px;font-weight:600;color:#5E554B">Phone · monthly</div><div style="font-weight:800;font-size:22px;line-height:1.1">$45</div></div>
+</div>
+<div style="flex:1"></div>
+<div style="margin:0 22px 14px;background:#1E1A17;color:#FAF6EE;padding:16px 20px;box-shadow:4px 4px 0 #C9BFAF;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Free to spend</div><div style="font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1">$43<span style="font-size:14px;opacity:.7">/day</span></div></div><button style="height:48px;padding:0 18px;background:#FAF6EE;color:#1E1A17;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Sort it →</button></div>
+<div style="height:30px"></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="4b"><div class="dv-olabel"><a class="dv-oid" href="#4b">4b</a>Runway — why the date moved</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m15 18-6-6 6-6"></path></svg>Free-to-spend envelope</div>
+<div style="margin:16px 22px 0;background:#1E1A17;color:#FAF6EE;padding:18px 20px 16px;box-shadow:4px 4px 0 #C9BFAF">
+<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">At $52/day this envelope empties</div>
+<div style="font-size:52px;font-weight:800;letter-spacing:-.04em;line-height:1;color:#FF9E7A">{{ runoutLabel }}</div>
+<div style="margin-top:12px;height:12px;background:rgba(250,246,238,.2);display:flex"><div style="width:17%;background:#FAF6EE"></div><div style="width:57%;background:rgba(250,246,238,.55)"></div><div style="flex:1;background:repeating-linear-gradient(135deg,#FF9E7A 0 3px,transparent 3px 7px)"></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;font-weight:700;opacity:.75"><span>Aug 24</span><span>today</span><span>Dec 12</span></div>
+<div style="margin-top:12px;font-size:14px;font-weight:600;line-height:1.35">Hold <b>$35/day</b> and it lasts to Dec 12. That's {{ shortDays }} more days to cover.</div>
+</div>
+<div style="margin:22px 22px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:16px">Why it moved this week</span><span style="font-size:12px;font-weight:700;color:#5E554B">net −3 days</span></div>
+<div style="margin:8px 22px 0;display:flex;flex-direction:column;gap:8px">
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;gap:12px;align-items:center"><div style="min-width:50px;font-weight:800;font-size:15px;color:#C2481F">−2 d</div><div style="flex:1"><div style="font-weight:800;font-size:14px">Dipped into Rent · $84</div><div style="font-size:12px;font-weight:600;color:#5E554B">Sep 3 · groceries came out of the wrong envelope</div></div></div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;gap:12px;align-items:center"><div style="min-width:50px;font-weight:800;font-size:15px;color:#C2481F">−2 d</div><div style="flex:1"><div style="font-weight:800;font-size:14px">Delivery ×3 · $71</div><div style="font-size:12px;font-weight:600;color:#5E554B">Tue–Thu · $19 of it was fees</div></div></div>
+<div style="background:#DDEDE3;border:2px solid #1E1A17;padding:10px 14px;display:flex;gap:12px;align-items:center"><div style="min-width:50px;font-weight:800;font-size:15px;color:#2F7A57">+2 d</div><div style="flex:1"><div style="font-weight:800;font-size:14px">Logged 14 h at the library</div><div style="font-size:12px;font-weight:600;color:#5E554B">$217 lands Sep 18 → Free to spend</div></div></div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;gap:12px;align-items:center"><div style="min-width:50px;font-weight:800;font-size:15px;color:#C2481F">−1 d</div><div style="flex:1"><div style="font-weight:800;font-size:14px">Textbook · $118</div><div style="font-size:12px;font-weight:600;color:#5E554B">One-off · bounces back if you stay on pace</div></div></div>
+</div>
+<div style="flex:1"></div>
+<div style="margin:0 22px 44px;border:2px dashed #8A7F72;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;font-weight:600;line-height:1.35"><span><b>Two extra shifts a week</b> refills this envelope to Dec 12.</span><span style="font-size:13px;font-weight:800;background:#1E1A17;color:#FAF6EE;padding:8px 12px;white-space:nowrap">Try it</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="4c"><div class="dv-olabel"><a class="dv-oid" href="#4c">4c</a>Receipt scan — lands in an envelope</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#1E1A17;color:#FAF6EE;font-family:'Baloo 2',system-ui,sans-serif;position:relative">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#26211D 0 10px,#211D19 10px 20px)"></div>
+<div style="position:absolute;left:60px;right:60px;top:130px;bottom:400px;background:repeating-linear-gradient(0deg,#f6f6f6 0 14px,#ececec 14px 16px);transform:rotate(-2deg);display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#777">[ receipt · camera feed ]</div>
+<div style="position:absolute;left:40px;right:40px;top:112px;bottom:382px;border:2px solid #FAF6EE"></div>
+<div style="position:absolute;top:70px;left:22px;right:22px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:800"><span style="opacity:.8">Cancel</span><span style="border:2px solid #FAF6EE;padding:3px 10px;font-size:12px">Reading…</span></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#FAF6EE;color:#1E1A17;border-top:2px solid #1E1A17;padding:16px 22px 44px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:12px;font-weight:700;color:#5E554B">Looks like</div><div style="font-weight:800;font-size:22px;line-height:1.1">Tiger Sugar · Village</div></div><div style="font-weight:800;font-size:34px;letter-spacing:-.03em;line-height:1">$8.65</div></div>
+<div style="margin-top:14px;font-size:12px;font-weight:700;color:#5E554B">Envelope</div>
+<div style="margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="background:#1E1A17;color:#FAF6EE;border:2px solid #1E1A17;padding:8px 12px;font-weight:800;font-size:14px">Free to spend · Drinks</div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:8px 12px;font-weight:800;font-size:14px">Free · Eating out</div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:8px 12px;font-weight:800;font-size:14px">Free · Groceries</div>
+<div style="border:2px dashed #8A7F72;padding:8px 12px;font-weight:800;font-size:14px;color:#5E554B">Rent (don't)</div>
+</div>
+<div style="margin-top:12px;background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;justify-content:space-between;font-size:14px;font-weight:600"><span>Today after this</span><span><b>$18.95</b> left · date unchanged</span></div>
+<div style="margin-top:8px;border:2px solid #1E1A17;background:#FFE3D8;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.35">3rd boba this week — breaks your <b>No-boba September</b> streak with Maya (day 11).</div>
+<div style="display:flex;gap:10px;margin-top:14px"><button style="flex:1;height:52px;background:#1E1A17;color:#FAF6EE;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Drop it in</button><button style="flex:1;height:52px;background:#fff;color:#1E1A17;border:2px solid #1E1A17;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Edit</button></div>
+</div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="4d"><div class="dv-olabel"><a class="dv-oid" href="#4d">4d</a>What-if — chat with the coach</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 22px 10px;border-bottom:2px solid #1E1A17;display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border:2px solid #1E1A17;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">R</div><div><div style="font-weight:800;font-size:16px;line-height:1.1">Runway</div><div style="font-size:11px;font-weight:700;color:#5E554B;white-space:nowrap">sees envelopes + shifts</div></div></div><div style="font-size:12px;font-weight:700;color:#5E554B;white-space:nowrap">$27.60 left today</div></div>
+<div style="flex:1;padding:14px 18px 0;display:flex;flex-direction:column;gap:10px;overflow:hidden;justify-content:flex-end">
+<div style="flex:none;align-self:center;font-size:11px;font-weight:700;color:#8A7F72;white-space:nowrap">Today 4:12 PM</div>
+<div style="flex:none;align-self:flex-end;max-width:76%;background:#1E1A17;color:#FAF6EE;padding:9px 13px;font-size:15px;font-weight:600;line-height:1.35">if i buy the AirPods Pro for $249?</div>
+<div style="flex:none;align-self:flex-start;display:flex;gap:8px;max-width:84%"><div style="width:24px;height:24px;border:2px solid #1E1A17;background:#fff;flex:none;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800">R</div><div style="background:#fff;color:#1E1A17;border:2px solid #1E1A17;padding:9px 13px;font-size:15px;font-weight:600;line-height:1.35">Big swing. That empties Free-to-spend on <b style="color:#C2481F">{{ runoutMinus5 }}</b> instead of <b>{{ runoutLabel }}</b> — 5 days, or 7 dining-hall lunches.</div></div>
+<div style="flex:none;align-self:flex-start;display:flex;gap:8px;max-width:84%"><div style="width:24px;height:24px;border:2px solid #1E1A17;background:#fff;flex:none;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800">R</div><div style="background:#fff;color:#1E1A17;border:2px solid #1E1A17;padding:9px 13px;font-size:15px;font-weight:600;line-height:1.35">Cheaper routes:<div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;font-size:14px"><div style="display:flex;justify-content:space-between;gap:10px;background:#DDEDE3;border:2px solid #1E1A17;padding:6px 10px"><span>Wait 2 paychecks (Oct 2)</span><b style="color:#2F7A57">−1 d</b></div><div style="display:flex;justify-content:space-between;gap:10px;border:2px solid #1E1A17;padding:6px 10px"><span>Refurb · $189</span><b>−4 d</b></div><div style="display:flex;justify-content:space-between;gap:10px;border:2px solid #1E1A17;padding:6px 10px"><span>Student price + trade-in</span><b>−3 d</b></div></div></div></div>
+<div style="flex:none;align-self:flex-start;display:flex;gap:8px;max-width:84%"><div style="width:24px;height:24px;border:2px solid #1E1A17;background:#fff;flex:none;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800">R</div><div style="background:#fff;color:#1E1A17;border:2px solid #1E1A17;padding:9px 13px;font-size:15px;font-weight:600;line-height:1.35">Not a no. Just a “not this Friday.”</div></div>
+</div>
+<div style="padding:10px 18px 0;display:flex;gap:8px;overflow:hidden"><span style="flex:none;font-size:13px;font-weight:800;background:#fff;border:2px solid #1E1A17;padding:6px 12px;white-space:nowrap">Plan the Oct 2 buy</span><span style="flex:none;font-size:13px;font-weight:800;background:#fff;border:2px solid #1E1A17;padding:6px 12px;white-space:nowrap">Buy anyway</span><span style="flex:none;font-size:13px;font-weight:800;background:#fff;border:2px solid #1E1A17;padding:6px 12px;white-space:nowrap">What else is 5 days?</span></div>
+<div style="padding:10px 18px 44px;display:flex;gap:8px;align-items:center"><div style="width:44px;height:44px;border:2px solid #1E1A17;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1E1A17" stroke-width="2.4"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg></div><div style="flex:1;height:44px;background:#fff;border:2px solid #1E1A17;display:flex;align-items:center;padding:0 12px;font-size:15px;font-weight:600;color:#8A7F72">Message</div><div style="width:44px;height:44px;background:#1E1A17;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FAF6EE" stroke-width="3"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg></div></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="4e"><div class="dv-olabel"><a class="dv-oid" href="#4e">4e</a>Job what-if — refill the envelope (live)</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m15 18-6-6 6-6"></path></svg>Jobs</div>
+<div style="padding:14px 22px 0"><h2 style="font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0">If I work more…</h2><p style="font-size:14px;font-weight:600;color:#5E554B;margin:6px 0 0">Pick a job, drag its hours. The envelope refills.</p></div>
+<div style="margin:14px 22px 0;display:flex;border:2px solid #1E1A17"><div style="flex:1;padding:8px 0;text-align:center;font-weight:800;font-size:13px;background:#1E1A17;color:#FAF6EE">Library desk</div><div style="flex:1;padding:8px 0;text-align:center;font-weight:800;font-size:13px;border-left:2px solid #1E1A17">Rec center</div><div style="flex:1;padding:8px 0;text-align:center;font-weight:800;font-size:13px;border-left:2px solid #1E1A17;color:#5E554B">+ Add</div></div>
+<div style="margin:10px 22px 0;background:#fff;border:2px solid #1E1A17;padding:12px 16px 12px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:12px;font-weight:700;color:#5E554B">Library · hours / week</span><span style="font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ hours }}<span style="font-size:14px;color:#5E554B"> h</span></span></div>
+<input type="range" min="4" max="24" step="1" value="{{ hours }}" onChange="{{ onHours }}" style="width:100%;accent-color:#1E1A17;margin:8px 0 2px">
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#8A7F72"><span>4 h</span><span>now: 12 h</span><span>24 h max</span></div>
+<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="border:2px solid #1E1A17;padding:8px 12px"><div style="font-size:11px;font-weight:700;color:#5E554B">Rate</div><div style="font-weight:800;font-size:18px;line-height:1.1">$15.50 / h</div></div>
+<div style="border:2px solid #1E1A17;background:#DDEDE3;padding:8px 12px"><div style="font-size:11px;font-weight:700;color:#5E554B">Extra / week</div><div style="font-weight:800;font-size:18px;line-height:1.1;color:#2F7A57">{{ extraWeekly }}</div></div>
+</div>
+<div style="margin-top:10px;padding-top:10px;border-top:2px dashed #C9BFAF;display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#5E554B"><span>Rec center stays at 6 h · $84/wk</span><span>All jobs: {{ hours }} + 6 h</span></div>
+</div>
+<div style="margin:14px 22px 0;background:#1E1A17;color:#FAF6EE;padding:14px 20px;box-shadow:4px 4px 0 #C9BFAF">
+<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Free-to-spend empties</div>
+<div style="display:flex;align-items:baseline;gap:12px"><div style="font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ runoutLabel }}</div><div style="font-size:14px;font-weight:600;opacity:.8">{{ deltaDays }}</div></div>
+<div style="display:flex;align-items:baseline;gap:8px;margin-top:8px"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Daily</span><span style="font-size:22px;font-weight:800">${{ safeDay }}</span></div>
+<div style="margin-top:8px;font-size:13px;font-weight:600;line-height:1.35;opacity:.9">{{ jobVerdict }}</div>
+</div>
+<div style="flex:1"></div>
+<div style="padding:0 22px 44px"><button style="width:100%;display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 18px;background:#fff;color:#1E1A17;border:2px solid #1E1A17;font:800 15px 'Baloo 2',sans-serif;cursor:pointer"><span style="white-space:nowrap">Ask for&nbsp;{{ hours }}&nbsp;h / week</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="4f"><div class="dv-olabel"><a class="dv-oid" href="#4f">4f</a>Friends — a shared envelope + streaks</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-size:22px">Friends</div><div style="width:36px;height:36px;border:2px solid #1E1A17;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;line-height:1">+</div></div>
+<div style="margin:14px 22px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:16px">Austin trip · Nov 20</span><span style="font-size:12px;font-weight:700;color:#5E554B">shared envelope</span></div>
+<div style="margin:8px 22px 0;background:#DDEDE3;border:2px solid #1E1A17;padding:14px 16px 14px">
+<div style="display:flex;align-items:baseline;gap:10px"><div style="font-size:48px;font-weight:800;letter-spacing:-.04em;line-height:1">$260</div><div style="font-size:14px;font-weight:600;color:#5E554B;line-height:1.3">of $600 · 3 people<br>10 weeks left</div></div>
+<div style="margin-top:10px;height:12px;background:#fff;border:2px solid #1E1A17;display:flex"><div style="width:20%;background:#1E1A17"></div><div style="width:15%;background:#2F7A57;border-left:2px solid #1E1A17"></div><div style="width:8.5%;background:#8A7F72;border-left:2px solid #1E1A17"></div></div>
+<div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;font-weight:600;color:#5E554B">
+<div><div style="font-weight:800;font-size:12px;color:#1E1A17">You</div><div style="font-weight:800;font-size:17px;color:#1E1A17">$120</div><div>$20/wk · on track</div></div>
+<div><div style="font-weight:800;font-size:12px;color:#1E1A17">Maya</div><div style="font-weight:800;font-size:17px;color:#1E1A17">$90</div><div>$20/wk · 1 wk behind</div></div>
+<div><div style="font-weight:800;font-size:12px;color:#1E1A17">Dev</div><div style="font-weight:800;font-size:17px;color:#1E1A17">$50</div><div>$25/wk · new</div></div>
+</div>
+<div style="margin-top:12px;display:flex;gap:10px"><button style="flex:1;height:44px;background:#1E1A17;color:#FAF6EE;border:0;font:800 13px 'Baloo 2',sans-serif;cursor:pointer">Move $20 in now</button><button style="flex:1;height:44px;background:#fff;color:#1E1A17;border:2px solid #1E1A17;font:800 13px 'Baloo 2',sans-serif;cursor:pointer">Change weekly</button></div>
+</div>
+<div style="margin:8px 22px 0;font-size:12px;font-weight:600;color:#5E554B;line-height:1.35">Your $20/wk already comes out before your daily number.</div>
+<div style="margin:22px 22px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:16px">Challenges</span><span style="font-size:12px;font-weight:700;color:#5E554B">streaks, not dollars</span></div>
+<div style="margin:8px 22px 0;display:flex;flex-direction:column;gap:8px">
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;gap:12px;align-items:center"><div style="flex:1"><div style="font-weight:800;font-size:14px">No boba · September</div><div style="font-size:12px;font-weight:600;color:#5E554B">with Maya · you broke yours today</div></div><div style="text-align:right"><div style="font-weight:800;font-size:16px;color:#C2481F">0 days</div><div style="font-size:11px;font-weight:600;color:#5E554B">Maya · 11</div></div></div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;gap:12px;align-items:center"><div style="flex:1"><div style="font-weight:800;font-size:14px">No delivery</div><div style="font-size:12px;font-weight:600;color:#5E554B">4 friends · you're longest</div></div><div style="text-align:right"><div style="font-weight:800;font-size:16px;color:#2F7A57">6 days</div><div style="font-size:11px;font-weight:600;color:#5E554B">next: Dev · 4</div></div></div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:10px 14px;display:flex;gap:12px;align-items:center"><div style="flex:1"><div style="font-weight:800;font-size:14px">No new clothes</div><div style="font-size:12px;font-weight:600;color:#5E554B">with Maya · until Thanksgiving</div></div><div style="text-align:right"><div style="font-weight:800;font-size:16px;color:#2F7A57">18 days</div><div style="font-size:11px;font-weight:600;color:#5E554B">Maya · 18</div></div></div>
+</div>
+<div style="flex:1"></div>
+<div style="border-top:2px solid #1E1A17;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 22px 30px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span style="color:#8A7F72">Envelopes</span><span style="color:#8A7F72">Spend</span><span>Friends</span><span style="color:#8A7F72">You</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="4g"><div class="dv-olabel"><a class="dv-oid" href="#4g">4g</a>Semester Wrapped — the envelopes, emptied</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#1E1A17;color:#FAF6EE;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;gap:4px"><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:#FAF6EE"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div><div style="flex:1;height:4px;background:rgba(250,246,238,.3)"></div></div>
+<div style="padding:16px 22px 0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Fall 2026 · Wrapped</div>
+<div style="padding:36px 22px 0">
+<div style="font-size:15px;font-weight:600;opacity:.8">Your $6,240 lasted until</div>
+<div style="font-size:88px;font-weight:800;letter-spacing:-.04em;line-height:.95">Dec 12</div>
+<div style="font-size:15px;font-weight:600;line-height:1.4;margin-top:12px;max-width:300px;opacity:.85">$61 left in Free-to-spend. In September the forecast said Nov 14.</div>
+</div>
+<div style="margin:32px 22px 0;display:flex;flex-direction:column;gap:8px">
+<div style="background:#FAF6EE;color:#1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Rent · 4 months</div><div style="font-size:12px;font-weight:600;color:#5E554B">never late</div></div><div style="font-weight:800;font-size:18px">$2,080</div></div>
+<div style="background:#FAF6EE;color:#1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Austin trip</div><div style="font-size:12px;font-weight:600;color:#5E554B">funded Nov 18 · 2 days early</div></div><div style="font-weight:800;font-size:18px">$200</div></div>
+<div style="background:#DDEDE3;color:#1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Library desk</div><div style="font-size:12px;font-weight:600;color:#5E554B">18 extra shifts · earned</div></div><div style="font-weight:800;font-size:18px;color:#2F7A57">+$1,116</div></div>
+<div style="border:2px dashed rgba(250,246,238,.4);padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Fewer bobas than August</div><div style="font-size:12px;font-weight:600;opacity:.7">11 of 16 weeks · saved</div></div><div style="font-weight:800;font-size:18px">~$180</div></div>
+</div>
+<div style="flex:1"></div>
+<div style="padding:0 22px 44px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600;opacity:.75">Tap → 4 of 7: your top category</span><span style="font-size:13px;font-weight:800;background:#FAF6EE;color:#1E1A17;padding:9px 14px">Share</span></div>
+</div></x-import></div></div>
+</div>
+<p class="dv-next">Try next: "add the Spend tab in this style" · "show the Move money sheet from <a class="dv-oid" href="#3b">3b</a>" · "wire it up as a clickable prototype"</p>
+</section>
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Three different directions — each built around a different user and pain point</span></div>
+<div style="max-width:760px;background:#fff;border:2px solid #1F1F1F;box-shadow:4px 4px 0 #1F1F1F;padding:16px 20px 6px;margin-bottom:28px;font-size:13px;line-height:1.55;color:#1F1F1F">
+<p style="margin:0 0 8px">Same data, same rounded type — but each option leads with a different truth about the problem. <a class="dv-oid" href="#3a">3a</a> leads with the <b>date</b> (the fear), <a class="dv-oid" href="#3b">3b</a> leads with the <b>split of the lump</b> (the mental-accounting gap), <a class="dv-oid" href="#3c">3c</a> leads with the <b>timeline</b> (the cause-and-effect gap). Pick one as the spine; the others' ideas can live as secondary screens.</p>
+</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="3a"><div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>Countdown — for the anxious planner · pain: "I'll be broke and won't see it coming"</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#17181C;color:#F4F1EA;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6"><span>Fall · day 19 of 111</span><span>Fri Sep 11</span></div>
+<div style="padding:44px 22px 0">
+<div style="font-size:14px;font-weight:600;opacity:.6">At this pace, money runs out</div>
+<div style="font-size:64px;font-weight:800;letter-spacing:-.04em;line-height:1;color:#FFB08A">{{ runoutLabel }}</div>
+<div style="font-size:14px;font-weight:600;margin-top:6px;opacity:.85">{{ shortDays }} days before the semester ends</div>
+</div>
+<div style="margin:30px 22px 0">
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6"><span>Aug 24</span><span>Today</span><span>Dec 12</span></div>
+<div style="margin-top:8px;height:22px;background:#2A2C33;position:relative;overflow:hidden"><div style="position:absolute;left:0;top:0;bottom:0;width:17%;background:#F4F1EA"></div><div style="position:absolute;left:17%;top:0;bottom:0;width:57%;background:#3E4A5E"></div><div style="position:absolute;left:74%;top:0;bottom:0;right:0;background:repeating-linear-gradient(135deg,#FFB08A 0 4px,transparent 4px 9px);opacity:.75"></div><div style="position:absolute;left:17%;top:0;bottom:0;width:2px;background:#F4F1EA"></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;font-weight:600;opacity:.7"><span>Lived</span><span>Covered at today's pace</span><span style="color:#FFB08A">Not covered</span></div>
+</div>
+<div style="margin:34px 22px 0;border-top:1px solid rgba(244,241,234,.18);padding-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:0 20px">
+<div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6">To make Dec 12</div><div style="font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1;color:#9DCFFF">$37<span style="font-size:14px;opacity:.7">/day</span></div></div>
+<div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6">You're spending</div><div style="font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1;color:#FFB08A">$52<span style="font-size:14px;opacity:.7">/day</span></div></div>
+</div>
+<div style="margin:22px 22px 0;background:#22242B;padding:14px 16px;font-size:14px;font-weight:600;line-height:1.4"><span style="opacity:.6">Today</span><br>$9.40 spent. <b style="color:#9DCFFF">$27.60</b> more keeps you on the $37 line.</div>
+<div style="margin:12px 22px 0;background:#22242B;padding:14px 16px;font-size:14px;font-weight:600;line-height:1.4;display:flex;justify-content:space-between;gap:12px"><span><span style="opacity:.6">Fastest fix</span><br>+4 h/week at the library moves the date to Nov 25.</span><span style="align-self:center;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:2px solid #F4F1EA;padding:6px 10px;white-space:nowrap">Try it</span></div>
+<div style="flex:1"></div>
+<div style="display:flex;gap:10px;padding:0 22px 14px"><button style="flex:1;height:52px;background:#F4F1EA;color:#17181C;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Scan receipt</button><button style="flex:1;height:52px;background:transparent;color:#F4F1EA;border:2px solid #F4F1EA;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">What if I…</button></div>
+<div style="border-top:1px solid rgba(244,241,234,.18);display:grid;grid-template-columns:repeat(4,1fr);padding:12px 22px 30px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span>Runway</span><span style="opacity:.45">Spend</span><span style="opacity:.45">Friends</span><span style="opacity:.45">You</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="3b"><div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a>Envelopes — for the first-time budgeter · pain: "the lump feels like free money"</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;justify-content:space-between;align-items:baseline"><div style="font-weight:800;font-size:22px">Your $6,240</div><div style="font-size:12px;font-weight:700;color:#5E554B">Aug 24 → Dec 12</div></div>
+<div style="padding:4px 22px 0;font-size:14px;font-weight:600;color:#5E554B">One lump, sorted into envelopes. Only the last one is yours to spend.</div>
+<div style="margin:12px 22px 0;background:#1E1A17;color:#FAF6EE;padding:20px 20px 18px;box-shadow:4px 4px 0 #C9BFAF">
+<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Free to spend · 92 days</div>
+<div style="display:flex;align-items:baseline;gap:12px;margin-top:2px"><div style="font-size:60px;font-weight:800;letter-spacing:-.04em;line-height:1">$3,210</div><div style="font-size:14px;font-weight:600;opacity:.8">= <b>$35</b> a day<br>$9.40 used today</div></div>
+<div style="margin-top:14px;height:10px;background:rgba(246,241,231,.2);display:flex"><div style="width:74%;background:#FAF6EE"></div><div style="flex:1;background:repeating-linear-gradient(135deg,#FF9E7A 0 3px,transparent 3px 7px)"></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;font-weight:600;opacity:.8"><span>At $52/day this envelope empties <b style="color:#FF9E7A">{{ runoutLabel }}</b></span></div>
+</div><div style="margin:18px 22px 0;display:flex;flex-direction:column;gap:10px">
+<div style="background:#fff;border:2px solid #1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Rent · Sep–Dec</div><div style="font-size:12px;font-weight:600;color:#8A7F72">$520 × 3 still to pay</div></div><div style="font-weight:800;font-size:18px">$1,560</div></div>
+<div style="background:#fff;border:2px solid #1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Phone + fees</div><div style="font-size:12px;font-weight:600;color:#8A7F72">$45 × 3 + $195 lab fee</div></div><div style="font-weight:800;font-size:18px">$330</div></div>
+<div style="background:#DDEDE3;border:2px solid #1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Austin trip fund</div><div style="font-size:12px;font-weight:600;color:#8A7F72">$20 / week, with Maya + Dev</div></div><div style="font-weight:800;font-size:18px">$200</div></div>
+<div style="background:transparent;border:2px dashed #8A7F72;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Already spent</div><div style="font-size:12px;font-weight:600;color:#8A7F72">18 days · $52/day</div></div><div style="font-weight:800;font-size:18px">$940</div></div>
+</div>
+
+<div style="flex:1"></div>
+<div style="display:flex;gap:10px;padding:0 22px 14px"><button style="flex:1;height:52px;background:#1E1A17;color:#FAF6EE;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Scan receipt</button><button style="flex:1;height:52px;background:#fff;color:#1E1A17;border:2px solid #1E1A17;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Move money</button></div>
+<div style="border-top:2px solid #1E1A17;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 22px 30px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span>Envelopes</span><span style="color:#8A7F72">Spend</span><span style="color:#8A7F72">Friends</span><span style="color:#8A7F72">You</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="3c"><div class="dv-olabel"><a class="dv-oid" href="#3c">3c</a>Timeline — for the working student · pain: "why did the date just move?"</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#F4F6FA;color:#1E2430;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 20px 14px;background:#fff;border-bottom:2px solid #1E2430;display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B7280">Safe today</div><div style="font-size:48px;font-weight:800;letter-spacing:-.04em;line-height:1">$37</div></div><div style="text-align:right"><div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B7280">Runs out</div><div style="font-size:22px;font-weight:800;line-height:1.1;color:#D9534F">{{ runoutLabel }}</div><div style="font-size:12px;font-weight:600;color:#6B7280">−3 days this week</div></div></div>
+<div style="flex:1;overflow:hidden;padding:18px 0 0;display:flex;flex-direction:column">
+<div style="padding:0 20px;display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B7280"><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span></div>
+<div style="margin:8px 20px 0;position:relative;height:34px">
+<div style="position:absolute;left:0;right:0;top:16px;height:2px;background:#B8C1D1"></div>
+<div style="position:absolute;left:0;top:16px;height:2px;width:17%;background:#1E2430"></div>
+<div style="position:absolute;left:17%;top:5px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:#1E2430;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center">11</div>
+<div style="position:absolute;left:23%;top:9px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:#2F7A57;border:2px solid #1E2430"></div>
+<div style="position:absolute;left:35%;top:9px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:#fff;border:2px solid #1E2430"></div>
+<div style="position:absolute;left:48%;top:9px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:#fff;border:2px dashed #1E2430"></div>
+<div style="position:absolute;left:74%;top:5px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:#D9534F;border:2px solid #1E2430"></div>
+<div style="position:absolute;left:74%;right:0;top:16px;height:2px;background:repeating-linear-gradient(90deg,#D9534F 0 4px,transparent 4px 8px)"></div>
+<div style="position:absolute;right:0;top:9px;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #1E2430"></div>
+</div>
+<div style="padding:0 20px;display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#6B7280"><span style="margin-left:9%">today</span><span style="color:#D9534F">runs out</span><span>finals</span></div>
+<div style="margin-top:18px;padding:0 20px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B7280">Coming up · swipe →</div>
+<div style="margin-top:8px;padding:0 20px;display:flex;gap:10px;overflow:hidden">
+<div style="flex:none;width:236px;background:#fff;border:2px solid #1E2430;padding:10px 12px"><div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;gap:8px"><span>Today · Fri 11</span><span style="color:#1E2430;white-space:nowrap">$9.40 so far</span></div><div style="font-size:12px;font-weight:600;color:#6B7280;line-height:1.35">Tiger Sugar $8.65 · vending $0.75</div></div>
+<div style="flex:none;width:236px;background:#E4F1E9;border:2px solid #1E2430;padding:10px 12px"><div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;gap:8px"><span>Sep 18 · Paycheck</span><span style="color:#2F7A57;white-space:nowrap">+$217</span></div><div style="font-size:12px;font-weight:600;color:#6B7280;line-height:1.35">14 h at the library · date +2 days</div></div>
+<div style="flex:none;width:236px;background:#fff;border:2px solid #1E2430;padding:10px 12px"><div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;gap:8px"><span>Oct 1 · Rent + phone</span><span style="color:#1E2430;white-space:nowrap">−$565</span></div><div style="font-size:12px;font-weight:600;color:#6B7280;line-height:1.35">Reserved · no change</div></div>
+</div>
+<div style="margin-top:10px;padding:0 20px;display:flex;gap:10px;overflow:hidden">
+<div style="flex:none;width:236px;background:#fff;border:2px solid #1E2430;padding:10px 12px"><div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;gap:8px"><span>Oct 16 · Fall break</span><span style="color:#6B7280;white-space:nowrap">?</span></div><div style="font-size:12px;font-weight:600;color:#6B7280;line-height:1.35">Last year: $140 this weekend. Plan it?</div></div>
+<div style="flex:none;width:236px;background:#FBE3E2;border:2px solid #1E2430;padding:10px 12px"><div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;gap:8px"><span>{{ runoutLabel }} · $0</span><span style="color:#D9534F;white-space:nowrap">at this pace</span></div><div style="font-size:12px;font-weight:600;color:#6B7280;line-height:1.35">Tap any card to see this move</div></div>
+</div>
+<div style="margin:16px 20px 0;background:#fff;border:2px solid #1E2430;padding:10px 12px;font-size:13px;font-weight:600;line-height:1.4"><b>Why −3 days this week:</b> delivery ×3 (−2), rent dip (−2), textbook (−1), extra library hours (+2).</div>
+</div>
+<div style="display:flex;gap:10px;padding:14px 20px 14px"><button style="flex:1;height:52px;background:#1E2430;color:#fff;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Scan receipt</button><button style="flex:1;height:52px;background:#fff;color:#1E2430;border:2px solid #1E2430;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Add an event</button></div>
+<div style="border-top:2px solid #1E2430;background:#fff;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 20px 30px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span>Timeline</span><span style="color:#6B7280">Spend</span><span style="color:#6B7280">Friends</span><span style="color:#6B7280">You</span></div>
+</div></x-import></div></div>
+</div>
+<p class="dv-next">Try next: "build the flow on <a class="dv-oid" href="#3b">3b</a>" · "merge <a class="dv-oid" href="#3a">3a</a>'s date hero into <a class="dv-oid" href="#2a">2a</a>" · "3c but lighter" · "make the timeline draggable"</p>
+</section>
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Neo-brutal, toned down · 2px rules, softer fills, one accent block per screen</span></div>
+<div style="max-width:720px;background:#FFFFFF;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;padding:16px 20px 6px;margin-bottom:28px;font-size:13px;line-height:1.55;color:#1F1F1F">
+<p style="margin:0 0 8px"><strong>From your reference, dialed toward finance:</strong> cream ground, 2px ink borders, short hard shadows, square corners, all-caps micro labels. Most surfaces are white now; color is reserved for one hero block per screen plus status chips. <strong>Kept:</strong> Baloo 2 for everything. <strong>Swapped:</strong> the yellow → soft blue <span style="display:inline-block;width:10px;height:10px;background:#9DCFFF;border:2px solid #1F1F1F;vertical-align:middle"></span> as the primary (calm, money-neutral), mint <span style="display:inline-block;width:10px;height:10px;background:#C4EDD3;border:2px solid #1F1F1F;vertical-align:middle"></span> for on-track, pink <span style="display:inline-block;width:10px;height:10px;background:#FFB1CB;border:2px solid #1F1F1F;vertical-align:middle"></span> for run-out warnings. Rice navy and owl dropped — generic college student. Same data model as turn 1; the hours tweak still drives every date.</p>
+</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Home</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FBF7EE;color:#1F1F1F;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 18px 0;display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-size:20px;letter-spacing:-.01em">Runway</div><div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#FFFFFF;border:2px solid #1F1F1F;padding:5px 10px">Day 19 · 92 left</div></div>
+<div style="margin:16px 18px 0;background:#9DCFFF;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;padding:16px 18px 14px">
+<div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Safe to spend today</div>
+<div style="display:flex;align-items:baseline;gap:12px"><div style="font-size:72px;font-weight:800;letter-spacing:-.04em;line-height:1">$37</div><div style="font-size:14px;font-weight:600;line-height:1.3">$9.40 spent<br>$27.60 to go</div></div>
+<div style="margin-top:10px;height:14px;background:#FFFFFF;border:2px solid #1F1F1F"><div style="width:25%;height:100%;background:#1F1F1F"></div></div>
+</div>
+<div style="margin:14px 18px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Semester runway</span><span style="font-size:12px;font-weight:800;background:#FFB1CB;border:2px solid #1F1F1F;padding:2px 8px">Out {{ runoutLabel }} at this pace</span></div>
+<div style="margin:10px 18px 0;background:#FFFFFF;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;padding:12px 14px 10px">
+<div style="display:flex;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px"><span style="width:33.25%">Sep</span><span style="width:27.5%">Oct</span><span style="width:26.5%">Nov</span><span>Dec</span></div>
+<div style="display:flex;gap:3px"><sc-for list="{{ weeks2 }}" as="w" hint-placeholder-count="16"><div style="flex:1;display:flex;flex-direction:column;gap:3px"><sc-for list="{{ w }}" as="d" hint-placeholder-count="7"><div style="width:100%;aspect-ratio:1;background:{{ d.bg }};outline:{{ d.ring }};outline-offset:-2px"></div></sc-for></div></sc-for></div>
+<div style="display:flex;gap:12px;margin-top:8px;font-size:11px;font-weight:600"><span><span style="display:inline-block;width:10px;height:10px;background:#1F1F1F;margin-right:5px;vertical-align:-1px"></span>lived</span><span><span style="display:inline-block;width:10px;height:10px;background:#9DCFFF;border:2px solid #1F1F1F;margin-right:5px;vertical-align:-1px"></span>covered</span><span><span style="display:inline-block;width:10px;height:10px;background:#FFD6E1;border:2px solid #1F1F1F;margin-right:5px;vertical-align:-1px"></span>not covered</span></div>
+</div>
+<div style="margin:16px 18px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="background:#FFFFFF;border:2px solid #1F1F1F;padding:6px 12px 8px"><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Eating out</div><div style="font-size:24px;font-weight:800;line-height:1.1">$318</div></div>
+<div style="background:#FFFFFF;border:2px solid #1F1F1F;padding:6px 12px 8px"><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Groceries</div><div style="font-size:24px;font-weight:800;line-height:1.1">$212</div></div>
+<div style="background:#FFFFFF;border:2px solid #1F1F1F;padding:6px 12px 8px"><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Delivery</div><div style="font-size:24px;font-weight:800;line-height:1.1">$164</div></div>
+<div style="background:#FFFFFF;border:2px solid #1F1F1F;padding:6px 12px 8px"><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Drinks</div><div style="font-size:24px;font-weight:800;line-height:1.1">$96</div></div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;gap:12px;padding:0 18px 16px"><button style="flex:1;height:52px;display:flex;align-items:center;justify-content:center;gap:8px;background:#1F1F1F;color:#FFFDF5;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #9DCFFF;font:800 15px 'Baloo 2',sans-serif;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>Scan receipt</button><button style="flex:1;height:52px;display:flex;align-items:center;justify-content:center;background:#FFFFFF;color:#1F1F1F;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">What if I…</button></div>
+<div style="border-top:2px solid #1F1F1F;background:#FFFFFF;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 18px 30px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span style="background:#9DCFFF;border:2px solid #1F1F1F;padding:4px 0">Runway</span><span style="padding:4px 0">Spend</span><span style="padding:4px 0">Friends</span><span style="padding:4px 0">You</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Onboarding 2/3</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FBF7EE;color:#1F1F1F;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 18px 0;display:flex;gap:6px"><div style="flex:1;height:12px;background:#1F1F1F;border:2px solid #1F1F1F"></div><div style="flex:1;height:12px;background:#1F1F1F;border:2px solid #1F1F1F"></div><div style="flex:1;height:12px;background:#FFFFFF;border:2px solid #1F1F1F"></div></div>
+<div style="padding:22px 18px 0"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Step 2 of 3</div><h2 style="font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:4px 0 0">What landed in August?</h2><p style="font-size:14px;font-weight:600;margin:8px 0 0;opacity:.75">One lump, no paycheck. That's the whole point.</p></div>
+<div style="margin:18px 18px 0;background:#FFFFFF;border:2px solid #1F1F1F;box-shadow:4px 4px 0 #1F1F1F">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:2px solid #1F1F1F"><div><div style="font-weight:800;font-size:15px">Aid refund</div><div style="font-size:12px;font-weight:600;opacity:.7">Grants after tuition</div></div><div style="font-weight:800;font-size:20px">$3,800</div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:2px solid #1F1F1F"><div><div style="font-weight:800;font-size:15px">Summer internship</div><div style="font-size:12px;font-weight:600;opacity:.7">What's left of it</div></div><div style="font-weight:800;font-size:20px">$2,440</div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px"><div><div style="font-weight:800;font-size:15px">Campus job</div><div style="font-size:12px;font-weight:600;opacity:.7">Library desk · $15.50/h · ~12 h/wk</div></div><div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#C4EDD3;border:2px solid #1F1F1F;padding:3px 8px">weekly</div></div>
+</div>
+<div style="margin:26px 18px 0;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Bills you already know</div>
+<div style="margin:10px 18px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="background:#FFFFFF;border:2px solid #1F1F1F;padding:10px 12px"><div style="font-size:12px;font-weight:600;opacity:.7">Rent · monthly</div><div style="font-weight:800;font-size:22px;line-height:1.1">$520</div></div>
+<div style="background:#FFFFFF;border:2px solid #1F1F1F;padding:10px 12px"><div style="font-size:12px;font-weight:600;opacity:.7">Phone · monthly</div><div style="font-weight:800;font-size:22px;line-height:1.1">$45</div></div>
+<div style="background:#C4EDD3;border:2px solid #1F1F1F;padding:10px 12px"><div style="font-size:12px;font-weight:600;opacity:.7">Meal plan</div><div style="font-weight:800;font-size:22px;line-height:1.1">Paid</div></div>
+<div style="border:2px dashed #1F1F1F;padding:10px 12px;display:flex;align-items:center;font-size:15px;font-weight:800">+ Add a bill</div>
+</div>
+<div style="flex:1"></div>
+<div style="margin:0 18px;border-top:2px solid #1F1F1F;padding-top:12px;display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:13px;font-weight:600">After bills, that's about</span><span style="font-size:30px;font-weight:800;letter-spacing:-.02em">$43<span style="font-size:13px;font-weight:600;letter-spacing:0"> / day to Dec 12</span></span></div>
+<div style="padding:14px 18px 44px"><button style="width:100%;display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 18px;background:#9DCFFF;color:#1F1F1F;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;font:800 16px 'Baloo 2',sans-serif;cursor:pointer">Set my runway<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="2c"><div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Runway detail — why it moved</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FBF7EE;color:#1F1F1F;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 18px 0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800"><span style="width:34px;height:34px;border:2px solid #1F1F1F;background:#FFFFFF;display:inline-flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m15 18-6-6 6-6"></path></svg></span>Runway</div>
+<div style="margin:12px 18px 0;background:#FFB1CB;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;padding:12px 18px 12px"><div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">At this pace you run out</div><div style="font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ runoutLabel }}</div><div style="font-size:13px;font-weight:600;margin-top:2px">{{ shortDays }} days short of Dec 12. Hold $37/day and you make it.</div></div>
+<div style="margin:14px 18px 0;background:#FFFFFF;border:2px solid #1F1F1F;padding:10px 14px 8px">
+<div style="display:flex;gap:3px"><sc-for list="{{ weeks2 }}" as="w" hint-placeholder-count="16"><div style="flex:1;display:flex;flex-direction:column;gap:3px"><sc-for list="{{ w }}" as="d" hint-placeholder-count="7"><div style="width:100%;aspect-ratio:1;background:{{ d.bg }};outline:{{ d.ring }};outline-offset:-2px"></div></sc-for></div></sc-for></div>
+<div style="display:flex;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-top:6px"><span style="width:33.25%">Sep</span><span style="width:27.5%">Oct</span><span style="width:26.5%">Nov</span><span>Dec</span></div>
+</div>
+<div style="margin:16px 18px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Why it moved this week</span><span style="font-size:12px;font-weight:800;border:2px solid #1F1F1F;padding:1px 8px">net −3 days</span></div>
+<div style="margin:8px 18px 0;background:#FFFFFF;border:2px solid #1F1F1F;box-shadow:4px 4px 0 #1F1F1F">
+<div style="display:flex;gap:12px;padding:8px 14px;border-bottom:2px solid #1F1F1F;align-items:center"><div style="min-width:52px;font-weight:800;font-size:15px;background:#FFD6E1;border:2px solid #1F1F1F;text-align:center;padding:2px 0">−2 d</div><div style="flex:1"><div style="font-weight:800;font-size:14px">Rent posted · $520</div><div style="font-size:12px;font-weight:600;opacity:.7">Reserved, but you dipped into it Sep 3</div></div></div>
+<div style="display:flex;gap:12px;padding:8px 14px;border-bottom:2px solid #1F1F1F;align-items:center"><div style="min-width:52px;font-weight:800;font-size:15px;background:#FFD6E1;border:2px solid #1F1F1F;text-align:center;padding:2px 0">−2 d</div><div style="flex:1"><div style="font-weight:800;font-size:14px">Delivery streak · $71</div><div style="font-size:12px;font-weight:600;opacity:.7">3 orders Tue–Thu · $19 of it was fees</div></div></div>
+<div style="display:flex;gap:12px;padding:8px 14px;border-bottom:2px solid #1F1F1F;align-items:center"><div style="min-width:52px;font-weight:800;font-size:15px;background:#C4EDD3;border:2px solid #1F1F1F;text-align:center;padding:2px 0">+2 d</div><div style="flex:1"><div style="font-weight:800;font-size:14px">Logged 14 h at the library</div><div style="font-size:12px;font-weight:600;opacity:.7">2 h over usual · $217 lands Sep 18</div></div></div>
+<div style="display:flex;gap:12px;padding:8px 14px;align-items:center"><div style="min-width:52px;font-weight:800;font-size:15px;background:#FFD6E1;border:2px solid #1F1F1F;text-align:center;padding:2px 0">−1 d</div><div style="flex:1"><div style="font-weight:800;font-size:14px">Textbook · $118</div><div style="font-size:12px;font-weight:600;opacity:.7">One-off — the date bounces back if you stay on pace</div></div></div>
+</div>
+<div style="flex:1"></div>
+<div style="margin:12px 18px 44px;background:#9DCFFF;border:2px solid #1F1F1F;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="font-size:14px;font-weight:600;line-height:1.35"><b>Two extra shifts a week</b> gets you to Dec 12.</div><span style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#1F1F1F;color:#FFFDF5;padding:8px 12px;white-space:nowrap">Show me</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="2d"><div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>Receipt scan</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#1F1F1F;color:#FFFDF5;font-family:'Baloo 2',system-ui,sans-serif;position:relative">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#1c1c1c 0 10px,#171717 10px 20px)"></div>
+<div style="position:absolute;left:60px;right:60px;top:130px;bottom:380px;background:repeating-linear-gradient(0deg,#f6f6f6 0 14px,#ececec 14px 16px);transform:rotate(-2deg);display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#777">[ receipt · camera feed ]</div>
+<div style="position:absolute;left:40px;right:40px;top:112px;bottom:362px;border:3px solid #9DCFFF"></div>
+<div style="position:absolute;top:70px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:800"><span style="border:3px solid #FFFDF5;padding:4px 10px">Cancel</span><span style="background:#9DCFFF;color:#1F1F1F;border:2px solid #1F1F1F;padding:4px 10px;font-size:11px;letter-spacing:.06em;text-transform:uppercase">Reading… hold still</span></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#FBF7EE;color:#1F1F1F;border-top:2px solid #1F1F1F;padding:16px 18px 44px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Looks like</div><div style="font-weight:800;font-size:22px;letter-spacing:-.01em;line-height:1.1">Tiger Sugar · Village</div></div><div style="font-weight:800;font-size:34px;letter-spacing:-.03em;line-height:1">$8.65</div></div>
+<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#1F1F1F;color:#FFFDF5;border:2px solid #1F1F1F;padding:6px 10px">Drinks</span><span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#FFFFFF;border:2px solid #1F1F1F;padding:6px 10px">Eating out</span><span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#FFFFFF;border:2px solid #1F1F1F;padding:6px 10px">Groceries</span><span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#FFFFFF;border:2px solid #1F1F1F;padding:6px 10px">Other</span></div>
+<div style="margin-top:14px;background:#FFFFFF;border:2px solid #1F1F1F;padding:10px 12px;display:flex;justify-content:space-between;font-size:14px;font-weight:600"><span>Today after this</span><span><b>$18.95</b> left · runway unchanged</span></div>
+<div style="margin-top:10px;background:#FFD6E1;border:2px solid #1F1F1F;padding:10px 12px;font-size:13px;font-weight:600;line-height:1.35">3rd boba this week — this breaks your <b>No-boba September</b> streak with Maya (day 11).</div>
+<div style="display:flex;gap:12px;margin-top:14px"><button style="flex:1;height:52px;background:#9DCFFF;color:#1F1F1F;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Log it</button><button style="flex:1;height:52px;background:#FFFFFF;color:#1F1F1F;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Edit</button></div>
+</div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="2e"><div class="dv-olabel"><a class="dv-oid" href="#2e">2e</a>What-if chat</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FBF7EE;color:#1F1F1F;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 18px 0;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:20px">What if…</div><div style="font-size:12px;font-weight:600;opacity:.7">knows your runway, bills and shifts</div></div><div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:2px solid #1F1F1F;padding:4px 8px">Coach</div></div>
+<div style="flex:1;padding:18px 18px 0;display:flex;flex-direction:column;gap:14px;overflow:hidden">
+<div style="align-self:flex-end;max-width:80%;background:#1F1F1F;color:#FFFDF5;border:2px solid #1F1F1F;padding:10px 14px;font-size:15px;font-weight:600;line-height:1.35">if i buy the AirPods Pro for $249?</div>
+<div style="align-self:flex-start;max-width:92%;background:#FFFFFF;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;padding:14px 14px;font-size:14px;font-weight:600;line-height:1.4">
+<div>Big swing. $249 today moves your run-out date from <b>{{ runoutLabel }}</b> to <b style="background:#FFD6E1;padding:0 4px">{{ runoutMinus5 }}</b> — about 5 days of runway, or 7 dining-hall lunches.</div>
+<div style="margin-top:12px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Cheaper routes</div>
+<div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:space-between;gap:10px;border:2px solid #1F1F1F;padding:8px 10px;align-items:center"><span><b>Wait 2 weeks</b> — two paychecks land, then it costs 1 day, not 5</span><span style="font-weight:800;background:#C4EDD3;border:2px solid #1F1F1F;padding:0 6px;white-space:nowrap">−1 d</span></div>
+<div style="display:flex;justify-content:space-between;gap:10px;border:2px solid #1F1F1F;padding:8px 10px;align-items:center"><span><b>Refurb</b> — $189, same warranty</span><span style="font-weight:800;background:#FFD6E1;border:2px solid #1F1F1F;padding:0 6px;white-space:nowrap">−4 d</span></div>
+<div style="display:flex;justify-content:space-between;gap:10px;border:2px solid #1F1F1F;padding:8px 10px;align-items:center"><span><b>Student discount + trade-in</b> your old pair</span><span style="font-weight:800;background:#FFD6E1;border:2px solid #1F1F1F;padding:0 6px;white-space:nowrap">−3 d</span></div>
+</div>
+<div style="margin-top:12px;opacity:.7;font-size:13px">Not a no. Just a "not this Friday."</div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><span style="font-size:12px;font-weight:800;background:#FFFFFF;border:2px solid #1F1F1F;padding:7px 10px">Show the 2-week plan</span><span style="font-size:12px;font-weight:800;background:#FFFFFF;border:2px solid #1F1F1F;padding:7px 10px">Buy anyway</span><span style="font-size:12px;font-weight:800;background:#FFFFFF;border:2px solid #1F1F1F;padding:7px 10px">What else costs 5 days?</span></div>
+</div>
+<div style="padding:12px 18px 44px;display:flex;gap:10px"><div style="flex:1;height:52px;background:#FFFFFF;border:2px solid #1F1F1F;display:flex;align-items:center;padding:0 14px;font-size:15px;font-weight:600;opacity:.6">if I… (or snap a price tag)</div><div style="width:52px;height:52px;background:#9DCFFF;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" stroke-width="3"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg></div></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="2f"><div class="dv-olabel"><a class="dv-oid" href="#2f">2f</a>Job what-if — live slider</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FBF7EE;color:#1F1F1F;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 18px 0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800"><span style="width:34px;height:34px;border:2px solid #1F1F1F;background:#FFFFFF;display:inline-flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m15 18-6-6 6-6"></path></svg></span>Library desk</div>
+<div style="padding:16px 18px 0"><h2 style="font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0">If I work more…</h2><p style="font-size:14px;font-weight:600;margin:6px 0 0;opacity:.75">Drag the hours. The date moves.</p></div>
+<div style="margin:16px 18px 0;background:#FFFFFF;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;padding:14px 14px 12px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Hours / week</span><span style="font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ hours }}<span style="font-size:14px;letter-spacing:0"> h</span></span></div>
+<input type="range" min="4" max="24" step="1" value="{{ hours }}" onChange="{{ onHours }}" style="width:100%;accent-color:#1F1F1F;margin:8px 0 2px">
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;opacity:.7"><span>4 h</span><span>now: 12 h</span><span>24 h max</span></div>
+<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="border:2px solid #1F1F1F;padding:8px 10px"><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Rate</div><div style="font-weight:800;font-size:18px;line-height:1.1">$15.50 / h</div></div>
+<div style="border:2px solid #1F1F1F;padding:8px 10px;background:#C4EDD3"><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Extra / week</div><div style="font-weight:800;font-size:18px;line-height:1.1">{{ extraWeekly }}</div></div>
+</div>
+</div>
+<div style="margin:18px 18px 0;background:#9DCFFF;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;padding:14px 18px">
+<div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">You'd run out</div>
+<div style="display:flex;align-items:baseline;gap:12px"><div style="font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ runoutLabel }}</div><div style="font-size:14px;font-weight:600">{{ deltaDays }}</div></div>
+<div style="margin-top:8px;font-size:13px;font-weight:600;line-height:1.35">{{ jobVerdict }}</div>
+</div>
+<div style="margin:18px 18px 0;background:#FFFFFF;border:2px solid #1F1F1F;padding:12px 14px 10px">
+<div style="display:flex;gap:3px"><sc-for list="{{ weeks2 }}" as="w" hint-placeholder-count="16"><div style="flex:1;display:flex;flex-direction:column;gap:3px"><sc-for list="{{ w }}" as="d" hint-placeholder-count="7"><div style="width:100%;aspect-ratio:1;background:{{ d.bg }};outline:{{ d.ring }};outline-offset:-2px"></div></sc-for></div></sc-for></div>
+</div>
+<div style="flex:1"></div>
+<div style="padding:0 18px 44px"><button style="width:100%;display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 18px;background:#1F1F1F;color:#FFFDF5;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #9DCFFF;font:800 16px 'Baloo 2',sans-serif;cursor:pointer"><span style="white-space:nowrap">Ask for&nbsp;{{ hours }}&nbsp;h / week</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="2g"><div class="dv-olabel"><a class="dv-oid" href="#2g">2g</a>Friends — fund vs challenges</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FBF7EE;color:#1F1F1F;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 18px 0;display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-size:20px">Friends</div><div style="width:36px;height:36px;background:#1F1F1F;color:#FFFDF5;border:2px solid #1F1F1F;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;line-height:1">+</div></div>
+<div style="margin:16px 18px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Fund · Austin trip · Nov 20</span><span style="font-size:11px;font-weight:600;opacity:.7">real money, set aside</span></div>
+<div style="margin:8px 18px 0;background:#C4EDD3;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;padding:14px 16px 14px">
+<div style="display:flex;align-items:baseline;gap:10px"><div style="font-size:52px;font-weight:800;letter-spacing:-.04em;line-height:1">$260</div><div style="font-size:14px;font-weight:600;line-height:1.3">of $600 · 3 people<br>10 weeks left</div></div>
+<div style="margin-top:10px;height:16px;background:#FFFFFF;border:2px solid #1F1F1F;display:flex"><div style="width:20%;height:100%;background:#1F1F1F"></div><div style="width:15%;height:100%;background:#9DCFFF;border-left:2px solid #1F1F1F"></div><div style="width:8.5%;height:100%;background:#FFB1CB;border-left:2px solid #1F1F1F"></div></div>
+<div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;font-weight:600">
+<div><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">You</div><div style="font-weight:800;font-size:17px">$120</div><div style="opacity:.75">$20/wk · on track</div></div>
+<div><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Maya</div><div style="font-weight:800;font-size:17px">$90</div><div style="opacity:.75">$20/wk · 1 wk behind</div></div>
+<div><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Dev</div><div style="font-weight:800;font-size:17px">$50</div><div style="opacity:.75">$25/wk · new</div></div>
+</div>
+<div style="margin-top:12px;display:flex;gap:10px"><button style="flex:1;height:44px;background:#1F1F1F;color:#FFFDF5;border:2px solid #1F1F1F;font:800 13px 'Baloo 2',sans-serif;cursor:pointer">Set aside $20 now</button><button style="flex:1;height:44px;background:#FFFFFF;color:#1F1F1F;border:2px solid #1F1F1F;font:800 13px 'Baloo 2',sans-serif;cursor:pointer">Change weekly</button></div>
+</div>
+<div style="margin:10px 18px 0;font-size:12px;font-weight:600;opacity:.7;line-height:1.35">Your $20/wk is already carved out of your $37/day.</div>
+<div style="margin:22px 18px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Challenges</span><span style="font-size:11px;font-weight:600;opacity:.7">streaks, not dollars</span></div>
+<div style="margin:8px 18px 0;background:#FFFFFF;border:2px solid #1F1F1F;box-shadow:4px 4px 0 #1F1F1F">
+<div style="display:flex;gap:12px;padding:10px 14px;border-bottom:2px solid #1F1F1F;align-items:center"><div style="flex:1"><div style="font-weight:800;font-size:14px">No boba · September</div><div style="font-size:12px;font-weight:600;opacity:.7">with Maya · you broke yours today</div></div><div style="text-align:right"><div style="font-weight:800;font-size:15px;background:#FFD6E1;border:2px solid #1F1F1F;padding:0 6px">0 days</div><div style="font-size:11px;font-weight:600;opacity:.7;margin-top:2px">Maya · 11</div></div></div>
+<div style="display:flex;gap:12px;padding:10px 14px;border-bottom:2px solid #1F1F1F;align-items:center"><div style="flex:1"><div style="font-weight:800;font-size:14px">No delivery</div><div style="font-size:12px;font-weight:600;opacity:.7">4 friends · you're longest</div></div><div style="text-align:right"><div style="font-weight:800;font-size:15px;background:#C4EDD3;border:2px solid #1F1F1F;padding:0 6px">6 days</div><div style="font-size:11px;font-weight:600;opacity:.7;margin-top:2px">next: Dev · 4</div></div></div>
+<div style="display:flex;gap:12px;padding:10px 14px;align-items:center"><div style="flex:1"><div style="font-weight:800;font-size:14px">No new clothes</div><div style="font-size:12px;font-weight:600;opacity:.7">with Maya · until Thanksgiving</div></div><div style="text-align:right"><div style="font-weight:800;font-size:15px;background:#C4EDD3;border:2px solid #1F1F1F;padding:0 6px">18 days</div><div style="font-size:11px;font-weight:600;opacity:.7;margin-top:2px">Maya · 18</div></div></div>
+</div>
+<div style="flex:1"></div>
+<div style="border-top:2px solid #1F1F1F;background:#FFFFFF;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 18px 30px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span style="padding:4px 0">Runway</span><span style="padding:4px 0">Spend</span><span style="background:#9DCFFF;border:2px solid #1F1F1F;padding:4px 0">Friends</span><span style="padding:4px 0">You</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="2h"><div class="dv-olabel"><a class="dv-oid" href="#2h">2h</a>Semester Wrapped — card 3 of 7</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FBF7EE;color:#1F1F1F;font-family:'Baloo 2',system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 18px 0;display:flex;gap:4px"><div style="flex:1;height:8px;background:#1F1F1F;border:2px solid #1F1F1F"></div><div style="flex:1;height:8px;background:#1F1F1F;border:2px solid #1F1F1F"></div><div style="flex:1;height:8px;background:#1F1F1F;border:2px solid #1F1F1F"></div><div style="flex:1;height:8px;background:#FFFFFF;border:2px solid #1F1F1F"></div><div style="flex:1;height:8px;background:#FFFFFF;border:2px solid #1F1F1F"></div><div style="flex:1;height:8px;background:#FFFFFF;border:2px solid #1F1F1F"></div><div style="flex:1;height:8px;background:#FFFFFF;border:2px solid #1F1F1F"></div></div>
+<div style="padding:16px 18px 0;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">Fall 2026 · Wrapped</div>
+<div style="margin:26px 18px 0;background:#FFFFFF;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #1F1F1F;padding:28px 18px 26px">
+<div style="font-size:15px;font-weight:600">You made it to</div>
+<div style="font-size:96px;font-weight:800;letter-spacing:-.04em;line-height:.95">Dec 12</div>
+<div style="font-size:15px;font-weight:600;line-height:1.4;margin-top:10px">$61 to spare. Back in September, the forecast said Nov 14.</div>
+</div>
+<div style="margin:28px 18px 0;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase">What moved the date</div>
+<div style="margin:10px 18px 0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+<div style="background:#FFFFFF;border:2px solid #1F1F1F;padding:10px 10px 12px"><div style="font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1">$1,116</div><div style="font-size:11px;font-weight:600;line-height:1.35;margin-top:6px"><b>earned</b><br>18 extra library shifts</div></div>
+<div style="background:#FFFFFF;border:2px solid #1F1F1F;padding:10px 10px 12px"><div style="font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1">~$180</div><div style="font-size:11px;font-weight:600;line-height:1.35;margin-top:6px"><b>saved</b><br>11 weeks with fewer bobas than August</div></div>
+<div style="background:#FFFFFF;border:2px solid #1F1F1F;padding:10px 10px 12px"><div style="font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1">~$210</div><div style="font-size:11px;font-weight:600;line-height:1.35;margin-top:6px"><b>saved</b><br>zero delivery in October</div></div>
+</div>
+<div style="flex:1"></div>
+<div style="margin:0 18px 22px;background:#FFFFFF;border:2px solid #1F1F1F;padding:14px 16px;font-size:15px;font-weight:600;line-height:1.4">In September the heat-strip said you had 65 days. You found 27 more — mostly at the library desk.</div>
+<div style="padding:0 18px 44px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600">Tap → 4 of 7: your top category</span><span style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#1F1F1F;color:#FFFDF5;border:2px solid #1F1F1F;box-shadow:3px 3px 0 #FFFDF5;padding:9px 14px">Share</span></div>
+</div></x-import></div></div>
+</div>
+<p class="dv-next">Try next: "try a different primary than blue" · "add the Spend tab" · "show the other Wrapped cards" · "wire it up as a clickable prototype"</p>
+</section>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Semester Runway · Rice edition · personality dial</span></div>
+<div style="max-width:720px;background:#fff;border-top:2px solid #201e1d;padding:18px 20px 6px;margin-bottom:28px;font-size:13px;line-height:1.55;color:#201e1d">
+<div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:rgba(0,0,0,.5);margin-bottom:8px">Assumptions + reasoning</div>
+<p style="margin:0 0 8px"><strong>Base system:</strong> Modernist (Archivo, flat, 2px rules, flush-left, grid). <strong>Overrides you asked for:</strong> accent swapped from Modernist red to Rice navy <span style="display:inline-block;width:10px;height:10px;background:#00205B;vertical-align:middle"></span> #00205B; the red is kept only as the run-out warning. Owl mascot is built from circles/diamonds (no illustration yet — drop-in point for a real owl).</p>
+<p style="margin:0 0 8px"><strong>The dial:</strong> <a class="dv-oid" href="#1a">1a</a> strict Modernist (zero radius, ledger), <a class="dv-oid" href="#1b">1b</a> Modernist bones + soft corners + owl badge, <a class="dv-oid" href="#1c">1c</a> rounded — Baloo 2 display type, owl as a small companion, flush-left rules kept, no emoji. All three share one data model: lump $6,240 · bills reserved $1,890 · spent $940 in 18 days · 92 days to Dec 12 → safe $37/day, pace $52/day → runs out {{ runoutLabel }}.</p>
+<p style="margin:0 0 8px"><strong>Runway viz:</strong> calendar heat-strip, 16 weeks × 7 days, Aug 24 → Dec 12. Ink = days lived, navy tint = covered at safe pace, red tint = uncovered at current pace. Flow screens <a class="dv-oid" href="#1d">1d</a>–<a class="dv-oid" href="#1j">1j</a> are dressed in <a class="dv-oid" href="#1b">1b</a>; I'll re-skin to whichever dial setting you pick. Tweaks: job hours/week drives the run-out date everywhere; mascot toggle.</p>
+</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Ledger — strict Modernist, navy</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#f3f2f2;color:#201e1d;font-family:Archivo,system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 20px 0;display:flex;justify-content:space-between;align-items:baseline"><div style="font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase">Semester Runway</div><div style="font-size:12px;color:#605d5d">Fri Sep 11 · Day 19/111</div></div>
+<div style="margin:14px 20px 0;height:2px;background:rgba(32,30,29,.4)"></div>
+<div style="padding:18px 20px 0">
+<div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#605d5d">Safe to spend today</div>
+<div style="display:flex;align-items:baseline;gap:10px"><div style="font-size:88px;font-weight:800;letter-spacing:-.04em;line-height:1;color:#00205B">$37</div><div style="font-size:14px;color:#605d5d;line-height:1.3">$9.40 spent<br>$27.60 left</div></div>
+</div>
+<div style="margin:18px 20px 0;height:2px;background:rgba(32,30,29,.4)"></div>
+<div style="padding:14px 20px 0">
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#605d5d"><span>Runway</span><span style="color:#ec3013">At this pace: out {{ runoutLabel }}</span></div>
+<div style="display:flex;font-size:10px;color:#605d5d;margin:10px 0 4px"><span style="width:6.25%">Aug</span><span style="width:27%">Sep</span><span style="width:27.5%">Oct</span><span style="width:26.5%">Nov</span><span>Dec</span></div>
+<div style="display:flex;gap:3px"><sc-for list="{{ weeks }}" as="w" hint-placeholder-count="16"><div style="flex:1;display:flex;flex-direction:column;gap:3px"><sc-for list="{{ w }}" as="d" hint-placeholder-count="7"><div style="width:100%;aspect-ratio:1;background:{{ d.bg }};outline:{{ d.ring }};outline-offset:-2px"></div></sc-for></div></sc-for></div>
+<div style="display:flex;gap:14px;margin-top:10px;font-size:11px;color:#605d5d"><span><span style="display:inline-block;width:9px;height:9px;background:#201e1d;margin-right:5px"></span>lived</span><span><span style="display:inline-block;width:9px;height:9px;background:#b3bfd8;margin-right:5px"></span>covered</span><span><span style="display:inline-block;width:9px;height:9px;background:#ffc4b8;margin-right:5px"></span>uncovered</span></div>
+</div>
+<div style="margin:18px 20px 0;height:2px;background:rgba(32,30,29,.4)"></div>
+<div style="padding:14px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:0 20px;font-size:13px">
+<div style="border-bottom:1px solid rgba(32,30,29,.2);padding:8px 0;display:flex;justify-content:space-between"><span style="color:#605d5d">Groceries</span><strong>$212</strong></div>
+<div style="border-bottom:1px solid rgba(32,30,29,.2);padding:8px 0;display:flex;justify-content:space-between"><span style="color:#605d5d">Eating out</span><strong>$318</strong></div>
+<div style="border-bottom:1px solid rgba(32,30,29,.2);padding:8px 0;display:flex;justify-content:space-between"><span style="color:#605d5d">Drinks</span><strong>$96</strong></div>
+<div style="border-bottom:1px solid rgba(32,30,29,.2);padding:8px 0;display:flex;justify-content:space-between"><span style="color:#605d5d">Delivery</span><strong>$164</strong></div>
+<div style="border-bottom:1px solid rgba(32,30,29,.2);padding:8px 0;display:flex;justify-content:space-between"><span style="color:#605d5d">Books</span><strong>$118</strong></div>
+<div style="border-bottom:1px solid rgba(32,30,29,.2);padding:8px 0;display:flex;justify-content:space-between"><span style="color:#605d5d">Other</span><strong>$32</strong></div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;gap:10px;padding:0 20px 14px"><button style="flex:1;display:flex;align-items:center;justify-content:flex-start;gap:8px;height:48px;padding:0 16px;background:#00205B;color:#fff;border:0;font:800 14px Archivo,sans-serif;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>Scan receipt</button><button style="flex:1;display:flex;align-items:center;justify-content:flex-start;height:48px;padding:0 16px;background:transparent;color:#201e1d;border:2px solid #201e1d;font:800 14px Archivo,sans-serif;cursor:pointer">What if I…</button></div>
+<div style="border-top:2px solid rgba(32,30,29,.4);display:grid;grid-template-columns:repeat(4,1fr);padding:12px 20px 30px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase"><span style="color:#00205B">Runway</span><span style="color:#605d5d">Spend</span><span style="color:#605d5d">Friends</span><span style="color:#605d5d">You</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Campus — Modernist bones, soft corners, owl badge</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#f3f2f2;color:#201e1d;font-family:Archivo,system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 20px 0;display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:50%;background:#00205B;position:relative"><div style="position:absolute;left:7px;top:10px;width:8px;height:8px;border-radius:50%;background:#fff"></div><div style="position:absolute;right:7px;top:10px;width:8px;height:8px;border-radius:50%;background:#fff"></div><div style="position:absolute;left:14px;top:20px;width:6px;height:6px;background:#ffb547;transform:rotate(45deg)"></div></div><div style="font-weight:800;font-size:15px;letter-spacing:-.01em">Semester Runway</div></div><div style="font-size:12px;color:#605d5d;background:#eae9e9;padding:4px 10px;border-radius:8px">Day 19 of 111</div></div>
+<div style="margin:16px 20px 0;background:#00205B;color:#fff;border-radius:16px;padding:20px 20px 18px">
+<div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;opacity:.75">Safe to spend today</div>
+<div style="display:flex;align-items:baseline;gap:12px;margin-top:4px"><div style="font-size:76px;font-weight:800;letter-spacing:-.04em;line-height:1">$37</div><div style="font-size:14px;line-height:1.35;opacity:.85">$9.40 spent<br>$27.60 to go</div></div>
+<div style="margin-top:14px;height:8px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden"><div style="width:25%;height:100%;background:#fff;border-radius:4px"></div></div>
+</div>
+<div style="margin:18px 20px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:15px">Runway</span><span style="font-size:12px;font-weight:600;color:#ec3013">At this pace you run out {{ runoutLabel }}</span></div>
+<div style="margin:10px 20px 0;background:#fff;border-radius:14px;padding:14px 16px 12px">
+<div style="display:flex;font-size:10px;color:#605d5d;margin:0 0 6px"><span style="width:6.25%">Aug</span><span style="width:27%">Sep</span><span style="width:27.5%">Oct</span><span style="width:26.5%">Nov</span><span>Dec</span></div>
+<div style="display:flex;gap:3px"><sc-for list="{{ weeks }}" as="w" hint-placeholder-count="16"><div style="flex:1;display:flex;flex-direction:column;gap:3px"><sc-for list="{{ w }}" as="d" hint-placeholder-count="7"><div style="width:100%;aspect-ratio:1;border-radius:3px;background:{{ d.bg }};outline:{{ d.ring }};outline-offset:-2px"></div></sc-for></div></sc-for></div>
+<div style="display:flex;justify-content:space-between;margin-top:10px;font-size:12px;color:#605d5d"><span>Semester ends Dec 12</span><span style="color:#00205B;font-weight:600">Why did it move? →</span></div>
+</div>
+<div style="margin:18px 20px 0;font-weight:800;font-size:15px">This semester</div>
+<div style="margin:10px 20px 0;display:flex;height:14px;border-radius:7px;overflow:hidden;gap:2px"><div style="width:34%;background:#00205B"></div><div style="width:23%;background:#3d5488"></div><div style="width:17%;background:#7d90b8"></div><div style="width:13%;background:#b3bfd8"></div><div style="width:10%;background:#d9dfeb"></div><div style="flex:1;background:#eae9e9"></div></div>
+<div style="margin:10px 20px 0;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:#605d5d"><span><b style="color:#201e1d">$318</b> eating out</span><span><b style="color:#201e1d">$212</b> groceries</span><span><b style="color:#201e1d">$164</b> delivery</span><span><b style="color:#201e1d">$118</b> books</span><span><b style="color:#201e1d">$96</b> drinks</span></div>
+<div style="flex:1"></div>
+<div style="display:flex;gap:10px;padding:0 20px 14px"><button style="flex:1;display:flex;align-items:center;justify-content:flex-start;gap:8px;height:50px;padding:0 16px;background:#00205B;color:#fff;border:0;border-radius:12px;font:800 14px Archivo,sans-serif;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>Scan receipt</button><button style="flex:1;display:flex;align-items:center;justify-content:flex-start;height:50px;padding:0 16px;background:#fff;color:#00205B;border:2px solid #00205B;border-radius:12px;font:800 14px Archivo,sans-serif;cursor:pointer">What if I…</button></div>
+<div style="border-top:2px solid rgba(32,30,29,.15);display:grid;grid-template-columns:repeat(4,1fr);padding:12px 20px 30px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase"><span style="color:#00205B">Runway</span><span style="color:#9b9797">Spend</span><span style="color:#9b9797">Friends</span><span style="color:#9b9797">You</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Owlet — rounded type, owl as a quiet companion, no emoji</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#f6f4ee;color:#00205B;font-family:'Baloo 2',Archivo,system-ui,sans-serif;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:50%;background:#00205B;position:relative"><div style="position:absolute;left:6px;top:9px;width:7px;height:7px;border-radius:50%;background:#fff"></div><div style="position:absolute;right:6px;top:9px;width:7px;height:7px;border-radius:50%;background:#fff"></div><div style="position:absolute;left:12px;top:18px;width:5px;height:5px;background:#ffb547;transform:rotate(45deg)"></div></div><div style="font-weight:800;font-size:17px">Runway</div></div><div style="font-size:13px;font-weight:700;color:#3d5488">Fri, Sep 11</div></div>
+<div style="padding:20px 22px 0">
+<div style="font-size:15px;font-weight:700;color:#3d5488">Today you can spend</div>
+<div style="font-size:96px;font-weight:800;letter-spacing:-.05em;line-height:.9;margin-top:4px">$37</div>
+<div style="display:flex;align-items:center;gap:10px;margin-top:14px;font-size:15px;font-weight:700"><span>$9.40 gone</span><span style="width:5px;height:5px;border-radius:50%;background:#3d5488"></span><span>$27.60 to go</span></div>
+</div>
+<div style="margin:16px 22px 0;height:3px;background:#00205B;border-radius:2px"></div>
+<div style="padding:16px 22px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:19px">92 days to Dec 12</span><span style="font-size:13px;font-weight:700;color:#ec3013">this pace ends {{ runoutLabel }}</span></div>
+<div style="padding:12px 22px 0;display:flex;gap:4px"><sc-for list="{{ weeks }}" as="w" hint-placeholder-count="16"><div style="flex:1;display:flex;flex-direction:column;gap:4px"><sc-for list="{{ w }}" as="d" hint-placeholder-count="7"><div style="width:100%;aspect-ratio:1;border-radius:50%;background:{{ d.bg }};outline:{{ d.ring }};outline-offset:-2px"></div></sc-for></div></sc-for></div>
+<div style="padding:8px 22px 0;display:flex;font-size:12px;font-weight:700;color:#3d5488"><span style="width:6.25%">Aug</span><span style="width:27%">Sep</span><span style="width:27.5%">Oct</span><span style="width:26.5%">Nov</span><span>Dec</span></div>
+<div style="margin:16px 22px 0;height:3px;background:#00205B;border-radius:2px"></div>
+<div style="padding:14px 22px 0;display:grid;grid-template-columns:1fr auto;gap:9px 16px;font-size:15px;font-weight:700;align-items:center">
+<div style="display:flex;align-items:center;gap:10px"><span style="width:72px;height:10px;border-radius:5px;background:#00205B"></span>Eating out</div><span>$318</span>
+<div style="display:flex;align-items:center;gap:10px"><span style="width:48px;height:10px;border-radius:5px;background:#3d5488"></span>Groceries</div><span>$212</span>
+<div style="display:flex;align-items:center;gap:10px"><span style="width:37px;height:10px;border-radius:5px;background:#7d90b8"></span>Delivery</div><span>$164</span>
+<div style="display:flex;align-items:center;gap:10px"><span style="width:22px;height:10px;border-radius:5px;background:#b3bfd8"></span>Drinks</div><span>$96</span>
+</div>
+<div style="flex:1"></div>
+<div style="margin:0 22px 12px;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:700;color:#3d5488;line-height:1.35"><div style="width:44px;height:50px;border-radius:22px 22px 18px 18px;background:#00205B;position:relative;flex:none"><div style="position:absolute;left:7px;top:13px;width:13px;height:13px;border-radius:50%;background:#fff"><div style="position:absolute;left:4px;top:4px;width:6px;height:6px;border-radius:50%;background:#00205B"></div></div><div style="position:absolute;right:7px;top:13px;width:13px;height:13px;border-radius:50%;background:#fff"><div style="position:absolute;left:4px;top:4px;width:6px;height:6px;border-radius:50%;background:#00205B"></div></div><div style="position:absolute;left:19px;top:28px;width:6px;height:6px;background:#ffb547;transform:rotate(45deg)"></div></div><div>Third boba this week. Maya's streak is at 11 — yours resets if you log this.</div></div>
+<div style="display:flex;gap:10px;padding:0 22px 14px"><button style="flex:1;height:56px;display:flex;align-items:center;justify-content:flex-start;padding:0 20px;background:#00205B;color:#fff;border:0;border-radius:999px;font:800 16px 'Baloo 2',sans-serif;cursor:pointer">Scan a receipt</button><button style="flex:1;height:56px;display:flex;align-items:center;justify-content:flex-start;padding:0 20px;background:transparent;color:#00205B;border:3px solid #00205B;border-radius:999px;font:800 16px 'Baloo 2',sans-serif;cursor:pointer">What if I…</button></div>
+<div style="border-top:3px solid #00205B;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 22px 30px;font-size:14px;font-weight:800"><span>Runway</span><span style="color:#7d90b8">Spend</span><span style="color:#7d90b8">Friends</span><span style="color:#7d90b8">You</span></div>
+</div></x-import></div></div>
+</div>
+
+<div class="dv-sub">Flow · dressed in <a class="dv-oid" href="#1b">1b</a></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Onboarding 2/3 — the lump + known bills</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#f3f2f2;color:#201e1d;font-family:Archivo,system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 20px 0;display:flex;gap:6px"><div style="flex:1;height:4px;background:#00205B;border-radius:2px"></div><div style="flex:1;height:4px;background:#00205B;border-radius:2px"></div><div style="flex:1;height:4px;background:#d7d3d3;border-radius:2px"></div></div>
+<div style="padding:22px 20px 0"><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#605d5d">Step 2 of 3</div><h2 style="font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:6px 0 0">What landed in August?</h2><p style="font-size:14px;color:#605d5d;margin:8px 0 0">One lump, no paycheck. That's the whole point.</p></div>
+<div style="margin:18px 20px 0;background:#fff;border-radius:14px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #eae9e9"><div><div style="font-weight:600;font-size:14px">Aid refund</div><div style="font-size:12px;color:#605d5d">Pell + Rice grant, after tuition</div></div><div style="font-weight:800;font-size:18px">$3,800</div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #eae9e9"><div><div style="font-weight:600;font-size:14px">Summer internship</div><div style="font-size:12px;color:#605d5d">What's left of it</div></div><div style="font-weight:800;font-size:18px">$2,440</div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px"><div><div style="font-weight:600;font-size:14px">On-campus job</div><div style="font-size:12px;color:#605d5d">Fondren desk · $15.50/h · ~12 h/wk</div></div><div style="font-size:12px;font-weight:600;color:#00205B;background:#eef1f7;padding:4px 10px;border-radius:8px">trickles in</div></div>
+</div>
+<div style="margin:18px 20px 0;font-weight:800;font-size:15px">Bills you already know</div>
+<div style="margin:10px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="background:#fff;border-radius:12px;padding:12px 14px"><div style="font-size:12px;color:#605d5d">Rent · monthly</div><div style="font-weight:800;font-size:18px">$520</div></div>
+<div style="background:#fff;border-radius:12px;padding:12px 14px"><div style="font-size:12px;color:#605d5d">Phone · monthly</div><div style="font-weight:800;font-size:18px">$45</div></div>
+<div style="background:#fff;border-radius:12px;padding:12px 14px"><div style="font-size:12px;color:#605d5d">Meal plan</div><div style="font-weight:800;font-size:18px;color:#605d5d">paid ✓</div></div>
+<div style="border:2px dashed #bab6b6;border-radius:12px;padding:12px 14px;display:flex;align-items:center;font-size:14px;font-weight:600;color:#605d5d">+ add a bill</div>
+</div>
+<div style="flex:1"></div>
+<div style="margin:0 20px;border-top:2px solid rgba(32,30,29,.4);padding-top:14px;display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:13px;color:#605d5d">After bills, that's about</span><span style="font-size:26px;font-weight:800;color:#00205B;letter-spacing:-.02em">$43<span style="font-size:13px;color:#605d5d;font-weight:600;letter-spacing:0"> / day until Dec 12</span></span></div>
+<div style="padding:14px 20px 44px"><button style="width:100%;display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 18px;background:#00205B;color:#fff;border:0;border-radius:12px;font:800 15px Archivo,sans-serif;cursor:pointer">Set my runway<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="1e"><div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Runway detail — why the date moved</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#f3f2f2;color:#201e1d;font-family:Archivo,system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 20px 0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#00205B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"></path></svg>Runway</div>
+<div style="padding:16px 20px 0"><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#605d5d">At this pace, you run out</div><div style="font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1.05;color:#ec3013">{{ runoutLabel }}</div><div style="font-size:14px;color:#605d5d;margin-top:6px">{{ shortDays }} days before Dec 12. Slow to $37/day and you make it.</div></div>
+<div style="margin:16px 20px 0;background:#fff;border-radius:14px;padding:14px 16px 12px">
+<div style="display:flex;gap:3px"><sc-for list="{{ weeks }}" as="w" hint-placeholder-count="16"><div style="flex:1;display:flex;flex-direction:column;gap:3px"><sc-for list="{{ w }}" as="d" hint-placeholder-count="7"><div style="width:100%;aspect-ratio:1;border-radius:3px;background:{{ d.bg }};outline:{{ d.ring }};outline-offset:-2px"></div></sc-for></div></sc-for></div>
+<div style="display:flex;font-size:10px;color:#605d5d;margin-top:6px"><span style="width:6.25%">Aug</span><span style="width:27%">Sep</span><span style="width:27.5%">Oct</span><span style="width:26.5%">Nov</span><span>Dec</span></div>
+</div>
+<div style="margin:20px 20px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:15px">Why it moved this week</span><span style="font-size:12px;color:#605d5d">net −3 days</span></div>
+<div style="margin:10px 20px 0;background:#fff;border-radius:14px;overflow:hidden">
+<div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #eae9e9;align-items:center"><div style="min-width:54px;font-weight:800;font-size:15px;color:#ec3013">−2 d</div><div style="flex:1"><div style="font-weight:600;font-size:14px">Rent posted · $520</div><div style="font-size:12px;color:#605d5d">Sep 1 · expected, already reserved — but you dipped into it Sep 3</div></div></div>
+<div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #eae9e9;align-items:center"><div style="min-width:54px;font-weight:800;font-size:15px;color:#ec3013">−2 d</div><div style="flex:1"><div style="font-weight:600;font-size:14px">Delivery streak · $71</div><div style="font-size:12px;color:#605d5d">Tue–Thu · 3 orders, fees were $19 of it</div></div></div>
+<div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #eae9e9;align-items:center"><div style="min-width:54px;font-weight:800;font-size:15px;color:#00205B">+2 d</div><div style="flex:1"><div style="font-weight:600;font-size:14px">Logged 14 h at Fondren</div><div style="font-size:12px;color:#605d5d">2 h over your usual · $217 landing Sep 18</div></div></div>
+<div style="display:flex;gap:12px;padding:12px 16px;align-items:center"><div style="min-width:54px;font-weight:800;font-size:15px;color:#ec3013">−1 d</div><div style="flex:1"><div style="font-weight:600;font-size:14px">Textbook · $118</div><div style="font-size:12px;color:#605d5d">One-off. Won't repeat — the date bounces back if you stay on pace</div></div></div>
+</div>
+<div style="flex:1"></div>
+<div style="margin:0 20px 44px;background:#eef1f7;border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:center"><div style="width:34px;height:34px;border-radius:50%;background:#00205B;position:relative;flex:none"><div style="position:absolute;left:7px;top:10px;width:8px;height:8px;border-radius:50%;background:#fff"></div><div style="position:absolute;right:7px;top:10px;width:8px;height:8px;border-radius:50%;background:#fff"></div><div style="position:absolute;left:14px;top:20px;width:6px;height:6px;background:#ffb547;transform:rotate(45deg)"></div></div><div style="font-size:13px;line-height:1.4"><b>Two extra shifts a week</b> gets you to Dec 12 with $0 to spare. Want me to show it?</div></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="1f"><div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Receipt scan — price + category read for you</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#111;color:#fff;font-family:Archivo,system-ui,sans-serif;position:relative">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#1c1c1c 0 10px,#171717 10px 20px)"></div>
+<div style="position:absolute;left:60px;right:60px;top:130px;bottom:340px;background:repeating-linear-gradient(0deg,#f6f6f6 0 14px,#ececec 14px 16px);border-radius:4px;transform:rotate(-2deg);display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#777">[ receipt · camera feed ]</div>
+<div style="position:absolute;left:44px;right:44px;top:112px;bottom:322px;border:2px solid #fff;border-radius:16px;opacity:.9"></div>
+<div style="position:absolute;top:70px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600"><span style="opacity:.8">Cancel</span><span style="background:rgba(255,255,255,.15);padding:6px 12px;border-radius:999px;font-size:12px">Reading… hold still</span></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#f3f2f2;color:#201e1d;border-radius:24px 24px 0 0;padding:18px 20px 44px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#605d5d">Looks like</div><div style="font-weight:800;font-size:22px;letter-spacing:-.02em">Tiger Sugar · Rice Village</div></div><div style="font-weight:800;font-size:32px;letter-spacing:-.03em">$8.65</div></div>
+<div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap"><span style="font-size:13px;font-weight:600;background:#00205B;color:#fff;padding:7px 12px;border-radius:999px">Drinks ✓</span><span style="font-size:13px;font-weight:600;background:#fff;padding:7px 12px;border-radius:999px;color:#605d5d">Eating out</span><span style="font-size:13px;font-weight:600;background:#fff;padding:7px 12px;border-radius:999px;color:#605d5d">Groceries</span><span style="font-size:13px;font-weight:600;background:#fff;padding:7px 12px;border-radius:999px;color:#605d5d">Other</span></div>
+<div style="margin-top:14px;background:#fff;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;font-size:13px"><span style="color:#605d5d">Today after this</span><span><b>$18.95</b> left · runway unchanged</span></div>
+<div style="margin-top:8px;background:#fff2ef;border-radius:12px;padding:12px 14px;font-size:13px;color:#ae1800">3rd boba this week — this breaks your <b>No-boba September</b> streak with Maya (day 11).</div>
+<div style="display:flex;gap:10px;margin-top:14px"><button style="flex:1;display:flex;align-items:center;justify-content:flex-start;height:50px;padding:0 16px;background:#00205B;color:#fff;border:0;border-radius:12px;font:800 14px Archivo,sans-serif;cursor:pointer">Log it</button><button style="flex:1;display:flex;align-items:center;justify-content:flex-start;height:50px;padding:0 16px;background:#fff;color:#00205B;border:2px solid #00205B;border-radius:12px;font:800 14px Archivo,sans-serif;cursor:pointer">Edit</button></div>
+</div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="1g"><div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>What-if chat — playful coach with cheaper routes</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#f3f2f2;color:#201e1d;font-family:Archivo,system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 20px 0;display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:50%;background:#00205B;position:relative"><div style="position:absolute;left:7px;top:10px;width:8px;height:8px;border-radius:50%;background:#fff"></div><div style="position:absolute;right:7px;top:10px;width:8px;height:8px;border-radius:50%;background:#fff"></div><div style="position:absolute;left:14px;top:20px;width:6px;height:6px;background:#ffb547;transform:rotate(45deg)"></div></div><div><div style="font-weight:800;font-size:15px">What if…</div><div style="font-size:12px;color:#605d5d">knows your runway, bills and shifts</div></div></div>
+<div style="flex:1;padding:20px 20px 0;display:flex;flex-direction:column;gap:12px;overflow:hidden">
+<div style="align-self:flex-end;max-width:78%;background:#00205B;color:#fff;border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:15px;line-height:1.35">if i buy the AirPods Pro for $249?</div>
+<div style="align-self:flex-start;max-width:88%;background:#fff;border-radius:18px 18px 18px 4px;padding:14px 16px;font-size:14px;line-height:1.45">
+<div>Okay, big swing. $249 today moves your run-out date from <b>{{ runoutLabel }}</b> to <b style="color:#ec3013">{{ runoutMinus5 }}</b> — that's about 5 days of runway, or 7 lunches at Seibel.</div>
+<div style="margin-top:12px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#605d5d">Cheaper routes</div>
+<div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;justify-content:space-between;gap:10px;background:#eef1f7;border-radius:10px;padding:10px 12px"><span><b>Wait 2 weeks</b> · 2 more Fondren paychecks land, then it costs you 1 day, not 5</span><span style="font-weight:800;color:#00205B;white-space:nowrap">−1 d</span></div>
+<div style="display:flex;justify-content:space-between;gap:10px;background:#eef1f7;border-radius:10px;padding:10px 12px"><span><b>Refurb from Apple</b> · $189, same warranty</span><span style="font-weight:800;color:#00205B;white-space:nowrap">−4 d</span></div>
+<div style="display:flex;justify-content:space-between;gap:10px;background:#eef1f7;border-radius:10px;padding:10px 12px"><span><b>Student discount + trade-in</b> of your old pair</span><span style="font-weight:800;color:#00205B;white-space:nowrap">−3 d</span></div>
+</div>
+<div style="margin-top:12px;color:#605d5d;font-size:13px">Not a no. Just a "not this Friday."</div>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:13px;font-weight:600;background:#fff;border:1.5px solid #d7d3d3;padding:8px 12px;border-radius:999px">Show me the 2-week plan</span><span style="font-size:13px;font-weight:600;background:#fff;border:1.5px solid #d7d3d3;padding:8px 12px;border-radius:999px">Buy anyway</span><span style="font-size:13px;font-weight:600;background:#fff;border:1.5px solid #d7d3d3;padding:8px 12px;border-radius:999px">What else costs 5 days?</span></div>
+</div>
+<div style="padding:12px 20px 44px;display:flex;gap:8px"><div style="flex:1;height:50px;background:#fff;border-radius:14px;display:flex;align-items:center;padding:0 16px;font-size:15px;color:#9b9797">if I… (or snap a price tag)</div><div style="width:50px;height:50px;border-radius:14px;background:#00205B;color:#fff;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg></div></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="1h"><div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>Job what-if — hours × rate move the date (live)</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#f3f2f2;color:#201e1d;font-family:Archivo,system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 20px 0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#00205B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"></path></svg>Fondren Library desk</div>
+<div style="padding:16px 20px 0"><h2 style="font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0">If I work more…</h2><p style="font-size:14px;color:#605d5d;margin:8px 0 0">Drag the hours. The date moves.</p></div>
+<div style="margin:18px 20px 0;background:#fff;border-radius:14px;padding:18px 16px 16px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:13px;color:#605d5d">Hours / week</span><span style="font-size:32px;font-weight:800;letter-spacing:-.03em;color:#00205B">{{ hours }}<span style="font-size:14px;color:#605d5d;font-weight:600;letter-spacing:0"> h</span></span></div>
+<input type="range" min="4" max="24" step="1" value="{{ hours }}" onChange="{{ onHours }}" style="width:100%;accent-color:#00205B;margin:10px 0 4px">
+<div style="display:flex;justify-content:space-between;font-size:11px;color:#9b9797"><span>4 h</span><span>now: 12 h</span><span>24 h (max for work-study)</span></div>
+<div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="background:#eef1f7;border-radius:10px;padding:10px 12px"><div style="font-size:11px;color:#605d5d">Rate</div><div style="font-weight:800;font-size:16px">$15.50 / h</div></div>
+<div style="background:#eef1f7;border-radius:10px;padding:10px 12px"><div style="font-size:11px;color:#605d5d">Extra per week</div><div style="font-weight:800;font-size:16px">{{ extraWeekly }}</div></div>
+</div>
+</div>
+<div style="margin:18px 20px 0;background:#00205B;color:#fff;border-radius:16px;padding:18px 20px">
+<div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;opacity:.75">You'd run out</div>
+<div style="display:flex;align-items:baseline;gap:12px;margin-top:2px"><div style="font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ runoutLabel }}</div><div style="font-size:14px;opacity:.85">{{ deltaDays }}</div></div>
+<div style="margin-top:12px;font-size:13px;line-height:1.4;opacity:.9">{{ jobVerdict }}</div>
+</div>
+<div style="margin:16px 20px 0;background:#fff;border-radius:14px;padding:14px 16px 12px">
+<div style="display:flex;gap:3px"><sc-for list="{{ weeks }}" as="w" hint-placeholder-count="16"><div style="flex:1;display:flex;flex-direction:column;gap:3px"><sc-for list="{{ w }}" as="d" hint-placeholder-count="7"><div style="width:100%;aspect-ratio:1;border-radius:3px;background:{{ d.bg }};outline:{{ d.ring }};outline-offset:-2px"></div></sc-for></div></sc-for></div>
+</div>
+<div style="flex:1"></div>
+<div style="padding:0 20px 44px"><button style="width:100%;display:flex;align-items:center;justify-content:flex-start;height:52px;padding:0 18px;background:#00205B;color:#fff;border:0;border-radius:12px;font:800 15px Archivo,sans-serif;cursor:pointer">Ask my supervisor for&nbsp;{{ hours }}&nbsp;h</button></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="1i"><div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>Friends — challenges (habits) and a fund (intentional set-aside), kept separate</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#f3f2f2;color:#201e1d;font-family:Archivo,system-ui,sans-serif;padding-top:62px">
+<div style="padding:8px 20px 0;display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-size:22px;letter-spacing:-.02em">Friends</div><div style="width:34px;height:34px;border-radius:50%;background:#00205B;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px">+</div></div>
+<div style="margin:16px 20px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:15px">Austin trip · Nov 20</span><span style="font-size:12px;color:#605d5d">a fund — real money, set aside</span></div>
+<div style="margin:10px 20px 0;background:#00205B;color:#fff;border-radius:16px;padding:18px 20px 16px">
+<div style="display:flex;align-items:baseline;gap:10px"><div style="font-size:48px;font-weight:800;letter-spacing:-.04em;line-height:1">$260</div><div style="font-size:14px;opacity:.85">of $600 · 3 people<br>10 weeks left</div></div>
+<div style="margin-top:12px;height:10px;background:rgba(255,255,255,.2);border-radius:5px;overflow:hidden;display:flex;gap:2px"><div style="width:20%;height:100%;background:#fff"></div><div style="width:15%;height:100%;background:rgba(255,255,255,.7)"></div><div style="width:8.5%;height:100%;background:rgba(255,255,255,.45)"></div></div>
+<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px">
+<div><div style="opacity:.75">You</div><div style="font-weight:800;font-size:15px">$120</div><div style="opacity:.75">$20 / wk · on track</div></div>
+<div><div style="opacity:.75">Maya</div><div style="font-weight:800;font-size:15px">$90</div><div style="opacity:.75">$20 / wk · 1 wk behind</div></div>
+<div><div style="opacity:.75">Dev</div><div style="font-weight:800;font-size:15px">$50</div><div style="opacity:.75">$25 / wk · just joined</div></div>
+</div>
+<div style="margin-top:14px;display:flex;gap:8px"><button style="flex:1;display:flex;align-items:center;justify-content:flex-start;height:44px;padding:0 14px;background:#fff;color:#00205B;border:0;border-radius:10px;font:800 13px Archivo,sans-serif;cursor:pointer">Set aside $20 now</button><button style="flex:1;display:flex;align-items:center;justify-content:flex-start;height:44px;padding:0 14px;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5);border-radius:10px;font:800 13px Archivo,sans-serif;cursor:pointer">Change my weekly</button></div>
+</div>
+<div style="margin:8px 20px 0;font-size:12px;color:#605d5d;line-height:1.4">Your $20/wk is already carved out of your $37/day — the runway number you see is after this.</div>
+<div style="margin:22px 20px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:15px">Challenges</span><span style="font-size:12px;color:#605d5d">habits — streaks, not dollars</span></div>
+<div style="margin:10px 20px 0;background:#fff;border-radius:14px;overflow:hidden">
+<div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #eae9e9;align-items:center"><div style="flex:1"><div style="font-weight:600;font-size:14px">No boba · September</div><div style="font-size:12px;color:#605d5d">with Maya · you broke yours today (Tiger Sugar)</div></div><div style="text-align:right"><div style="font-weight:800;font-size:15px;color:#ec3013">0 days</div><div style="font-size:11px;color:#605d5d">Maya · 11</div></div></div>
+<div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #eae9e9;align-items:center"><div style="flex:1"><div style="font-weight:600;font-size:14px">No delivery</div><div style="font-size:12px;color:#605d5d">4 friends · you're longest</div></div><div style="text-align:right"><div style="font-weight:800;font-size:15px;color:#00205B">6 days</div><div style="font-size:11px;color:#605d5d">next: Dev · 4</div></div></div>
+<div style="display:flex;gap:12px;padding:12px 16px;align-items:center"><div style="flex:1"><div style="font-weight:600;font-size:14px">No new clothes</div><div style="font-size:12px;color:#605d5d">with Maya · until Thanksgiving</div></div><div style="text-align:right"><div style="font-weight:800;font-size:15px;color:#00205B">18 days</div><div style="font-size:11px;color:#605d5d">Maya · 18</div></div></div>
+</div>
+<div style="margin:8px 20px 0;font-size:12px;color:#605d5d;line-height:1.4">Skips don't move money. They show up as runway days kept — this month, no-delivery has kept you about 2 days.</div>
+<div style="flex:1"></div>
+<div style="border-top:2px solid rgba(32,30,29,.15);display:grid;grid-template-columns:repeat(4,1fr);padding:12px 20px 30px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase"><span style="color:#9b9797">Runway</span><span style="color:#9b9797">Spend</span><span style="color:#00205B">Friends</span><span style="color:#9b9797">You</span></div>
+</div></x-import></div></div>
+
+<div class="dv-opt" id="1j"><div class="dv-olabel"><a class="dv-oid" href="#1j">1j</a>Semester Wrapped — story card 3 of 7</div><div class="dv-card">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#00205B;color:#fff;font-family:Archivo,system-ui,sans-serif;padding-top:62px;position:relative;overflow:hidden">
+<div style="position:absolute;right:-90px;bottom:-60px;width:320px;height:320px;border-radius:50%;background:#001a4a"></div>
+<div style="position:absolute;right:28px;bottom:104px;width:96px;height:110px;border-radius:48px 48px 40px 40px;background:#3d5488"><div style="position:absolute;left:16px;top:28px;width:28px;height:28px;border-radius:50%;background:#fff"><div style="position:absolute;left:10px;top:9px;width:11px;height:11px;border-radius:50%;background:#00205B"></div></div><div style="position:absolute;right:16px;top:28px;width:28px;height:28px;border-radius:50%;background:#fff"><div style="position:absolute;left:10px;top:9px;width:11px;height:11px;border-radius:50%;background:#00205B"></div></div><div style="position:absolute;left:41px;top:60px;width:14px;height:14px;background:#ffb547;transform:rotate(45deg)"></div></div>
+<div style="padding:8px 20px 0;display:flex;gap:4px;position:relative"><div style="flex:1;height:3px;background:#fff;border-radius:2px"></div><div style="flex:1;height:3px;background:#fff;border-radius:2px"></div><div style="flex:1;height:3px;background:#fff;border-radius:2px"></div><div style="flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:2px"></div><div style="flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:2px"></div><div style="flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:2px"></div><div style="flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:2px"></div></div>
+<div style="padding:16px 20px 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;opacity:.75;position:relative">Fall 2026 · Wrapped</div>
+<div style="padding:36px 20px 0;position:relative">
+<div style="font-size:15px;opacity:.85">You made it to</div>
+<div style="font-size:80px;font-weight:800;letter-spacing:-.04em;line-height:.95;margin-top:2px">Dec 12</div>
+<div style="font-size:15px;line-height:1.4;opacity:.85;margin-top:12px;max-width:300px">$61 to spare. Back in September, the forecast said Nov 14.</div>
+<div style="margin:32px 0 0;height:2px;background:rgba(255,255,255,.35)"></div>
+<div style="margin-top:14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;opacity:.75">What moved the date</div>
+<div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+<div><div style="font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1">$1,116</div><div style="font-size:12px;line-height:1.35;opacity:.8;margin-top:6px">earned<br>18 extra Fondren shifts</div></div>
+<div><div style="font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1">~$180</div><div style="font-size:12px;line-height:1.35;opacity:.8;margin-top:6px">saved<br>11 weeks with fewer bobas than August</div></div>
+<div><div style="font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1">~$210</div><div style="font-size:12px;line-height:1.35;opacity:.8;margin-top:6px">saved<br>zero delivery in October</div></div>
+</div>
+</div>
+<div style="flex:1"></div>
+<div style="padding:0 20px 44px;position:relative;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;opacity:.75">Tap → next · 4 of 7: your top category</span><span style="font-size:13px;font-weight:800;background:#fff;color:#00205B;padding:10px 16px;border-radius:999px">Share</span></div>
+</div></x-import></div></div>
+</div>
+<p class="dv-next">Try next: "go with <a class="dv-oid" href="#1b">1b</a> and re-skin the flow" · "make <a class="dv-oid" href="#1c">1c</a> a bit more professional" · "show the other 6 Wrapped cards" · "wire it up as a clickable prototype"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;hoursPerWeek&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:12,&quot;min&quot;:4,&quot;max&quot;:24,&quot;step&quot;:1,&quot;unit&quot;:&quot;h/wk&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Model&quot;}}">
+class Component extends DCLogic {
+  state = { hours: null };
+  renderVals() {
+    const hours = this.state.hours ?? (this.props.hoursPerWeek ?? 12);
+    const TODAY = 18, END = 110, BASE_OUT = 82; // day indices from Aug 24
+    const shift = Math.round((hours - 12) * 15.5 * 9 / 52);
+    const out = Math.max(TODAY + 1, Math.min(END, BASE_OUT + shift));
+    const fmt = i => new Date(2026, 7, 24 + i).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const build = (c) => {
+      const ws = [];
+      for (let w = 0; w < 16; w++) {
+        const days = [];
+        for (let d = 0; d < 7; d++) {
+          const i = w * 7 + d;
+          let bg = c.covered, ring = 'none';
+          if (i > END) bg = 'transparent';
+          else if (i < TODAY) bg = c.lived;
+          else if (i === TODAY) { bg = c.today; ring = c.todayRing; }
+          else if (i >= out) bg = c.uncovered;
+          if (i === out && out < END) ring = c.outRing;
+          days.push({ bg, ring });
+        }
+        ws.push(days);
+      }
+      return ws;
+    };
+    const weeks = build({ covered: '#b3bfd8', lived: '#201e1d', today: '#00205B', todayRing: '2px solid #ffb547', uncovered: '#ffc4b8', outRing: '2px solid #ec3013' });
+    const weeks2 = build({ covered: '#9DCFFF', lived: '#1F1F1F', today: '#FFFFFF', todayRing: '2px solid #1F1F1F', uncovered: '#FFD6E1', outRing: '2px solid #1F1F1F' });
+    const delta = out - BASE_OUT;
+    const madeIt = out >= END;
+    return {
+      hours, weeks, weeks2,
+      safeDay: madeIt ? 37 + Math.round((hours - 12) * 15.5 / 7) : 37,
+      runoutLabel: madeIt ? 'Dec 12 ✓' : fmt(out),
+      runoutMinus5: fmt(Math.max(TODAY + 1, out - 5)),
+      shortDays: END - out,
+      extraWeekly: (hours >= 12 ? '+' : '−') + '$' + Math.abs((hours - 12) * 15.5).toFixed(0),
+      deltaDays: delta === 0 ? 'same as today' : (delta > 0 ? '+' : '') + delta + ' days vs now',
+      jobVerdict: madeIt ? 'That covers you through finals. Your safe-to-spend goes up to $' + (37 + Math.round((hours - 12) * 15.5 / 7)) + '/day.'
+        : hours > 12 ? 'Closer. ' + (Math.ceil((END - out) * 52 / (15.5 * 9))) + ' more hours a week and you clear Dec 12.'
+        : hours < 12 ? 'Fewer shifts means the red creeps toward Halloween. Pair it with a no-delivery week to offset.'
+        : 'Current schedule. Bump the slider to see what two extra shifts do.',
+      onHours: e => this.setState({ hours: +e.target.value }),
+    };
+  }
+}
+</script>
+</body>
+</html>
