@@ -76,3 +76,46 @@ export function monthlyDueDates(dayOfMonth: number, from: ISODate, to: ISODate):
   }
   return out;
 }
+
+/** The 1st of the month `iso` falls in. */
+export function startOfMonth(iso: ISODate): ISODate {
+  const d = parseDate(iso);
+  return toISODate(new Date(d.getFullYear(), d.getMonth(), 1));
+}
+
+/** Shift by whole months, clamping to the end of a shorter month. */
+export function addMonths(iso: ISODate, months: number): ISODate {
+  const d = parseDate(iso);
+  const target = new Date(d.getFullYear(), d.getMonth() + months, 1);
+  const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+  target.setDate(Math.min(d.getDate(), lastDay));
+  return toISODate(target);
+}
+
+export function daysInMonth(iso: ISODate): number {
+  const d = parseDate(iso);
+  return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+}
+
+/**
+ * Which column the 1st sits in, counting Monday as 0 — the app shows weeks
+ * Monday-first everywhere, including Wrapped's rhythm chart.
+ */
+export function mondayIndexOfFirst(iso: ISODate): number {
+  return (parseDate(startOfMonth(iso)).getDay() + 6) % 7;
+}
+
+/** "November 2026". */
+export function monthLabel(iso: ISODate): string {
+  const d = parseDate(iso);
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+  return `${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+/** The same calendar day, ignoring anything finer. */
+export function isSameDay(a: ISODate, b: ISODate): boolean {
+  return a === b;
+}

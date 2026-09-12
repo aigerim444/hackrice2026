@@ -276,7 +276,13 @@ export function GoalForm({
 
       <Row gap={14} align="flex-start">
         <Field label="Target" value={target} onChange={setTarget} placeholder="600" keyboardType="number-pad" />
-        <DateField label="Needed by" value={occasion} onChange={setOccasion} min={addDays(today, 7)} />
+        <DateField
+          label="Needed by"
+          value={occasion}
+          onChange={setOccasion}
+          min={addDays(today, 7)}
+          today={today}
+        />
       </Row>
 
       <View>
@@ -436,7 +442,7 @@ export function ChallengeForm({
       </View>
 
       <Row gap={14} align="flex-start">
-        <DateField label="Until" value={until} onChange={setUntil} min={addDays(today, 1)} />
+        <DateField label="Until" value={until} onChange={setUntil} min={addDays(today, 1)} today={today} />
         <View style={{ flex: 1 }} />
       </Row>
 
