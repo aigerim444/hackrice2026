@@ -23,6 +23,13 @@ Requires the Expo SDK 57 toolchain (React Native 0.86, React 19.2). The camera
 needs a real device; in the simulator the receipt scanner falls back to the
 placeholder viewfinder and still parses.
 
+`npm run web` renders at phone size — 402×874, centered on the design's canvas
+ground — rather than stretching across the browser window, so what you see on a
+laptop matches what ships. Below 440px the frame drops away and the app goes
+full-bleed, which is what a real phone should get. That lives in
+`public/index.html`, which overrides Expo's default web shell; it carries
+react-native-web's reset, so keep that block if you edit it.
+
 ## The screens
 
 | Route | What it is |

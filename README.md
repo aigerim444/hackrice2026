@@ -47,7 +47,7 @@ npm start        # press i for the iOS simulator, or scan the QR with Expo Go
 ```
 
 ```sh
-npm run web      # no simulator needed
+npm run web      # no simulator needed — opens phone-sized in your browser
 npm test         # the projection engine's contract, on plain Node
 npm run typecheck
 ```
@@ -55,6 +55,10 @@ npm run typecheck
 Expo SDK 57 · React Native 0.86 · React 19.2. The camera needs a real device; in a
 simulator or browser the receipt scanner falls back to a placeholder viewfinder and
 still parses.
+
+The web build deliberately renders at phone size (402×874, centered) instead of
+filling the window, so a laptop shows you the real thing. Narrow the window past
+440px and it goes full-bleed like a phone.
 
 ## How it's built
 
