@@ -128,43 +128,8 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
 
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const jobTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
-
-  /**
-   * Fetches the snapshot fresh. Used both for the initial load and as
-   * `refetch` — the retry after a failed load, or a pull-to-refresh once
-   * there's already data on screen. `cancelled` guards the initial mount
-   * effect against a slow request outliving an unmount; a user-triggered
-   * refetch has nothing to race, so it doesn't need the same guard.
-   */
-  const load = useCallback((cancelledRef?: { current: boolean }) => {
-    setLoading(true);
-    setError(null);
-    return api
-      .getSnapshot()
-      .then((next) => {
-        if (cancelledRef?.current) return;
-        setSnapshot(next);
-        setSetup(setupFrom(next));
-      })
-      .catch((e: unknown) => {
-        if (!cancelledRef?.current) {
-          setError(e instanceof Error ? e.message : 'Could not load your semester.');
-        }
-      })
-      .finally(() => {
-        if (!cancelledRef?.current) setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    const cancelledRef = { current: false };
-    load(cancelledRef);
-    return () => {
-      cancelledRef.current = true;
-    };
-  }, [load]);
-
-  const refetch = useCallback(() => load(), [load]);
+  /** Whether a snapshot has ever loaded — decides what a failure means below. */
+  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
     const timers = jobTimers.current;
@@ -184,6 +149,61 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
     setToast(message);
     toastTimer.current = setTimeout(() => setToast(null), TOAST_MS);
   }, []);
+
+  /**
+   * Fetches the snapshot fresh. Used both for the initial load and as
+   * `refetch` — the retry after a failed load, or a pull-to-refresh once
+   * there's already data on screen.
+   *
+   * Those two cases mean different things on failure: no snapshot yet is the
+   * blocking `error` the Gate shows full-screen, because there's nothing else
+   * to render. A refresh failing once there's already data on screen doesn't
+   * get to blank that data out from under the user — it's a toast, and the
+   * stale snapshot stays put. `cancelled` guards the initial mount effect
+   * against a slow request outliving an unmount; a user-triggered refetch has
+   * nothing to race, so it doesn't need the same guard.
+   */
+  const load = useCallback(
+    (cancelledRef?: { current: boolean }) => {
+      const isInitial = !hasLoadedRef.current;
+      if (isInitial) {
+        setLoading(true);
+        setError(null);
+      }
+      return api
+        .getSnapshot()
+        .then((next) => {
+          if (cancelledRef?.current) return;
+          hasLoadedRef.current = true;
+          setSnapshot(next);
+          setSetup(setupFrom(next));
+        })
+        .catch((e: unknown) => {
+          if (cancelledRef?.current) return;
+          const message = e instanceof Error ? e.message : 'Could not load your semester.';
+          if (isInitial) {
+            setError(message);
+          } else {
+            flash(`Couldn't refresh — ${message}`);
+          }
+        })
+        .finally(() => {
+          if (cancelledRef?.current) return;
+          if (isInitial) setLoading(false);
+        });
+    },
+    [flash],
+  );
+
+  useEffect(() => {
+    const cancelledRef = { current: false };
+    load(cancelledRef);
+    return () => {
+      cancelledRef.current = true;
+    };
+  }, [load]);
+
+  const refetch = useCallback(() => load(), [load]);
 
   const draftSetup = useCallback((patch: Partial<SetupInput>) => {
     setSetup((current) => ({ ...current, ...patch }));

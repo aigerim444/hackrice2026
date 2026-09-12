@@ -1,6 +1,6 @@
 import { Redirect, router } from 'expo-router';
-import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { RefreshControl, ScrollView, View } from 'react-native';
 
 import { shortDate, weekdayDate, weeksBetween } from '../src/domain/dates';
 import { cents, money, signedMoney } from '../src/domain/format';
@@ -23,8 +23,14 @@ import { Toast } from '../src/ui/Toast';
  * calendar strip, and whitespace plus rules where the cards used to be.
  */
 export default function HomeScreen() {
-  const { snapshot, projection, toast, dismissToast } = useLoadedRunway();
+  const { snapshot, projection, toast, dismissToast, refetch } = useLoadedRunway();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch().finally(() => setRefreshing(false));
+  }, [refetch]);
 
   if (!snapshot.setupComplete) return <Redirect href="/onboarding" />;
 
@@ -37,7 +43,12 @@ export default function HomeScreen() {
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={{ paddingBottom: 168 }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 168 }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.ink} />
+        }>
         {/* The hero. Tapping the number is the same as tapping Runway — it's the
             same envelope, seen two ways. */}
         <Tap
