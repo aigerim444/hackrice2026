@@ -47,6 +47,7 @@ export default function FriendsScreen() {
     inviteToChallenge,
     toast,
     dismissToast,
+    flash,
   } = useLoadedRunway();
   const { challenges, semester, funds, people } = snapshot;
 
@@ -57,6 +58,15 @@ export default function FriendsScreen() {
   const [inviting, setInviting] = useState<string | null>(null);
   const [addingFriend, setAddingFriend] = useState(false);
 
+  const [savingFriend, setSavingFriend] = useState(false);
+  const [friendError, setFriendError] = useState<string | null>(null);
+  const [savingGoal, setSavingGoal] = useState(false);
+  const [goalError, setGoalError] = useState<string | null>(null);
+  const [savingChallenge, setSavingChallenge] = useState(false);
+  const [challengeError, setChallengeError] = useState<string | null>(null);
+  const [invitingBusy, setInvitingBusy] = useState(false);
+  const [inviteError, setInviteError] = useState<string | null>(null);
+
   const featured = primaryFund(snapshot);
   const others = funds.filter((fund) => fund.id !== featured?.id);
 
@@ -65,8 +75,75 @@ export default function FriendsScreen() {
     setMoving(fundId);
     try {
       await contributeToFund(fundId, MOVE_AMOUNT);
+    } catch (e) {
+      flash(e instanceof Error ? e.message : "Couldn't move that — try again.");
     } finally {
       setMoving(null);
+    }
+  };
+
+  const saveFriend = async (name: string) => {
+    setSavingFriend(true);
+    setFriendError(null);
+    try {
+      await addPerson(name);
+      setAddingFriend(false);
+    } catch (e) {
+      setFriendError(e instanceof Error ? e.message : "Couldn't add them — try again.");
+    } finally {
+      setSavingFriend(false);
+    }
+  };
+
+  const saveGoal = async (draft: FundDraft) => {
+    setSavingGoal(true);
+    setGoalError(null);
+    try {
+      await addFund(draft);
+      setAddingGoal(false);
+    } catch (e) {
+      setGoalError(e instanceof Error ? e.message : "Couldn't add that goal — try again.");
+    } finally {
+      setSavingGoal(false);
+    }
+  };
+
+  const saveChallenge = async (draft: ChallengeDraft) => {
+    setSavingChallenge(true);
+    setChallengeError(null);
+    try {
+      await addChallenge(draft);
+      setAddingChallenge(false);
+    } catch (e) {
+      setChallengeError(e instanceof Error ? e.message : "Couldn't start that — try again.");
+    } finally {
+      setSavingChallenge(false);
+    }
+  };
+
+  const sendFundInvites = async (fundId: string, ids: string[]) => {
+    setInvitingBusy(true);
+    setInviteError(null);
+    try {
+      await inviteToFund(fundId, ids);
+      setInviting(null);
+    } catch (e) {
+      setInviteError(e instanceof Error ? e.message : "Couldn't send those invites — try again.");
+    } finally {
+      setInvitingBusy(false);
+    }
+  };
+
+  const sendChallengeInvites = async (challengeId: string, ids: string[]) => {
+    setInvitingBusy(true);
+    setInviteError(null);
+    try {
+      await inviteToChallenge(challengeId, ids);
+      setInviting(null);
+    } catch (e) {
+      setInviteError(e instanceof Error ? e.message : "Couldn't send those invites — try again.");
+    } finally {
+      setInvitingBusy(false);
     }
   };
 
@@ -89,10 +166,9 @@ export default function FriendsScreen() {
             <FriendForm
               known={people.map((person) => person.name)}
               onCancel={() => setAddingFriend(false)}
-              onSave={async (name) => {
-                setAddingFriend(false);
-                await addPerson(name);
-              }}
+              onSave={saveFriend}
+              saving={savingFriend}
+              error={friendError}
             />
           ) : (
             <AddRow
@@ -111,11 +187,13 @@ export default function FriendsScreen() {
             onMove={() => move(featured.id)}
             invitable={invitable(snapshot, featured.members.map((m) => m.id))}
             inviteOpen={inviting === featured.id}
-            onToggleInvite={() => setInviting(inviting === featured.id ? null : featured.id)}
-            onInvite={async (ids) => {
-              setInviting(null);
-              await inviteToFund(featured.id, ids);
+            onToggleInvite={() => {
+              setInviteError(null);
+              setInviting(inviting === featured.id ? null : featured.id);
             }}
+            onInvite={(ids) => sendFundInvites(featured.id, ids)}
+            inviteBusy={invitingBusy}
+            inviteError={inviteError}
           />
         ) : !addingGoal ? (
           <T
@@ -153,10 +231,9 @@ export default function FriendsScreen() {
               people={people}
               inviteNote={people.length ? undefined : 'Add a friend above to split this with someone.'}
               onCancel={() => setAddingGoal(false)}
-              onSave={async (draft: FundDraft) => {
-                setAddingGoal(false);
-                await addFund(draft);
-              }}
+              onSave={saveGoal}
+              saving={savingGoal}
+              error={goalError}
             />
           ) : (
             <AddRow
@@ -175,13 +252,13 @@ export default function FriendsScreen() {
               challenge={challenge}
               invitable={invitable(snapshot, challenge.participants.map((p) => p.id))}
               inviteOpen={inviting === challenge.id}
-              onToggleInvite={() =>
-                setInviting(inviting === challenge.id ? null : challenge.id)
-              }
-              onInvite={async (ids) => {
-                setInviting(null);
-                await inviteToChallenge(challenge.id, ids);
+              onToggleInvite={() => {
+                setInviteError(null);
+                setInviting(inviting === challenge.id ? null : challenge.id);
               }}
+              onInvite={(ids) => sendChallengeInvites(challenge.id, ids)}
+              inviteBusy={invitingBusy}
+              inviteError={inviteError}
             />
           ))}
 
@@ -191,10 +268,9 @@ export default function FriendsScreen() {
               people={people}
               inviteNote={people.length ? undefined : 'Add a friend above to run this against someone.'}
               onCancel={() => setAddingChallenge(false)}
-              onSave={async (draft: ChallengeDraft) => {
-                setAddingChallenge(false);
-                await addChallenge(draft);
-              }}
+              onSave={saveChallenge}
+              saving={savingChallenge}
+              error={challengeError}
             />
           ) : (
             <AddRow label="+ Add a challenge" onPress={() => setAddingChallenge(true)} />
@@ -261,12 +337,17 @@ function InvitePanel({
   people,
   onCancel,
   onInvite,
+  busy,
+  error,
 }: {
   people: Person[];
   onCancel: () => void;
   onInvite: (ids: string[]) => void;
+  busy?: boolean;
+  error?: string | null;
 }) {
   const [selected, setSelected] = useState<string[]>([]);
+  const canSend = selected.length > 0 && !busy;
 
   return (
     <View
@@ -288,12 +369,21 @@ function InvitePanel({
         }
         emptyNote="Everyone you know is already in this one."
       />
+      {error ? (
+        <T w={600} size={13} lh={1.35} color={colors.red}>
+          {error}
+        </T>
+      ) : null}
       <View style={{ flexDirection: 'row', gap: 10 }}>
-        <OutlineButton label="Cancel" height={40} onPress={onCancel} style={{ flex: 1 }} />
-        <View
-          style={{ flex: 1, opacity: selected.length ? 1 : 0.4 }}
-          pointerEvents={selected.length ? 'auto' : 'none'}>
-          <PrimaryButton label="Send invites" height={40} onPress={() => onInvite(selected)} />
+        <View style={{ flex: 1, opacity: busy ? 0.5 : 1 }} pointerEvents={busy ? 'none' : 'auto'}>
+          <OutlineButton label="Cancel" height={40} onPress={onCancel} />
+        </View>
+        <View style={{ flex: 1, opacity: canSend ? 1 : 0.4 }} pointerEvents={canSend ? 'auto' : 'none'}>
+          <PrimaryButton
+            label={busy ? 'Sending…' : 'Send invites'}
+            height={40}
+            onPress={() => onInvite(selected)}
+          />
         </View>
       </View>
     </View>
@@ -311,6 +401,8 @@ function FeaturedFund({
   inviteOpen,
   onToggleInvite,
   onInvite,
+  inviteBusy,
+  inviteError,
 }: {
   fund: Fund;
   today: string;
@@ -321,6 +413,8 @@ function FeaturedFund({
   inviteOpen: boolean;
   onToggleInvite: () => void;
   onInvite: (ids: string[]) => void;
+  inviteBusy?: boolean;
+  inviteError?: string | null;
 }) {
   const weeksLeft = Math.max(0, weeksBetween(today, fund.occasion));
   const progress = fundProgress(fund, weeksLeft);
@@ -417,7 +511,13 @@ function FeaturedFund({
         </View>
 
         {inviteOpen ? (
-          <InvitePanel people={canInvite} onCancel={onToggleInvite} onInvite={onInvite} />
+          <InvitePanel
+            people={canInvite}
+            onCancel={onToggleInvite}
+            onInvite={onInvite}
+            busy={inviteBusy}
+            error={inviteError}
+          />
         ) : null}
       </View>
 
@@ -505,12 +605,16 @@ function ChallengeRow({
   inviteOpen,
   onToggleInvite,
   onInvite,
+  inviteBusy,
+  inviteError,
 }: {
   challenge: Challenge;
   invitable: Person[];
   inviteOpen: boolean;
   onToggleInvite: () => void;
   onInvite: (ids: string[]) => void;
+  inviteBusy?: boolean;
+  inviteError?: string | null;
 }) {
   const sub = [challengeWith(challenge), challenge.sublabel].filter(Boolean).join(' · ');
 
@@ -544,7 +648,13 @@ function ChallengeRow({
       ) : null}
 
       {inviteOpen ? (
-        <InvitePanel people={canInvite} onCancel={onToggleInvite} onInvite={onInvite} />
+        <InvitePanel
+          people={canInvite}
+          onCancel={onToggleInvite}
+          onInvite={onInvite}
+          busy={inviteBusy}
+          error={inviteError}
+        />
       ) : null}
     </View>
   );
