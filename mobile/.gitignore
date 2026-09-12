@@ -42,3 +42,7 @@ yarn-error.*
 
 # domain test build
 build-test/
+build-scripts/
+
+# supabase CLI local state
+supabase/.temp/

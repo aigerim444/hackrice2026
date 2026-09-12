@@ -128,6 +128,8 @@ export class SupabaseRunwayApi implements RunwayApi {
         amount: 520,
         cadence: 'monthly',
         due_day: 1,
+        due_date: null,
+        prepaid: false,
       },
       {
         id: draftId('bill'),
@@ -138,6 +140,8 @@ export class SupabaseRunwayApi implements RunwayApi {
         amount: 45,
         cadence: 'monthly',
         due_day: 15,
+        due_date: null,
+        prepaid: false,
       },
       {
         id: draftId('bill'),
@@ -147,7 +151,9 @@ export class SupabaseRunwayApi implements RunwayApi {
         envelope: 'fees',
         amount: 195,
         cadence: 'once',
+        due_day: null,
         due_date: '2026-10-05',
+        prepaid: false,
       },
       {
         id: draftId('bill'),
@@ -157,6 +163,8 @@ export class SupabaseRunwayApi implements RunwayApi {
         envelope: 'fees',
         amount: 0,
         cadence: 'once',
+        due_day: null,
+        due_date: null,
         prepaid: true,
       },
     ]);

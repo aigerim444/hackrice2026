@@ -8,6 +8,8 @@
     "android",
     "ios",
     "build-test",
+    "build-scripts",
+    "scripts",
     "babel.config.js",
     "metro.config.js",
     "**/*.test.ts"
