@@ -41,6 +41,8 @@ interface RunwayContextValue {
   baseline: Projection | null;
   loading: boolean;
   error: string | null;
+  /** Re-runs the initial fetch — the retry behind a failed load or a pull-to-refresh. */
+  refetch: () => Promise<void>;
 
   toast: string | null;
   flash: (message: string) => void;
@@ -127,25 +129,42 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const jobTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
-  useEffect(() => {
-    let cancelled = false;
-    api
+  /**
+   * Fetches the snapshot fresh. Used both for the initial load and as
+   * `refetch` — the retry after a failed load, or a pull-to-refresh once
+   * there's already data on screen. `cancelled` guards the initial mount
+   * effect against a slow request outliving an unmount; a user-triggered
+   * refetch has nothing to race, so it doesn't need the same guard.
+   */
+  const load = useCallback((cancelledRef?: { current: boolean }) => {
+    setLoading(true);
+    setError(null);
+    return api
       .getSnapshot()
       .then((next) => {
-        if (cancelled) return;
+        if (cancelledRef?.current) return;
         setSnapshot(next);
         setSetup(setupFrom(next));
       })
       .catch((e: unknown) => {
-        if (!cancelled) setError(e instanceof Error ? e.message : 'Could not load your semester.');
+        if (!cancelledRef?.current) {
+          setError(e instanceof Error ? e.message : 'Could not load your semester.');
+        }
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelledRef?.current) setLoading(false);
       });
-    return () => {
-      cancelled = true;
-    };
   }, []);
+
+  useEffect(() => {
+    const cancelledRef = { current: false };
+    load(cancelledRef);
+    return () => {
+      cancelledRef.current = true;
+    };
+  }, [load]);
+
+  const refetch = useCallback(() => load(), [load]);
 
   useEffect(() => {
     const timers = jobTimers.current;
@@ -288,6 +307,7 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
       baseline,
       loading,
       error,
+      refetch,
       toast,
       flash,
       dismissToast,
@@ -314,6 +334,7 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
       baseline,
       loading,
       error,
+      refetch,
       toast,
       flash,
       dismissToast,

@@ -11,7 +11,7 @@ import type {
   SetupInput,
 } from '../../domain/types';
 import type { WrappedStats } from '../../domain/wrapped';
-import type { RunwayApi } from '../api';
+import { ApiError, type RunwayApi } from '../api';
 import { SEED_SNAPSHOT, SEED_WRAPPED } from './seed';
 
 const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -19,14 +19,39 @@ const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, 
 /** The snapshot is plain JSON, so this is enough — and it works on every engine. */
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 
-/** Latency the mock fakes, so the UI is exercised the way a network exercises it. */
+/**
+ * Latency the mock fakes, so the UI is exercised the way a network exercises
+ * it — long enough to actually see a loading state, not just flicker past it.
+ */
 const LATENCY = {
-  read: 80,
-  write: 120,
+  read: 300,
+  write: 300,
   /** The design holds "Reading…" for a beat before the parsed sheet slides up. */
   scan: 1100,
   coach: 600,
 };
+
+/**
+ * A dev-only knob, off by default: fraction of calls that fail after their
+ * latency, so loading→error→retry paths get exercised without a real network.
+ * Toggled from the You screen (mock-only), never touched in production.
+ */
+let failureRate = 0;
+
+export function setFailureRate(rate: number): void {
+  failureRate = Math.max(0, Math.min(1, rate));
+}
+
+export function getFailureRate(): number {
+  return failureRate;
+}
+
+/** Rolls the dice after the latency, so a failure looks like a real one. */
+function maybeFail(): void {
+  if (Math.random() < failureRate) {
+    throw new ApiError('The connection dropped. Try again.');
+  }
+}
 
 /**
  * In-memory implementation of `RunwayApi`.
@@ -45,11 +70,13 @@ export class MockRunwayApi implements RunwayApi {
 
   async getSnapshot(): Promise<SemesterSnapshot> {
     await wait(LATENCY.read);
+    maybeFail();
     return clone(this.snapshot);
   }
 
   async completeSetup(input: SetupInput): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     const s = this.snapshot;
     const today = s.semester.today;
 
@@ -113,6 +140,7 @@ export class MockRunwayApi implements RunwayApi {
 
   async addPerson(name: string): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     const trimmed = name.trim();
     return this.commit({
       ...this.snapshot,
@@ -125,6 +153,7 @@ export class MockRunwayApi implements RunwayApi {
 
   async inviteToFund(fundId: string, personIds: string[]): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     return this.commit({
       ...this.snapshot,
       funds: this.snapshot.funds.map((fund) =>
@@ -159,6 +188,7 @@ export class MockRunwayApi implements RunwayApi {
 
   async inviteToChallenge(challengeId: string, personIds: string[]): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     return this.commit({
       ...this.snapshot,
       challenges: this.snapshot.challenges.map((challenge) =>
@@ -191,6 +221,7 @@ export class MockRunwayApi implements RunwayApi {
 
   async addJob(draft: JobDraft): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     return this.commit({
       ...this.snapshot,
       jobs: [...this.snapshot.jobs, completeJob(draft, this.snapshot.semester.today)],
@@ -199,6 +230,7 @@ export class MockRunwayApi implements RunwayApi {
 
   async addFund(draft: FundDraft): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     return this.commit({
       ...this.snapshot,
       funds: [...this.snapshot.funds, this.hydrateFund(draft)],
@@ -207,6 +239,7 @@ export class MockRunwayApi implements RunwayApi {
 
   async addChallenge(draft: ChallengeDraft): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     return this.commit({
       ...this.snapshot,
       challenges: [
@@ -236,11 +269,13 @@ export class MockRunwayApi implements RunwayApi {
 
   async resetSemester(): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     return this.commit(clone(SEED_SNAPSHOT));
   }
 
   async setJobHours(jobId: string, hoursPerWeek: number): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     return this.commit({
       ...this.snapshot,
       jobs: this.snapshot.jobs.map((job) => (job.id === jobId ? { ...job, hoursPerWeek } : job)),
@@ -251,6 +286,7 @@ export class MockRunwayApi implements RunwayApi {
     input: Parameters<RunwayApi['logExpense']>[0],
   ): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     const s = this.snapshot;
     return this.commit({
       ...s,
@@ -283,6 +319,7 @@ export class MockRunwayApi implements RunwayApi {
 
   async scanReceipt(): Promise<ParsedReceipt> {
     await wait(LATENCY.scan);
+    maybeFail();
     return {
       merchant: 'Tiger Sugar · Village',
       amount: 8.65,
@@ -296,6 +333,7 @@ export class MockRunwayApi implements RunwayApi {
     this.snapshot = { ...this.snapshot, chat: [...this.snapshot.chat, question] };
 
     await wait(LATENCY.coach);
+    maybeFail();
 
     const reply = coachReply(this.snapshot, text);
     const snapshot = this.commit({
@@ -307,6 +345,7 @@ export class MockRunwayApi implements RunwayApi {
 
   async contributeToFund(fundId: string, amount: number): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
+    maybeFail();
     const s = this.snapshot;
     return this.commit({
       ...s,
@@ -326,6 +365,7 @@ export class MockRunwayApi implements RunwayApi {
 
   async getWrapped(): Promise<WrappedStats> {
     await wait(LATENCY.read);
+    maybeFail();
     return clone(SEED_WRAPPED);
   }
 }
