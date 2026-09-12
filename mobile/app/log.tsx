@@ -34,6 +34,7 @@ export default function LogScreen() {
   const [amountText, setAmountText] = useState('');
   const [category, setCategory] = useState<Category>('Eating out');
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // Tolerate "$12", "12.50 ", "12,50" — people type money the way they say it.
   const amount = Number(amountText.replace(/[^0-9.]/g, ''));
@@ -51,6 +52,7 @@ export default function LogScreen() {
   const save = async () => {
     if (!valid || saving) return;
     setSaving(true);
+    setSaveError(null);
     try {
       await logExpense({
         merchant: merchant.trim() || category,
@@ -68,6 +70,8 @@ export default function LogScreen() {
               : ' Streak reset.'
             : ' Date unchanged.'),
       );
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Couldn't log that — try again.");
     } finally {
       setSaving(false);
     }
@@ -194,8 +198,16 @@ export default function LogScreen() {
             </View>
           ) : null}
 
+          {saveError ? (
+            <T w={600} size={13} lh={1.35} color={colors.red}>
+              {saveError}
+            </T>
+          ) : null}
+
           <View style={{ flexDirection: 'row', gap: 10 }}>
-            <View style={{ flex: 1, opacity: valid ? 1 : 0.4 }} pointerEvents={valid ? 'auto' : 'none'}>
+            <View
+              style={{ flex: 1, opacity: valid && !saving ? 1 : 0.4 }}
+              pointerEvents={valid && !saving ? 'auto' : 'none'}>
               <PrimaryButton label={saving ? 'Logging…' : 'Log it'} height={52} onPress={save} />
             </View>
             <OutlineButton
