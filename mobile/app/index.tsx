@@ -183,6 +183,16 @@ export default function HomeScreen() {
               },
             },
             {
+              id: 'log',
+              icon: '$',
+              title: 'Log a spend',
+              sublabel: 'no receipt needed',
+              onPress: () => {
+                setMenuOpen(false);
+                router.push('/log');
+              },
+            },
+            {
               id: 'whatif',
               icon: '?',
               title: 'What if I…',

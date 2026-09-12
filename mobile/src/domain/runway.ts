@@ -143,6 +143,34 @@ export function projectWithExtraSpend(snapshot: SemesterSnapshot, amount: number
 }
 
 /**
+ * The projection as it will actually be once `amount` is charged to today.
+ *
+ * Distinct from `projectWithExtraSpend`, which asks a hypothetical about the
+ * envelope as a whole. This is what a confirmation sheet should preview,
+ * because it charges the money the same way `logExpense` will: to *today*,
+ * which shrinks the daily allowance as well as spending it. Subtracting the
+ * charge from `leftToday` by hand gets that second part wrong — by 26 cents on
+ * a $23 lunch, which is exactly the kind of gap someone notices right after
+ * tapping the button.
+ */
+export function projectWithCharge(snapshot: SemesterSnapshot, amount: number): Projection {
+  return project({
+    ...snapshot,
+    todayExpenses: [
+      ...snapshot.todayExpenses,
+      {
+        id: 'preview',
+        merchant: 'preview',
+        amount,
+        category: 'Other',
+        envelope: 'free',
+        occurredOn: snapshot.semester.today,
+      },
+    ],
+  });
+}
+
+/**
  * Where the heat strip's three bands sit: spent-so-far, covered-from-here, and
  * the hatched run-out zone. Returned as CSS-style percentage strings because
  * that's what both the design and React Native's layout take.

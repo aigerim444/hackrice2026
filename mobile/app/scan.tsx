@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { isAiEnabled } from '../src/data/client';
 import { cents } from '../src/domain/format';
+import { projectWithCharge } from '../src/domain/runway';
 import { challengeRivals } from '../src/domain/selectors';
 import type { Category, ParsedReceipt } from '../src/domain/types';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
@@ -31,7 +32,7 @@ const ENVELOPE_CHOICES: { category: Category; label: string }[] = [
  */
 export default function ScanScreen() {
   const insets = useSafeAreaInsets();
-  const { snapshot, projection, scanReceipt, logExpense, flash } = useLoadedRunway();
+  const { snapshot, scanReceipt, logExpense, flash } = useLoadedRunway();
 
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraReady, setCameraReady] = useState(false);
@@ -79,9 +80,9 @@ export default function ScanScreen() {
 
   const boba = snapshot.challenges.find((c) => c.category === 'Drinks');
   const breaksStreak = Boolean(receipt && category === 'Drinks' && boba && !boba.broken);
-  const afterToday = receipt
-    ? Math.max(0, projection.safeDaily - projection.todaySpent - receipt.amount)
-    : 0;
+  // Through the engine, not by subtraction: charging today shrinks the daily
+  // allowance as well as spending it, so this is the number you'll actually see.
+  const afterToday = receipt ? projectWithCharge(snapshot, receipt.amount).leftToday : 0;
 
   // The sheet grows with whatever Gemini read off the receipt, and the capture
   // frame above it has to get out of the way.
@@ -172,6 +173,13 @@ export default function ScanScreen() {
         <Pressable onPress={() => router.replace('/')} hitSlop={12}>
           <T w={800} size={14} color={colors.cream} opacity={0.8}>
             Cancel
+          </T>
+        </Pressable>
+        {/* The way out when there's no receipt to photograph, or the camera
+            won't cooperate. Always available, not just after a failed read. */}
+        <Pressable onPress={() => router.replace('/log')} hitSlop={12}>
+          <T w={800} size={13} color={colors.cream} opacity={0.8}>
+            No receipt →
           </T>
         </Pressable>
         <View style={{ borderWidth: RULE, borderColor: colors.cream, paddingHorizontal: 10, paddingVertical: 3 }}>
