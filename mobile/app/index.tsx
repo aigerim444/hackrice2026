@@ -36,7 +36,7 @@ export default function HomeScreen() {
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 168 }} showsVerticalScrollIndicator={false}>
         {/* The hero. Tapping the number is the same as tapping Runway — it's the
             same envelope, seen two ways. */}
         <Tap
@@ -54,7 +54,7 @@ export default function HomeScreen() {
           <T w={600} size={15} color={colors.muted} style={{ marginTop: 26 }}>
             Left to spend today
           </T>
-          <T w={800} size={96} tracking={-0.05} lh={0.95}>
+          <T w={800} size={96} tracking={-0.05} lh={0.95} fit>
             {cents(projection.leftToday)}
           </T>
           <T w={600} size={15} color={colors.muted} style={{ marginTop: 10 }}>
@@ -153,7 +153,8 @@ export default function HomeScreen() {
         <Rule />
       </ScrollView>
 
-      {toast ? <Toast message={toast} onDismiss={dismissToast} /> : null}
+      {/* Home is the one screen with a floating +, so the toast clears it. */}
+      {toast ? <Toast message={toast} onDismiss={dismissToast} bottom={168} /> : null}
 
       <TabBar current="home" />
 

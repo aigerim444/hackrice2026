@@ -4,6 +4,7 @@ import Svg, { Defs, Pattern, Rect } from 'react-native-svg';
 
 import type { Projection } from '../domain/runway';
 import { heatStrip } from '../domain/runway';
+import { scaleWidth } from '../theme/scale';
 import { alpha, colors, GUTTER, RULE } from '../theme/tokens';
 import { Kicker, T } from '../theme/type';
 import { Flexible, Row, Rule, Tap } from './primitives';
@@ -179,7 +180,7 @@ export function BarRow({
 }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-      <T w={top === undefined ? 700 : 600} size={size} color={color} style={{ width: labelWidth }} nowrap>
+      <T w={top === undefined ? 700 : 600} size={size} color={color} style={{ width: scaleWidth(labelWidth) }} nowrap>
         {label}
       </T>
       <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -193,7 +194,7 @@ export function BarRow({
           }}
         />
       </View>
-      <T w={top === undefined ? 700 : 800} size={size} color={color} style={{ width: amountWidth }} right nowrap>
+      <T w={top === undefined ? 700 : 800} size={size} color={color} style={{ width: scaleWidth(amountWidth) }} right nowrap>
         {amount}
       </T>
     </View>

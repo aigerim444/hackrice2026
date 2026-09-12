@@ -76,7 +76,7 @@ export default function FriendsScreen() {
             paddingVertical: 14,
           }}>
           <Row align="baseline" gap={10} style={{ justifyContent: 'flex-start' }}>
-            <T w={800} size={48} tracking={-0.04} lh={1}>
+            <T w={800} size={48} tracking={-0.04} lh={1} fit>
               {money(progress.contributed)}
             </T>
             <T w={600} size={14} color={colors.muted} lh={1.3}>

@@ -8,6 +8,7 @@ import { api } from '../src/data/client';
 import { shortDate } from '../src/domain/dates';
 import { money } from '../src/domain/format';
 import type { WrappedStats } from '../src/domain/wrapped';
+import { scaleWidth } from '../src/theme/scale';
 import { alpha, colors, GUTTER, RULE } from '../src/theme/tokens';
 import { Kicker, T } from '../src/theme/type';
 import { FadeIn, Flexible, Row } from '../src/ui/primitives';
@@ -169,7 +170,7 @@ function LumpCard({ stats, fg }: { stats: WrappedStats; fg: string }) {
         <T w={600} size={15} color={fg} opacity={0.7}>
           On {shortDate(stats.startDate)} you had
         </T>
-        <T w={800} size={96} tracking={-0.05} lh={0.95} color={fg}>
+        <T w={800} size={96} tracking={-0.05} lh={0.95} color={fg} fit>
           {money(stats.lump)}
         </T>
         <T w={600} size={15} lh={1.4} color={fg} opacity={0.7} style={{ marginTop: 12, maxWidth: 300 }}>
@@ -378,7 +379,7 @@ function CategoryCard({ stats, fg }: { stats: WrappedStats; fg: string }) {
       <View style={{ marginHorizontal: GUTTER, marginTop: 28, gap: 6 }}>
         {stats.categoryRanking.map((row, i) => (
           <View key={row.name} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <T w={700} size={14} color={fg} style={{ width: 100 }} nowrap>
+            <T w={700} size={14} color={fg} style={{ width: scaleWidth(100) }} nowrap>
               {row.name}
             </T>
             <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -392,7 +393,7 @@ function CategoryCard({ stats, fg }: { stats: WrappedStats; fg: string }) {
                 }}
               />
             </View>
-            <T w={700} size={14} color={fg} style={{ width: 56 }} right nowrap>
+            <T w={700} size={14} color={fg} style={{ width: scaleWidth(56) }} right nowrap>
               {money(row.amount)}
             </T>
           </View>

@@ -4,6 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { shortDate } from '../src/domain/dates';
 import { money, signedDays } from '../src/domain/format';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
+import { scaleWidth } from '../src/theme/scale';
 import { colors, GUTTER, RULE } from '../src/theme/tokens';
 import { Kicker, T } from '../src/theme/type';
 import { BackLink, HeatStrip, InkBlock, SectionHeading, StripAxis } from '../src/ui/blocks';
@@ -77,7 +78,7 @@ export default function RunwayScreen() {
                 w={800}
                 size={15}
                 color={move.positive ? colors.green : colors.red}
-                style={{ minWidth: 50 }}>
+                style={{ minWidth: scaleWidth(50) }}>
                 {signedDays(move.deltaDays)}
               </T>
               <Flexible>
