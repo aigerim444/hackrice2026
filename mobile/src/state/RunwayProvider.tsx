@@ -272,6 +272,14 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
     try {
       const { snapshot: next } = await api.askCoach(text);
       setSnapshot(next);
+    } catch (e) {
+      // The round trip never happened, so the echo shouldn't stick around —
+      // otherwise a retry (chat.tsx restores the typed text on failure)
+      // duplicates the bubble instead of replacing it.
+      setSnapshot((current) =>
+        current ? { ...current, chat: current.chat.filter((m) => m.id !== optimistic.id) } : current,
+      );
+      throw e;
     } finally {
       setCoachThinking(false);
     }
