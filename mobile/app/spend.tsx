@@ -55,6 +55,11 @@ export default function SpendScreen() {
         </T>
 
         <View style={{ marginHorizontal: GUTTER, marginTop: 8, gap: 8 }}>
+          {today.length === 0 ? (
+            <T w={600} size={14} lh={1.4} color={colors.muted}>
+              Nothing logged today yet.
+            </T>
+          ) : null}
           {today.map((item) => (
             <FadeIn key={item.id}>
               <Row style={{ borderBottomWidth: RULE, borderColor: colors.ruleSoft, paddingVertical: 12 }}>
