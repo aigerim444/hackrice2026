@@ -249,6 +249,41 @@ function Bubble({ message }: { message: ChatMessage }) {
             ))}
           </View>
         ) : null}
+
+        {/* The receipt. The coach isn't allowed to do arithmetic — it can only
+            quote what the projection engine handed back — so showing which
+            what-ifs it ran is showing where every figure above came from. */}
+        {message.trace?.length ? (
+          <View
+            style={{
+              marginTop: 10,
+              paddingTop: 8,
+              borderTopWidth: RULE,
+              borderColor: colors.ruleSoft,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: 6,
+            }}>
+            <T w={800} size={10} caps tracking={0.06} color={colors.muted}>
+              ran
+            </T>
+            {message.trace.map((step, index) => (
+              <View
+                key={`${step}-${index}`}
+                style={{
+                  borderWidth: RULE,
+                  borderColor: colors.ruleSoft,
+                  paddingHorizontal: 7,
+                  paddingVertical: 2,
+                }}>
+                <T w={700} size={11} color={colors.muted}>
+                  {step}
+                </T>
+              </View>
+            ))}
+          </View>
+        ) : null}
       </View>
     </FadeIn>
   );

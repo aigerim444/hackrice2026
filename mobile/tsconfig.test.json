@@ -12,5 +12,5 @@
     "rootDir": "src",
     "types": ["node"]
   },
-  "include": ["src/domain/**/*.ts", "src/data/mock/seed.ts"]
+  "include": ["src/domain/**/*.ts", "src/data/mock/seed.ts", "src/data/api.ts", "src/data/gemini/**/*.ts"]
 }
