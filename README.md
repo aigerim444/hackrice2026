@@ -91,8 +91,11 @@ streak.
 
 ## State of things
 
-`tsc` clean · 14/14 projection tests, pinned to the design's own figures · iOS,
+`tsc` clean · 16/16 projection tests, pinned to the design's own figures · iOS,
 Android and web bundles all build · no console errors across any screen.
+
+**Picking this up?** [`STATE.md`](STATE.md) is the working handoff: what's real, what's
+stubbed, the known rough edges, and the handful of things that look wrong and aren't.
 
 Stubs behind a real surface: **Share** on the Wrapped cards, the `+ Add` affordances
 for bills, goals, jobs and friends, and auth. Receipt OCR is server-side by design —

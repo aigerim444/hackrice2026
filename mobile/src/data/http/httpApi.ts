@@ -18,15 +18,21 @@ import { ApiError, type RunwayApi } from '../api';
  * method maps to one endpoint, and every mutation responds with the updated
  * snapshot, exactly as `RunwayApi` promises.
  *
- *   GET  /semesters/current                 → SemesterSnapshot
- *   POST /semesters/current/setup           → SemesterSnapshot
- *   POST /semesters/current/reset           → SemesterSnapshot
+ *   GET   /semesters/current                → SemesterSnapshot
+ *   POST  /semesters/current/setup          → SemesterSnapshot
+ *   POST  /semesters/current/reset          → SemesterSnapshot
+ *   POST  /jobs                             → SemesterSnapshot
  *   PATCH /jobs/:id                         → SemesterSnapshot
- *   POST /expenses                          → SemesterSnapshot
- *   POST /receipts:scan  (multipart)        → ParsedReceipt
- *   POST /coach/messages                    → { snapshot, reply }
- *   POST /funds/:id/contributions           → SemesterSnapshot
- *   GET  /semesters/current/wrapped         → WrappedStats
+ *   POST  /funds                            → SemesterSnapshot
+ *   POST  /funds/:id/invites                → SemesterSnapshot
+ *   POST  /funds/:id/contributions          → SemesterSnapshot
+ *   POST  /challenges                       → SemesterSnapshot
+ *   POST  /challenges/:id/invites           → SemesterSnapshot
+ *   POST  /people                           → SemesterSnapshot
+ *   POST  /expenses                         → SemesterSnapshot
+ *   POST  /receipts:scan  (multipart)       → ParsedReceipt
+ *   POST  /coach/messages                   → { snapshot, reply }
+ *   GET   /semesters/current/wrapped        → WrappedStats
  *
  * Auth is a bearer token on every request; there is no session state.
  */
