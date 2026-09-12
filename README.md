@@ -30,6 +30,13 @@ you run out — and why that date moved.
 - **What-ifs, priced in days.** Ask about a $249 purchase and the coach answers in
   runway — 5 days — with cheaper routes. Drag your shift hours and the date moves
   under your thumb.
+- **A coach that can't do arithmetic.** Gemini gets the projection engine as callable
+  what-ifs and may only quote the strings they hand back. It decides *which* question
+  you're asking; the engine decides what's true. Chips under each reply name the
+  what-ifs it ran.
+- **Point the camera, or just type it.** Gemini reads the merchant, total and line
+  items off a receipt. No receipt — a vending machine, a Venmo split — and manual
+  entry lands the same charge in the same envelope.
 - **More than one campus job.** Each has its own rate, hours and pay cadence, because
   two paychecks landing on different days is exactly what makes the date wander.
 - **Funds vs. challenges.** A shared fund is real money everyone pledges weekly. A
@@ -47,10 +54,17 @@ npm start        # press i for the iOS simulator, or scan the QR with Expo Go
 ```
 
 ```sh
-npm run web      # no simulator needed — opens phone-sized in your browser
-npm test         # the projection engine's contract, on plain Node
+npm run web           # no simulator needed — opens phone-sized in your browser
+npm test              # the engine's contract + the AI layer, on plain Node
 npm run typecheck
+npm run gemini:doctor # checks your key, egress, and the model id
 ```
+
+**Optional:** copy `mobile/.env.example` to `mobile/.env.local` and add a
+[Gemini key](https://aistudio.google.com/apikey) to turn on real receipt reading
+and the grounded coach. Without one the app runs exactly the same, with a demo
+receipt parse and the built-in coach heuristic — every AI path has a non-AI
+fallback, on purpose.
 
 Expo SDK 57 · React Native 0.86 · React 19.2. The camera needs a real device; in a
 simulator or browser the receipt scanner falls back to a placeholder viewfinder and
@@ -66,7 +80,8 @@ filling the window, so a laptop shows you the real thing. Narrow the window past
 mobile/
   app/            routes (expo-router), one file per screen
   src/domain/     pure logic — no React, no I/O
-  src/data/       one API boundary: mock today, HTTP client ready
+  src/data/       one API boundary: mock today, HTTP client ready,
+                  gemini/ decorating whichever store is underneath
   src/theme/      design tokens
   src/ui/         design-system primitives
 project/          the Claude Design handoff the app was built from
@@ -89,17 +104,24 @@ Mutations return the whole snapshot rather than a patch, because everything here
 ripples: logging an $8.65 boba moves today's remainder, the category bars, and a
 streak.
 
+**The model never owns a number.** `src/data/gemini/` is a decorator over that same
+boundary: it overrides exactly two methods — reading a receipt and answering a
+what-if — and delegates all state untouched. The coach is handed the projection
+engine as tools (`src/domain/tools.ts`) whose results are pre-formatted strings, and
+told it may quote those and nothing else. So it can be wrong about tone and cannot be
+wrong about money.
+
 ## State of things
 
-`tsc` clean · 16/16 projection tests, pinned to the design's own figures · iOS,
+`tsc` clean · 35/35 tests, the projection engine pinned to the design’s own figures · iOS,
 Android and web bundles all build · no console errors across any screen.
 
 **Picking this up?** [`STATE.md`](STATE.md) is the working handoff: what's real, what's
 stubbed, the known rough edges, and the handful of things that look wrong and aren't.
 
-Stubs behind a real surface: **Share** on the Wrapped cards, the `+ Add` affordances
-for bills, goals, jobs and friends, and auth. Receipt OCR is server-side by design —
-the camera captures and uploads, but the mock returns a fixed parse.
+Stubs behind a real surface: **Share** on the Wrapped cards, auth, and Wrapped itself
+(a fixed end-of-term recap, not yet derived from your live semester). Nothing
+persists across a restart yet — that's Supabase's job, and it isn't built.
 
 See [`mobile/README.md`](mobile/README.md) for the fuller engineering notes and
 [`HANDOFF.md`](HANDOFF.md) for the original design-handoff instructions.

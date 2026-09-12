@@ -5,10 +5,13 @@ anything; it is the difference between a ten-minute change and an afternoon.
 
 - **Branch:** `claude/semester-runway-app` (all work lives here; `main` has the raw
   design handoff only)
-- **Last verified:** typecheck clean, 16/16 tests pass, web + iOS bundles export,
+- **Last verified:** typecheck clean, 35/35 tests pass, web + iOS bundles export,
   the whole first-run flow driven in a browser
 - **Nothing is deployed anywhere.** There is no backend, no account system, no
   data that survives a page reload.
+- **Gemini is wired in** for receipt reading and the coach, behind
+  `EXPO_PUBLIC_GEMINI_API_KEY`. Every AI path falls back to the non-AI one, so
+  the app is fully usable with no key at all.
 
 ---
 
@@ -25,7 +28,8 @@ Verify a change:
 
 ```sh
 npx tsc --noEmit --noUnusedLocals --noUnusedParameters   # types
-npm test                                                 # 16 domain tests, plain Node
+npm test                                                 # 35 pure tests, plain Node
+npm run gemini:doctor                                    # key + egress + model id
 npx expo export --platform web                           # web bundle → dist/
 npx expo export --platform ios --output-dir /tmp/ios     # native bundle (see §6)
 ```
@@ -47,8 +51,10 @@ src/state/         RunwayProvider — the one store; holds the snapshot,
                    derives the projection, exposes every mutation
   ↓
 src/data/          api.ts (the interface) → client.ts (picks one)
-                   mock/  in-memory, ships by default
-                   http/  real client, waiting for a server
+                   mock/    in-memory, ships by default
+                   http/    real client, waiting for a server
+                   gemini/  decorator: owns receipt-reading and the coach,
+                            delegates all state to whichever store is inside
   ↓
 src/domain/        pure TypeScript. No React, no imports from anywhere above.
                    runway.ts is the projection engine; everything numeric
@@ -69,11 +75,20 @@ deltas and can't drift.
 concrete implementation. Set `EXPO_PUBLIC_API_URL` and every screen is talking to
 a server with no change above that line.
 
+**Two independent switches.** `EXPO_PUBLIC_API_URL` decides *where state lives*;
+`EXPO_PUBLIC_GEMINI_API_KEY` decides *whether the app can see and reason*. They
+compose — Gemini wraps whichever store is underneath — so you can run real OCR
+against the demo semester, which is what you want on a laptop.
+
+**Gemini never owns state and never owns arithmetic.** It reads images and writes
+sentences; the snapshot stays with the inner API and every number stays with the
+projection engine. See §4a.
+
 ---
 
 ## 3. What actually works
 
-Ten screens, all reachable, all wired to the store:
+Eleven screens, all reachable, all wired to the store:
 
 | Screen | File | State |
 |---|---|---|
@@ -81,9 +96,10 @@ Ten screens, all reachable, all wired to the store:
 | Home | `app/index.tsx` | live daily number, heat strip, category bars, streak line |
 | Runway | `app/runway.tsx` | run-out date + the ledger of what moved it |
 | Spend | `app/spend.tsx` | envelopes and today's charges |
-| Scan | `app/scan.tsx` | camera → parsed receipt → confirm → logged |
+| Scan | `app/scan.tsx` | camera → Gemini reads it → confirm → logged |
+| Log a spend | `app/log.tsx` | manual entry, no receipt needed; same charge, same maths |
 | Jobs what-if | `app/jobs.tsx` | drag hours, date moves under your thumb |
-| Coach | `app/chat.tsx` | what-ifs priced in days of runway |
+| Coach | `app/chat.tsx` | what-ifs priced in days of runway, with a tool trace |
 | Friends | `app/friends.tsx` | people, goals (money), challenges (streaks), invites |
 | You | `app/you.tsx` | setup summary, reset, entry to Wrapped |
 | Wrapped | `app/wrapped.tsx` | 7 story cards |
@@ -95,6 +111,35 @@ somebody to invite — that was a deliberate fix, don't reintroduce seeded frien
 
 ---
 
+## 4a. The AI layer, and the rule it obeys
+
+**The coach cannot do arithmetic.** `src/domain/tools.ts` exposes the projection
+engine as four callable what-ifs (price a purchase, change shift hours, change a
+weekly pledge, read the current position). Every figure they return is
+*pre-formatted* — `"$36"`, `"Nov 15"` — and the system instruction is that the
+model may quote those strings verbatim and nothing else. It picks which question
+to ask; the engine answers it.
+
+That is the whole guarantee: the coach can be wrong about tone, but it cannot
+quote a number the home screen disagrees with, because it was never given the
+ability to produce one. The chips under each reply ("ran priced $249") are the
+receipt.
+
+If you change anything here, keep that property. Specifically: don't let the
+model return figures it computed, and don't let a tool return a raw number where
+it currently returns a formatted string — the formatting is what stops the model
+reformatting, rounding or "about"-ing its way into a wrong answer.
+
+`src/domain/coach.ts` stays as the offline fallback and is not dead code: with no
+key, no network, or a model error, it answers instead. Worse sentence, same
+numbers. Test both paths before shipping a change.
+
+**Everything degrades.** Receipt scan falls back to the demo parse, the coach to
+the heuristic. Verify with the key unset — that is the state a judge or a flaky
+venue network will see.
+
+---
+
 ## 4. Known stubs — things that are deliberately fake
 
 None of these are bugs. They're the seams where a real implementation goes.
@@ -102,8 +147,8 @@ None of these are bugs. They're the seams where a real implementation goes.
 | Stub | Where | What a real version does |
 |---|---|---|
 | **The entire backend** | `src/data/mock/mockApi.ts` | In-memory, fake latency, resets on reload. `src/data/http/httpApi.ts` is a *working* client (not a placeholder) that defines the wire contract — 15 endpoints, bearer auth, snapshot-in-response, listed in its header comment. Point `EXPO_PUBLIC_API_URL` at a server implementing it. |
-| **Receipt OCR** | `MockRunwayApi.scanReceipt` | Always returns "Tiger Sugar · Village, $8.65, Drinks" after a 1.1s beat. Real version posts the image multipart to `POST /receipts:scan`. The camera capture itself is real; the bytes are thrown away. |
-| **The coach** | `src/domain/coach.ts` | Regex pulls a price out of your message, then arithmetic over the same projection the home screen uses. Kept pure so the coach can never quote a number the rest of the app disagrees with. When a model goes behind `RunwayApi.askCoach`, this stays as the fallback and as the source of the structured `routes` — a model should fill those, not write prose. |
+| **Receipt OCR without a key** | `MockRunwayApi.scanReceipt` | The fallback: always "Tiger Sugar · Village, $8.65, Drinks" after a 1.1s beat. **With a Gemini key this is real** — `src/data/gemini/receipts.ts` sends the photo as inline base64 and gets back merchant, total, line items and a category constrained to the `Category` enum. |
+| **The coach without a key** | `src/domain/coach.ts` | The fallback: a regex pulls a price out of your message, then arithmetic over the same projection. **With a key, Gemini answers** via the grounded tool loop in `src/data/gemini/coach.ts` — see §4a. The heuristic still supplies the structured `routes` either way. |
 | **Contacts** | `src/data/contacts.ts` | Six hardcoded names. Swap for `expo-contacts` or a server "people you know" list. Async and permissioned in reality, which is why it's a function, not a constant. |
 | **Invites** | `mockApi.inviteToFund` / `inviteToChallenge` | People land as `status: 'invited'` and stay there forever. Nobody ever accepts, because there's no second device. |
 | **Streaks** | `mockApi.logExpense` | Only ever *break*. A charge in a challenge's category resets it; nothing advances it, because "you didn't buy boba today" is the absence of evidence and needs a server-side daily tick. |
@@ -111,6 +156,7 @@ None of these are bugs. They're the seams where a real implementation goes.
 | **Fund contributions** | `app/friends.tsx` | The "Put $20 in" button is a fixed `MOVE_AMOUNT = 20`. No amount picker yet. |
 | **Prior spending** | `seed.ts` | `priorCategoryTotals` ($940, all envelopes) and `priorFreeSpend` ($880, free envelope only) are two independent constants. A real backend derives both from one transaction feed and they reconcile by construction. The header comment in `seed.ts` explains the split — read it before you "fix" the discrepancy. |
 | **Auth** | `httpApi.ts` | `getToken` defaults to `() => null`. No login screen exists. |
+| **The Gemini key** | `EXPO_PUBLIC_GEMINI_API_KEY` | `EXPO_PUBLIC_` means it is **bundled into the app** and readable by anyone with the binary. Fine for a demo; a shipped build puts these calls behind the server `httpApi.ts` describes and holds the key there. |
 
 ---
 
@@ -119,9 +165,10 @@ None of these are bugs. They're the seams where a real implementation goes.
 Honest list. None are blocking, none are hidden.
 
 1. **No persistence.** Reload the browser or restart the app and you're back at
-   onboarding. There is no `AsyncStorage`, no `localStorage`, nothing. This is the
-   single biggest gap between the demo and something usable — and the easiest
-   thing to add, since the whole state is one JSON-serializable snapshot.
+   onboarding. Still the single biggest gap between the demo and something
+   usable. Per `CLAUDE.md` this is closed by Supabase, not by local storage —
+   an AsyncStorage implementation exists on the `wip/asyncstorage-persistence`
+   branch and was deliberately **not** merged.
 2. **Bills entered in onboarding without an envelope default to `fees`**
    (`mockApi.completeSetup`). Fine for the four seeded bills; a user-entered
    "car insurance" also lands in fees, which is wrong but harmless to the maths.
@@ -135,6 +182,12 @@ Honest list. None are blocking, none are hidden.
    spending history. Unreachable today because the seed ships prior spending.
 7. **Wrapped is always available** from the You tab, even in week 3. It's a demo
    card deck, not a gated end-of-term feature.
+8. **Static hosting needs a SPA rewrite.** `expo export --platform web` emits a
+   single-page app, so a plain file server 404s on a deep link like `/friends`.
+   The Expo dev server handles it; a static host needs a fallback-to-index rule.
+9. **The Gemini model id is a guess until checked.** Google rotates them. If the
+   AI paths silently fall back, run `npm run gemini:doctor` first — it prints the
+   ids your key can actually reach.
 
 ---
 
@@ -171,7 +224,13 @@ Each of these looks wrong and is not. They cost real time to discover.
   because the seed ships neither — don't "fix" that by re-seeding them.
 - **`expo export --platform ios` needs `--output-dir`.** Without it, it writes to
   `dist/` and silently clobbers the web build, which then serves a blank page.
-- **`src/domain/` imports nothing from React or `src/ui`.** See §2.
+- **`src/domain/` imports nothing from React or `src/ui`.** See §2. `tools.ts`
+  lives there for exactly this reason: the model's what-ifs have to be testable
+  and side-effect-free.
+- **Tool results are formatted strings, not numbers.** See §4a — this is load
+  bearing, not a style choice.
+- **The `.env` files are gitignored and `.env.example` is the template.** `.env`
+  itself was *not* ignored until recently; don't loosen that back.
 
 ---
 
@@ -179,10 +238,10 @@ Each of these looks wrong and is not. They cost real time to discover.
 
 Roughly in order of value per hour:
 
-1. **Persist the snapshot.** `AsyncStorage` in `RunwayProvider`, keyed by
-   semester id. One JSON blob. Unblocks every other kind of testing.
-   Superseded by `CLAUDE.md`: this project goes straight to Supabase, so treat
-   AsyncStorage as intentionally skipped rather than a step still owed.
+1. **Persist the snapshot.** Per `CLAUDE.md`, via Supabase against the contract
+   in `httpApi.ts` — treat AsyncStorage as intentionally skipped rather than a
+   step still owed. (A working AsyncStorage version sits unmerged on
+   `wip/asyncstorage-persistence` if that decision is ever revisited.)
 2. **Give bills a real envelope picker** in onboarding (fixes §5.2).
 3. **Amount picker on fund contributions**, replacing the fixed $20.
 4. **A daily tick that advances streaks**, so challenges can go up as well as
@@ -190,7 +249,10 @@ Roughly in order of value per hour:
    server.
 5. **Stand up the backend** against the contract in `httpApi.ts`. The client is
    already written; the endpoints are listed in its header comment.
-6. **Derive Wrapped from the live snapshot** instead of `SEED_WRAPPED`.
+6. **Derive Wrapped from the live snapshot** instead of `SEED_WRAPPED` — but see
+   `CLAUDE.md`: this is deliberately out of scope until its own session.
+7. **Narrate Wrapped with ElevenLabs.** Gemini writes the card copy from real
+   ledger stats, ElevenLabs speaks it. Not started.
 
 ---
 
@@ -201,6 +263,7 @@ mobile/            the Expo app — everything above is about this
 project/           the original Claude Design HTML prototypes
 chats/             the design conversation; where the intent lives
 docs/screenshots/  the images in README.md
+CLAUDE.md          working agreements for agents on this repo — read it first
 README.md          what the product is, for a reader who isn't building it
 HANDOFF.md         the original design-bundle note (historical)
 STATE.md           this file
