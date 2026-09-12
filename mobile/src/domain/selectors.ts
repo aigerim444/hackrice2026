@@ -1,5 +1,5 @@
 import { money, pct } from './format';
-import type { Category, Fund, SemesterSnapshot } from './types';
+import type { Category, Challenge, Fund, SemesterSnapshot } from './types';
 
 /** The goal Home features: the one that comes due soonest. */
 export function primaryFund(snapshot: SemesterSnapshot): Fund | undefined {
@@ -71,4 +71,44 @@ export function homeStreaks(snapshot: SemesterSnapshot) {
   const delivery = snapshot.challenges.find((c) => c.id === 'ch-delivery');
   const boba = snapshot.challenges.find((c) => c.id === 'ch-boba');
   return { delivery, boba };
+}
+
+/** Who else is in a challenge, best run first. Invitees aren't ranked yet. */
+export function challengeRivals(challenge: Challenge) {
+  return challenge.participants
+    .filter((p) => !p.isYou && p.status === 'joined')
+    .sort((a, b) => b.streakDays - a.streakDays);
+}
+
+/** People still to accept. */
+export function challengePending(challenge: Challenge) {
+  return challenge.participants.filter((p) => p.status === 'invited');
+}
+
+/** The right-hand caption under your streak: who you're up against. */
+export function challengeCaption(challenge: Challenge): string {
+  const rivals = challengeRivals(challenge);
+  const pending = challengePending(challenge);
+  if (!rivals.length) {
+    return pending.length ? `${pending.length} invited` : 'just you';
+  }
+  const [leader] = rivals;
+  if (leader.streakDays === challenge.youStreakDays) return `${leader.name} · tied`;
+  return challenge.youStreakDays > leader.streakDays
+    ? `next: ${leader.name} · ${leader.streakDays}`
+    : `${leader.name} · ${leader.streakDays}`;
+}
+
+/** "with Maya", "with Dev + 2 others", "just you". */
+export function challengeWith(challenge: Challenge): string {
+  const names = challenge.participants.filter((p) => !p.isYou).map((p) => p.name);
+  if (!names.length) return 'just you';
+  if (names.length === 1) return `with ${names[0]}`;
+  if (names.length === 2) return `with ${names[0]} + ${names[1]}`;
+  return `with ${names[0]} + ${names.length - 1} others`;
+}
+
+/** People not already in this fund or challenge, so the picker only offers new ones. */
+export function invitable(snapshot: SemesterSnapshot, alreadyIn: string[]) {
+  return snapshot.people.filter((person) => !alreadyIn.includes(person.id));
 }

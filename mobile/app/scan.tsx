@@ -6,6 +6,7 @@ import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cents } from '../src/domain/format';
+import { challengeRivals } from '../src/domain/selectors';
 import type { Category, ParsedReceipt } from '../src/domain/types';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
 import { colors, GUTTER, RULE } from '../src/theme/tokens';
@@ -90,10 +91,13 @@ export default function ScanScreen() {
         envelope: 'free',
       });
       router.replace('/');
+      const [rival] = boba ? challengeRivals(boba) : [];
       flash(
         `${cents(receipt.amount)} dropped into Free · ${category}.` +
           (breaksStreak
-            ? ` No-boba streak reset — ${boba?.leaderName}'s still at ${boba?.leaderDays}.`
+            ? rival
+              ? ` Streak reset — ${rival.name}'s still at ${rival.streakDays}.`
+              : ' Streak reset.'
             : ' Date unchanged.'),
       );
     } finally {
@@ -270,7 +274,7 @@ export default function ScanScreen() {
                   <T w={800} size={13}>
                     {boba?.label}
                   </T>{' '}
-                  streak with {boba?.leaderName} (day {boba?.youStreakDays}).
+                  streak (day {boba?.youStreakDays}).
                 </T>
               </View>
             ) : null}

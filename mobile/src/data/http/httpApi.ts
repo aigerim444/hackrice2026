@@ -85,6 +85,14 @@ export class HttpRunwayApi implements RunwayApi {
     return this.post('/challenges', draft);
   }
 
+  inviteToFund(fundId: string, personIds: string[]): Promise<SemesterSnapshot> {
+    return this.post(`/funds/${encodeURIComponent(fundId)}/invites`, { personIds });
+  }
+
+  inviteToChallenge(challengeId: string, personIds: string[]): Promise<SemesterSnapshot> {
+    return this.post(`/challenges/${encodeURIComponent(challengeId)}/invites`, { personIds });
+  }
+
   setJobHours(jobId: string, hoursPerWeek: number): Promise<SemesterSnapshot> {
     return this.request(`/jobs/${encodeURIComponent(jobId)}`, {
       method: 'PATCH',

@@ -79,13 +79,22 @@ export interface Bill {
   prepaid?: boolean;
 }
 
+/** Someone you know. The directory the invite pickers choose from. */
+export interface Person {
+  id: string;
+  name: string;
+  /** Single letter for the avatar square. */
+  initial: string;
+}
+
 export interface FundMember {
   id: string;
   name: string;
   isYou?: boolean;
   contributed: number;
   weeklyPledge: number;
-  status: 'ahead' | 'on track' | 'behind' | 'new';
+  /** `invited` means they haven't accepted yet, so their pledge isn't counted. */
+  status: 'ahead' | 'on track' | 'behind' | 'new' | 'invited';
 }
 
 /**
@@ -105,22 +114,32 @@ export interface Fund {
   /** Your own pledge, and anything you've moved in on top of it this week. */
   weeklyPledge: number;
   extraContributed: number;
+  /** Whose idea it was. Absent when it was yours. */
+  startedBy?: string;
+}
+
+export interface ChallengeParticipant {
+  id: string;
+  name: string;
+  isYou?: boolean;
+  streakDays: number;
+  /** `invited` until they accept — they don't appear on the leaderboard yet. */
+  status: 'joined' | 'invited';
 }
 
 export interface Challenge {
   id: string;
   label: string;
-  /** Who you're doing it with / how long it runs. */
-  sublabel: string;
-  /** Sublabel shown once you've broken it today. */
-  brokenSublabel?: string;
+  /** Extra context: what it's for, when it ends. */
+  sublabel?: string;
   category?: Category;
+  /** Optional end date. */
+  until?: ISODate;
+  /** Everyone in it, you included. */
+  participants: ChallengeParticipant[];
+  /** Your own run, denormalised so screens don't recompute it. */
   youStreakDays: number;
   broken: boolean;
-  leaderName: string;
-  leaderDays: number;
-  /** Right-hand caption under your streak count. */
-  leaderCaption: string;
 }
 
 export interface Expense {
@@ -177,6 +196,8 @@ export interface SemesterSnapshot {
   bills: Bill[];
   /** Everything you're setting money aside for. The first is the one Home features. */
   funds: Fund[];
+  /** People you can invite to a fund or a challenge. */
+  people: Person[];
   challenges: Challenge[];
   /** Everything logged today. Older spend is summarised below. */
   todayExpenses: Expense[];
@@ -218,10 +239,16 @@ export interface ChallengeDraft {
   category?: Category;
   /** Optional end date, so "No boba until Thanksgiving" can say so. */
   until?: ISODate;
+  /** People to invite. They join as `invited` until they accept. */
+  inviteIds?: string[];
 }
 
 /** A goal as typed in. Yours alone unless someone else is already paying in. */
-export type FundDraft = Omit<Fund, 'members'> & { members?: FundMember[] };
+export type FundDraft = Omit<Fund, 'members'> & {
+  members?: FundMember[];
+  /** People to invite. They join as `invited` until they accept. */
+  inviteIds?: string[];
+};
 
 /**
  * What onboarding collects.

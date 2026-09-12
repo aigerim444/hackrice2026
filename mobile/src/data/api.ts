@@ -44,6 +44,12 @@ export interface RunwayApi {
   /** Start cutting something out. No money attached — the payoff is the streak. */
   addChallenge(draft: ChallengeDraft): Promise<SemesterSnapshot>;
 
+  /** Ask people to join a fund. They show as invited until they accept. */
+  inviteToFund(fundId: string, personIds: string[]): Promise<SemesterSnapshot>;
+
+  /** Ask people to join a challenge. */
+  inviteToChallenge(challengeId: string, personIds: string[]): Promise<SemesterSnapshot>;
+
   /** Drag a job's hours. Persisted, because a schedule change is a real change. */
   setJobHours(jobId: string, hoursPerWeek: number): Promise<SemesterSnapshot>;
 

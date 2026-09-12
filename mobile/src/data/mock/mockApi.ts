@@ -71,11 +71,19 @@ export class MockRunwayApi implements RunwayApi {
     });
   }
 
-  /** A goal you added is yours alone until someone else pays in. */
+  private person(id: string) {
+    return this.snapshot.people.find((p) => p.id === id);
+  }
+
+  /**
+   * A goal starts with you in it, plus anyone you invited — as `invited`, since
+   * they haven't agreed to a weekly pledge yet.
+   */
   private hydrateFund(draft: FundDraft): Fund {
     if (draft.members?.length) return draft as Fund;
     return {
       ...draft,
+      shared: Boolean(draft.inviteIds?.length),
       members: [
         {
           id: this.snapshot.user.id,
@@ -85,8 +93,88 @@ export class MockRunwayApi implements RunwayApi {
           weeklyPledge: draft.weeklyPledge,
           status: 'on track',
         },
+        ...(draft.inviteIds ?? []).flatMap((id) => {
+          const person = this.person(id);
+          return person
+            ? [
+                {
+                  id: person.id,
+                  name: person.name,
+                  contributed: 0,
+                  weeklyPledge: 0,
+                  status: 'invited' as const,
+                },
+              ]
+            : [];
+        }),
       ],
     };
+  }
+
+  async inviteToFund(fundId: string, personIds: string[]): Promise<SemesterSnapshot> {
+    await wait(LATENCY.write);
+    return this.commit({
+      ...this.snapshot,
+      funds: this.snapshot.funds.map((fund) =>
+        fund.id !== fundId
+          ? fund
+          : {
+              ...fund,
+              shared: true,
+              members: [
+                ...fund.members,
+                ...personIds
+                  .filter((id) => !fund.members.some((m) => m.id === id))
+                  .flatMap((id) => {
+                    const person = this.person(id);
+                    return person
+                      ? [
+                          {
+                            id: person.id,
+                            name: person.name,
+                            contributed: 0,
+                            weeklyPledge: 0,
+                            status: 'invited' as const,
+                          },
+                        ]
+                      : [];
+                  }),
+              ],
+            },
+      ),
+    });
+  }
+
+  async inviteToChallenge(challengeId: string, personIds: string[]): Promise<SemesterSnapshot> {
+    await wait(LATENCY.write);
+    return this.commit({
+      ...this.snapshot,
+      challenges: this.snapshot.challenges.map((challenge) =>
+        challenge.id !== challengeId
+          ? challenge
+          : {
+              ...challenge,
+              participants: [
+                ...challenge.participants,
+                ...personIds
+                  .filter((id) => !challenge.participants.some((p) => p.id === id))
+                  .flatMap((id) => {
+                    const person = this.person(id);
+                    return person
+                      ? [
+                          {
+                            id: person.id,
+                            name: person.name,
+                            streakDays: 0,
+                            status: 'invited' as const,
+                          },
+                        ]
+                      : [];
+                  }),
+              ],
+            },
+      ),
+    });
   }
 
   async addJob(draft: JobDraft): Promise<SemesterSnapshot> {
@@ -107,7 +195,6 @@ export class MockRunwayApi implements RunwayApi {
 
   async addChallenge(draft: ChallengeDraft): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
-    const until = draft.until ? ` · until ${shortDate(draft.until)}` : '';
     return this.commit({
       ...this.snapshot,
       challenges: [
@@ -116,14 +203,20 @@ export class MockRunwayApi implements RunwayApi {
           id: draft.id,
           label: draft.label,
           category: draft.category,
+          until: draft.until,
+          sublabel: draft.until ? `until ${shortDate(draft.until)}` : undefined,
           // Starts at zero and counts up from the absence of a charge.
-          sublabel: `just you${until}`,
-          brokenSublabel: `just you · broken today`,
           youStreakDays: 0,
           broken: false,
-          leaderName: 'You',
-          leaderDays: 0,
-          leaderCaption: 'just you',
+          participants: [
+            { id: this.snapshot.user.id, name: 'You', isYou: true, streakDays: 0, status: 'joined' },
+            ...(draft.inviteIds ?? []).flatMap((id) => {
+              const person = this.person(id);
+              return person
+                ? [{ id: person.id, name: person.name, streakDays: 0, status: 'invited' as const }]
+                : [];
+            }),
+          ],
         },
       ],
     });
@@ -165,7 +258,12 @@ export class MockRunwayApi implements RunwayApi {
       // is inferred from the *absence* of a charge, server-side.
       challenges: s.challenges.map((c) =>
         c.category === input.category && !c.broken
-          ? { ...c, broken: true, youStreakDays: 0 }
+          ? {
+              ...c,
+              broken: true,
+              youStreakDays: 0,
+              participants: c.participants.map((p) => (p.isYou ? { ...p, streakDays: 0 } : p)),
+            }
           : c,
       ),
     });

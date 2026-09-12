@@ -4,7 +4,15 @@ import { Pressable, TextInput, View } from 'react-native';
 import { addDays, weeksBetween } from '../domain/dates';
 import { money } from '../domain/format';
 import { draftId, weeklyPay } from '../domain/payroll';
-import type { BillDraft, Category, ChallengeDraft, FundDraft, JobDraft, PayCadence } from '../domain/types';
+import type {
+  BillDraft,
+  Category,
+  ChallengeDraft,
+  FundDraft,
+  JobDraft,
+  PayCadence,
+  Person,
+} from '../domain/types';
 import { CATEGORIES } from '../domain/types';
 import { colors, fonts, RULE } from '../theme/tokens';
 import { scaleFont } from '../theme/scale';
@@ -99,6 +107,83 @@ function FormCard({
           <PrimaryButton label={saveLabel} height={44} onPress={onSave} />
         </View>
       </View>
+    </View>
+  );
+}
+
+/**
+ * Who's in.
+ *
+ * This is what makes the Friends tab honest: Maya is in your Austin trip
+ * because someone picked her here, not because the app decided so. People are
+ * chips you toggle — invited until they accept.
+ */
+export function PeoplePicker({
+  people,
+  selected,
+  onToggle,
+  emptyNote = 'Just you for now.',
+}: {
+  people: Person[];
+  selected: string[];
+  onToggle: (id: string) => void;
+  emptyNote?: string;
+}) {
+  if (!people.length) {
+    return (
+      <T w={600} size={13} lh={1.35} color={colors.muted}>
+        {emptyNote}
+      </T>
+    );
+  }
+
+  return (
+    <View>
+      <T w={700} size={12} color={colors.muted} style={{ marginBottom: 6 }}>
+        Who&apos;s in?
+      </T>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        {people.map((person) => {
+          const on = selected.includes(person.id);
+          return (
+            <Pressable
+              key={person.id}
+              onPress={() => onToggle(person.id)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: on }}
+              accessibilityLabel={`${on ? 'Remove' : 'Invite'} ${person.name}`}
+              style={({ pressed }) => ({
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 8,
+                borderWidth: RULE,
+                borderColor: colors.ink,
+                backgroundColor: on ? colors.ink : colors.white,
+                paddingVertical: 6,
+                paddingHorizontal: 10,
+                opacity: pressed && !on ? 0.7 : 1,
+              })}>
+              <T w={800} size={12} color={on ? colors.ink : colors.cream}
+                 style={{
+                   width: 20,
+                   height: 20,
+                   textAlign: 'center',
+                   backgroundColor: on ? colors.cream : colors.ink,
+                 }}>
+                {person.initial}
+              </T>
+              <T w={800} size={13} color={on ? colors.cream : colors.ink} nowrap>
+                {person.name}
+              </T>
+            </Pressable>
+          );
+        })}
+      </View>
+      <T w={600} size={12} lh={1.35} color={colors.muted} style={{ marginTop: 8 }}>
+        {selected.length
+          ? `${selected.length} ${selected.length === 1 ? 'person' : 'people'} will be invited — they join once they accept.`
+          : 'Nobody yet. Tap a name to invite them.'}
+      </T>
     </View>
   );
 }
@@ -240,11 +325,14 @@ export function GoalForm({
   onCancel,
   onSave,
   today,
+  people = [],
 }: {
   onCancel: () => void;
   onSave: (draft: FundDraft) => void;
   today: string;
+  people?: Person[];
 }) {
+  const [invites, setInvites] = useState<string[]>([]);
   const [label, setLabel] = useState('');
   const [target, setTarget] = useState('');
   const [occasion, setOccasion] = useState(() => addDays(today, 70));
@@ -270,6 +358,7 @@ export function GoalForm({
           targetAmount: targetNum,
           weeklyPledge: pledge,
           extraContributed: 0,
+          inviteIds: invites,
         })
       }>
       <Field label="What for?" value={label} onChange={setLabel} placeholder="Austin trip" autoFocus />
@@ -297,6 +386,17 @@ export function GoalForm({
         <InkSlider value={pledge} min={0} max={60} step={5} onChange={setPledge} />
         <SliderAxis labels={['$0', `${weeks} weeks → ${money(saved)}`, '$60']} />
       </View>
+
+      <PeoplePicker
+        people={people}
+        selected={invites}
+        onToggle={(id) =>
+          setInvites((current) =>
+            current.includes(id) ? current.filter((x) => x !== id) : [...current, id],
+          )
+        }
+        emptyNote="Saving on your own — no one else to invite yet."
+      />
 
       {canSave && saved < targetNum ? (
         <T w={600} size={13} lh={1.35} color={colors.red}>
@@ -387,11 +487,14 @@ export function ChallengeForm({
   onCancel,
   onSave,
   today,
+  people = [],
 }: {
   onCancel: () => void;
   onSave: (draft: ChallengeDraft) => void;
   today: string;
+  people?: Person[];
 }) {
+  const [invites, setInvites] = useState<string[]>([]);
   const [label, setLabel] = useState('');
   const [category, setCategory] = useState<Category | undefined>('Drinks');
   const [until, setUntil] = useState(() => addDays(today, 30));
@@ -404,7 +507,9 @@ export function ChallengeForm({
       onCancel={onCancel}
       canSave={canSave}
       saveLabel="Start streak"
-      onSave={() => onSave({ id: draftId('ch'), label: label.trim(), category, until })}>
+      onSave={() =>
+        onSave({ id: draftId('ch'), label: label.trim(), category, until, inviteIds: invites })
+      }>
       <Field
         label="What are you cutting out?"
         value={label}
@@ -445,6 +550,17 @@ export function ChallengeForm({
         <DateField label="Until" value={until} onChange={setUntil} min={addDays(today, 1)} today={today} />
         <View style={{ flex: 1 }} />
       </Row>
+
+      <PeoplePicker
+        people={people}
+        selected={invites}
+        onToggle={(id) =>
+          setInvites((current) =>
+            current.includes(id) ? current.filter((x) => x !== id) : [...current, id],
+          )
+        }
+        emptyNote="Going it alone — no one else to invite yet."
+      />
 
       <T w={600} size={13} lh={1.35} color={colors.muted}>
         {category
