@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Semester Runway</title>
+
+    <!-- react-native-web's recommended reset. Expo's default template ships
+         this; overriding the template means we carry it ourselves. -->
+    <style id="expo-reset">
+      html,
+      body {
+        height: 100%;
+      }
+      /* <ScrollView> does the scrolling, not the document. */
+      body {
+        overflow: hidden;
+      }
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+
+    <!-- Semester Runway is a phone app, so the web build renders at phone size
+         instead of stretching across a desktop window. Below 440px — a real
+         phone, or a narrow window — the frame drops away and the app goes
+         full-bleed, which is what you want on the device itself. -->
+    <style id="phone-frame">
+      body {
+        margin: 0;
+        background: #efe9dd; /* the design canvas the phone sits on */
+      }
+      #root {
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        background: #faf6ee;
+        overflow: hidden;
+      }
+
+      @media (min-width: 440px) {
+        body {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        #root {
+          /* iPhone 16 Pro logical size — what the design was drawn against. */
+          width: 402px;
+          height: min(874px, 100vh);
+          flex: 0 0 auto;
+          box-shadow:
+            0 24px 60px rgba(30, 26, 23, 0.22),
+            0 0 0 1px rgba(30, 26, 23, 0.16);
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #17140f;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "Semester Runway",
+    "slug": "semester-runway",
+    "scheme": "semesterrunway",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FAF6EE",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.semesterrunway.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Semester Runway reads the price and category off your receipts so you don't have to type them in."
+      }
+    },
+    "android": {
+      "package": "com.semesterrunway.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#FAF6EE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "backgroundColor": "#FAF6EE",
+          "imageWidth": 180
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Semester Runway reads the price and category off your receipts so you don't have to type them in."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
