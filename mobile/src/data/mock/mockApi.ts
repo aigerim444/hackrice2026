@@ -43,6 +43,18 @@ export class MockRunwayApi implements RunwayApi {
     return clone(next);
   }
 
+  /**
+   * Adopt a snapshot restored from the device cache.
+   *
+   * A real server remembers you across restarts; this one lives in memory and
+   * would otherwise hand back the seed the moment you logged an expense, wiping
+   * whatever the app had just restored. Mock-only, and deliberately not on
+   * `RunwayApi` — there is nothing for a server to implement here.
+   */
+  hydrate(snapshot: SemesterSnapshot): void {
+    this.snapshot = clone(snapshot);
+  }
+
   async getSnapshot(): Promise<SemesterSnapshot> {
     await wait(LATENCY.read);
     return clone(this.snapshot);

@@ -3,6 +3,7 @@ import { hasGemini } from './gemini/geminiClient';
 import { HttpRunwayApi } from './http/httpApi';
 import { MockRunwayApi } from './mock/mockApi';
 import type { RunwayApi } from './api';
+import type { SemesterSnapshot } from '../domain/types';
 
 /**
  * Picks the implementation.
@@ -25,6 +26,17 @@ const store: RunwayApi = baseUrl ? new HttpRunwayApi(baseUrl) : new MockRunwayAp
 export const api: RunwayApi = hasGemini() ? new GeminiAugmentedApi(store) : store;
 
 export const isMockApi = !baseUrl;
+
+/**
+ * Hand a cached snapshot back to the store on launch.
+ *
+ * Only the mock needs this — a real server already remembers you, and without
+ * it the mock would serve the seed again on the next mutation and undo the
+ * restore. A no-op against `HttpRunwayApi`, by design.
+ */
+export function hydrateStoreFromCache(snapshot: SemesterSnapshot): void {
+  if (store instanceof MockRunwayApi) store.hydrate(snapshot);
+}
 
 /** True when the AI paths are live. Screens badge themselves honestly with it. */
 export const isAiEnabled = hasGemini();

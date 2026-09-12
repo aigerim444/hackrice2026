@@ -9,7 +9,8 @@ import {
   type ReactNode,
 } from 'react';
 
-import { api } from '../data/client';
+import { api, hydrateStoreFromCache } from '../data/client';
+import { cacheSnapshot, clearCachedSnapshot, loadCachedSnapshot } from '../data/persist';
 import { money } from '../domain/format';
 import { project, projectBaseline, type Projection } from '../domain/runway';
 import type {
@@ -127,25 +128,52 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const jobTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
+  /**
+   * Boot: the device cache first, then the API.
+   *
+   * The cache is only there to make the first frame instant and to survive a
+   * restart. It is handed back to the store before the read so an in-memory
+   * mock doesn't serve the seed again on the next mutation, and the API's
+   * answer overwrites it either way — a stale cache can make one frame out of
+   * date, never the app wrong.
+   */
   useEffect(() => {
     let cancelled = false;
-    api
-      .getSnapshot()
-      .then((next) => {
+
+    (async () => {
+      const cached = await loadCachedSnapshot();
+      if (cached && !cancelled) {
+        hydrateStoreFromCache(cached);
+        setSnapshot(cached);
+        setSetup(setupFrom(cached));
+        setLoading(false);
+      }
+
+      try {
+        const next = await api.getSnapshot();
         if (cancelled) return;
         setSnapshot(next);
         setSetup(setupFrom(next));
-      })
-      .catch((e: unknown) => {
-        if (!cancelled) setError(e instanceof Error ? e.message : 'Could not load your semester.');
-      })
-      .finally(() => {
+      } catch (e: unknown) {
+        // With a cache on screen this isn't worth an error state — the user is
+        // looking at their semester, just not a freshly fetched one.
+        if (!cancelled && !cached) {
+          setError(e instanceof Error ? e.message : 'Could not load your semester.');
+        }
+      } finally {
         if (!cancelled) setLoading(false);
-      });
+      }
+    })();
+
     return () => {
       cancelled = true;
     };
   }, []);
+
+  /** Write through on every change, so a restart lands where you left off. */
+  useEffect(() => {
+    if (snapshot) void cacheSnapshot(snapshot);
+  }, [snapshot]);
 
   useEffect(() => {
     const timers = jobTimers.current;
@@ -180,6 +208,7 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
   );
 
   const resetSemester = useCallback(async () => {
+    await clearCachedSnapshot();
     const next = await api.resetSemester();
     setSnapshot(next);
     setSetup(setupFrom(next));
