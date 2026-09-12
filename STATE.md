@@ -73,7 +73,7 @@ a server with no change above that line.
 
 ## 3. What actually works
 
-Nine screens, all reachable, all wired to the store:
+Ten screens, all reachable, all wired to the store:
 
 | Screen | File | State |
 |---|---|---|
@@ -181,6 +181,8 @@ Roughly in order of value per hour:
 
 1. **Persist the snapshot.** `AsyncStorage` in `RunwayProvider`, keyed by
    semester id. One JSON blob. Unblocks every other kind of testing.
+   Superseded by `CLAUDE.md`: this project goes straight to Supabase, so treat
+   AsyncStorage as intentionally skipped rather than a step still owed.
 2. **Give bills a real envelope picker** in onboarding (fixes §5.2).
 3. **Amount picker on fund contributions**, replacing the fixed $20.
 4. **A daily tick that advances streaks**, so challenges can go up as well as
