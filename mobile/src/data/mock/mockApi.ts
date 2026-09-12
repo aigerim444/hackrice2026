@@ -1,5 +1,13 @@
 import { coachReply, userMessage } from '../../domain/coach';
-import type { ParsedReceipt, SemesterSnapshot, SetupInput } from '../../domain/types';
+import { completeJob } from '../../domain/payroll';
+import type {
+  Fund,
+  FundDraft,
+  JobDraft,
+  ParsedReceipt,
+  SemesterSnapshot,
+  SetupInput,
+} from '../../domain/types';
 import type { WrappedStats } from '../../domain/wrapped';
 import type { RunwayApi } from '../api';
 import { SEED_SNAPSHOT, SEED_WRAPPED } from './seed';
@@ -41,6 +49,8 @@ export class MockRunwayApi implements RunwayApi {
   async completeSetup(input: SetupInput): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
     const s = this.snapshot;
+    const today = s.semester.today;
+
     return this.commit({
       ...s,
       setupComplete: true,
@@ -51,20 +61,45 @@ export class MockRunwayApi implements RunwayApi {
             ? { ...source, amount: input.summerAmount }
             : source,
       ),
-      bills: s.bills.map((bill) =>
-        bill.id === 'bill-rent'
-          ? { ...bill, amount: input.rentAmount }
-          : bill.id === 'bill-phone'
-            ? { ...bill, amount: input.phoneAmount }
-            : bill,
-      ),
-      fund: {
-        ...s.fund,
-        weeklyPledge: input.fundWeeklyPledge,
-        members: s.fund.members.map((m) =>
-          m.isYou ? { ...m, weeklyPledge: input.fundWeeklyPledge } : m,
-        ),
-      },
+      // The drafts replace whatever was there: onboarding is the whole truth
+      // about what you earn, what you owe and what you're saving for.
+      jobs: input.jobs.map((draft) => completeJob(draft, today)),
+      bills: input.bills.map((draft) => ({ ...draft, envelope: draft.envelope ?? 'fees' })),
+      funds: input.funds.map((draft) => this.hydrateFund(draft)),
+    });
+  }
+
+  /** A goal you added is yours alone until someone else pays in. */
+  private hydrateFund(draft: FundDraft): Fund {
+    if (draft.members?.length) return draft as Fund;
+    return {
+      ...draft,
+      members: [
+        {
+          id: this.snapshot.user.id,
+          name: 'You',
+          isYou: true,
+          contributed: 0,
+          weeklyPledge: draft.weeklyPledge,
+          status: 'on track',
+        },
+      ],
+    };
+  }
+
+  async addJob(draft: JobDraft): Promise<SemesterSnapshot> {
+    await wait(LATENCY.write);
+    return this.commit({
+      ...this.snapshot,
+      jobs: [...this.snapshot.jobs, completeJob(draft, this.snapshot.semester.today)],
+    });
+  }
+
+  async addFund(draft: FundDraft): Promise<SemesterSnapshot> {
+    await wait(LATENCY.write);
+    return this.commit({
+      ...this.snapshot,
+      funds: [...this.snapshot.funds, this.hydrateFund(draft)],
     });
   }
 
@@ -134,18 +169,22 @@ export class MockRunwayApi implements RunwayApi {
     return { snapshot, reply };
   }
 
-  async contributeToFund(amount: number): Promise<SemesterSnapshot> {
+  async contributeToFund(fundId: string, amount: number): Promise<SemesterSnapshot> {
     await wait(LATENCY.write);
     const s = this.snapshot;
     return this.commit({
       ...s,
-      fund: {
-        ...s.fund,
-        extraContributed: s.fund.extraContributed + amount,
-        members: s.fund.members.map((m) =>
-          m.isYou ? { ...m, contributed: m.contributed + amount } : m,
-        ),
-      },
+      funds: s.funds.map((fund) =>
+        fund.id !== fundId
+          ? fund
+          : {
+              ...fund,
+              extraContributed: fund.extraContributed + amount,
+              members: fund.members.map((m) =>
+                m.isYou ? { ...m, contributed: m.contributed + amount } : m,
+              ),
+            },
+      ),
     });
   }
 

@@ -1,4 +1,10 @@
-import type { ParsedReceipt, SemesterSnapshot, SetupInput } from '../../domain/types';
+import type {
+  FundDraft,
+  JobDraft,
+  ParsedReceipt,
+  SemesterSnapshot,
+  SetupInput,
+} from '../../domain/types';
 import type { WrappedStats } from '../../domain/wrapped';
 import { ApiError, type RunwayApi } from '../api';
 
@@ -18,7 +24,7 @@ import { ApiError, type RunwayApi } from '../api';
  *   POST /expenses                          → SemesterSnapshot
  *   POST /receipts:scan  (multipart)        → ParsedReceipt
  *   POST /coach/messages                    → { snapshot, reply }
- *   POST /funds/current/contributions       → SemesterSnapshot
+ *   POST /funds/:id/contributions           → SemesterSnapshot
  *   GET  /semesters/current/wrapped         → WrappedStats
  *
  * Auth is a bearer token on every request; there is no session state.
@@ -66,6 +72,14 @@ export class HttpRunwayApi implements RunwayApi {
     return this.post('/semesters/current/reset', {});
   }
 
+  addJob(draft: JobDraft): Promise<SemesterSnapshot> {
+    return this.post('/jobs', draft);
+  }
+
+  addFund(draft: FundDraft): Promise<SemesterSnapshot> {
+    return this.post('/funds', draft);
+  }
+
   setJobHours(jobId: string, hoursPerWeek: number): Promise<SemesterSnapshot> {
     return this.request(`/jobs/${encodeURIComponent(jobId)}`, {
       method: 'PATCH',
@@ -95,8 +109,8 @@ export class HttpRunwayApi implements RunwayApi {
     return this.post<Awaited<ReturnType<RunwayApi['askCoach']>>>('/coach/messages', { text });
   }
 
-  contributeToFund(amount: number): Promise<SemesterSnapshot> {
-    return this.post('/funds/current/contributions', { amount });
+  contributeToFund(fundId: string, amount: number): Promise<SemesterSnapshot> {
+    return this.post(`/funds/${encodeURIComponent(fundId)}/contributions`, { amount });
   }
 
   getWrapped(): Promise<WrappedStats> {

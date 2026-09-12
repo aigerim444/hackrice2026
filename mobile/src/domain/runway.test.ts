@@ -23,6 +23,25 @@ import type { SemesterSnapshot } from './types';
 
 const load = (): SemesterSnapshot => JSON.parse(JSON.stringify(SEED_SNAPSHOT));
 
+/** The seed ships no jobs — onboarding collects them — so tests add their own. */
+function withJob(snapshot: SemesterSnapshot, hoursPerWeek: number): SemesterSnapshot {
+  return {
+    ...snapshot,
+    jobs: [
+      {
+        id: 'job-test',
+        name: 'Library desk',
+        hourlyRate: 15.5,
+        hoursPerWeek,
+        baselineHoursPerWeek: 12,
+        payCadence: 'biweekly',
+        nextPayDate: '2026-09-18',
+        nextPayAmount: 372,
+      },
+    ],
+  };
+}
+
 test('the semester frames 111 days, with Sep 11 as day 19', () => {
   const p = project(load());
   assert.equal(p.totalDays, 111);
@@ -59,13 +78,21 @@ test('scheduled hours are the baseline, so the what-if starts at zero delta', ()
 });
 
 test('extra shifts push the date out; fewer pull it in', () => {
-  const more = load();
-  more.jobs[0].hoursPerWeek = 18;
-  assert.equal(shortDate(project(more).runOutDate), 'Dec 2');
+  const base = withJob(load(), 12);
+  const more = withJob(load(), 18);
+  const fewer = withJob(load(), 6);
 
-  const fewer = load();
-  fewer.jobs[0].hoursPerWeek = 6;
-  assert.ok(project(fewer).runOutIndex < project(load()).runOutIndex);
+  assert.ok(project(more).runOutIndex > project(base).runOutIndex);
+  assert.ok(project(fewer).runOutIndex < project(base).runOutIndex);
+
+  // Nine paid weeks left at $15.50, so six extra hours a week is +$837.
+  assert.equal(project(more).futureJobIncome, 837);
+});
+
+test('a job added in onboarding earns from the hours it was set up with', () => {
+  // Its own hours are the baseline, so a fresh job is worth zero *extra* —
+  // the what-if only measures movement away from what's scheduled.
+  assert.equal(project(withJob(load(), 12)).futureJobIncome, 0);
 });
 
 test('logging a receipt comes out of today, not out of the date', () => {
@@ -88,7 +115,7 @@ test('logging a receipt comes out of today, not out of the date', () => {
 
 test('moving money into the trip fund lowers the daily number', () => {
   const snapshot = load();
-  snapshot.fund.extraContributed = 20;
+  snapshot.funds[0].extraContributed = 20;
   assert.equal(money(project(snapshot).safeDaily), '$35');
 });
 
@@ -104,7 +131,7 @@ test('bill cadence decides what is still owed, not a flat multiplier', () => {
 
 test('the fund is pledged over the weeks left before the trip', () => {
   const snapshot = load();
-  assert.equal(weeksBetween(snapshot.semester.today, snapshot.fund.occasion), 10);
+  assert.equal(weeksBetween(snapshot.semester.today, snapshot.funds[0].occasion), 10);
 });
 
 test('spending bars rank by category and include today', () => {

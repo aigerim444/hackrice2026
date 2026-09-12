@@ -16,6 +16,8 @@ import type {
   Category,
   ChatMessage,
   EnvelopeId,
+  FundDraft,
+  JobDraft,
   ParsedReceipt,
   SemesterSnapshot,
   SetupInput,
@@ -58,7 +60,9 @@ interface RunwayContextValue {
   }) => Promise<void>;
   scanReceipt: (input: { imageUri?: string }) => Promise<ParsedReceipt>;
   askCoach: (text: string) => Promise<void>;
-  contributeToFund: (amount: number) => Promise<void>;
+  contributeToFund: (fundId: string, amount: number) => Promise<void>;
+  addJob: (draft: JobDraft) => Promise<void>;
+  addFund: (draft: FundDraft) => Promise<void>;
   /** True while the coach is composing, so the thread can show it. */
   coachThinking: boolean;
 }
@@ -70,18 +74,22 @@ const TOAST_MS = 3600;
 /** Pull the editable setup values back out of a snapshot. */
 function setupFrom(snapshot: SemesterSnapshot | null): SetupInput {
   if (!snapshot) {
-    return { aidAmount: 0, summerAmount: 0, rentAmount: 0, phoneAmount: 0, fundWeeklyPledge: 0 };
+    return { aidAmount: 0, summerAmount: 0, jobs: [], bills: [], funds: [] };
   }
   return {
     aidAmount: snapshot.income.find((i) => i.kind === 'aid')?.amount ?? 0,
     summerAmount: snapshot.income.find((i) => i.kind === 'summer')?.amount ?? 0,
-    rentAmount: snapshot.bills.find((b) => b.id === 'bill-rent')?.amount ?? 0,
-    phoneAmount: snapshot.bills.find((b) => b.id === 'bill-phone')?.amount ?? 0,
-    fundWeeklyPledge: snapshot.fund.weeklyPledge,
+    jobs: snapshot.jobs.map(({ nextPayDate, nextPayAmount, baselineHoursPerWeek, ...draft }) => draft),
+    bills: snapshot.bills,
+    funds: snapshot.funds,
   };
 }
 
-/** Apply a draft setup to a snapshot so onboarding's totals update as you type. */
+/**
+ * Apply a draft setup to a snapshot so onboarding's totals update as you type.
+ * The jobs the user is building don't have a payday yet, so they're projected
+ * with the hours they entered as their baseline.
+ */
 function withSetup(snapshot: SemesterSnapshot, setup: SetupInput): SemesterSnapshot {
   return {
     ...snapshot,
@@ -92,14 +100,14 @@ function withSetup(snapshot: SemesterSnapshot, setup: SetupInput): SemesterSnaps
           ? { ...source, amount: setup.summerAmount }
           : source,
     ),
-    bills: snapshot.bills.map((bill) =>
-      bill.id === 'bill-rent'
-        ? { ...bill, amount: setup.rentAmount }
-        : bill.id === 'bill-phone'
-          ? { ...bill, amount: setup.phoneAmount }
-          : bill,
-    ),
-    fund: { ...snapshot.fund, weeklyPledge: setup.fundWeeklyPledge },
+    jobs: setup.jobs.map((draft) => ({
+      ...draft,
+      baselineHoursPerWeek: draft.hoursPerWeek,
+      nextPayDate: snapshot.semester.today,
+      nextPayAmount: 0,
+    })),
+    bills: setup.bills.map((draft) => ({ ...draft, envelope: draft.envelope ?? 'fees' })),
+    funds: setup.funds.map((draft) => ({ ...draft, members: draft.members ?? [] })),
   };
 }
 
@@ -222,8 +230,16 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const contributeToFund = useCallback(async (amount: number) => {
-    const next = await api.contributeToFund(amount);
+  const addJob = useCallback(async (draft: JobDraft) => {
+    setSnapshot(await api.addJob(draft));
+  }, []);
+
+  const addFund = useCallback(async (draft: FundDraft) => {
+    setSnapshot(await api.addFund(draft));
+  }, []);
+
+  const contributeToFund = useCallback(async (fundId: string, amount: number) => {
+    const next = await api.contributeToFund(fundId, amount);
     setSnapshot(next);
     const after = project(next);
     flash(
@@ -260,6 +276,8 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
       scanReceipt,
       askCoach,
       contributeToFund,
+      addJob,
+      addFund,
       coachThinking,
     }),
     [
@@ -280,6 +298,8 @@ export function RunwayProvider({ children }: { children: ReactNode }) {
       scanReceipt,
       askCoach,
       contributeToFund,
+      addJob,
+      addFund,
       coachThinking,
     ],
   );

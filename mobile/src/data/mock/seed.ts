@@ -48,28 +48,9 @@ export const SEED_SNAPSHOT: SemesterSnapshot = {
     },
   ],
 
-  jobs: [
-    {
-      id: 'job-lib',
-      name: 'Library desk',
-      hourlyRate: 15.5,
-      hoursPerWeek: 12,
-      baselineHoursPerWeek: 12,
-      payCadence: 'biweekly',
-      nextPayDate: '2026-09-18',
-      nextPayAmount: 217,
-    },
-    {
-      id: 'job-rec',
-      name: 'Rec center',
-      hourlyRate: 14,
-      hoursPerWeek: 6,
-      baselineHoursPerWeek: 6,
-      payCadence: 'monthly',
-      nextPayDate: '2026-10-01',
-      nextPayAmount: 336,
-    },
-  ],
+  // Empty on purpose: campus jobs are entered during onboarding, because
+  // whether you work none, one or three of them is the whole variable.
+  jobs: [],
 
   bills: [
     { id: 'bill-rent', label: 'Rent', envelope: 'rent', amount: 520, cadence: 'monthly', dueDay: 1 },
@@ -92,19 +73,22 @@ export const SEED_SNAPSHOT: SemesterSnapshot = {
     },
   ],
 
-  fund: {
-    id: 'fund-austin',
-    label: 'Austin trip',
-    occasion: '2026-11-20',
-    targetAmount: 600,
-    weeklyPledge: 20,
-    extraContributed: 0,
-    members: [
-      { id: 'u-priya', name: 'You', isYou: true, contributed: 120, weeklyPledge: 20, status: 'on track' },
-      { id: 'u-maya', name: 'Maya', contributed: 90, weeklyPledge: 20, status: 'behind' },
-      { id: 'u-dev', name: 'Dev', contributed: 50, weeklyPledge: 25, status: 'new' },
-    ],
-  },
+  funds: [
+    {
+      id: 'fund-austin',
+      label: 'Austin trip',
+      shared: true,
+      occasion: '2026-11-20',
+      targetAmount: 600,
+      weeklyPledge: 20,
+      extraContributed: 0,
+      members: [
+        { id: 'u-priya', name: 'You', isYou: true, contributed: 120, weeklyPledge: 20, status: 'on track' },
+        { id: 'u-maya', name: 'Maya', contributed: 90, weeklyPledge: 20, status: 'behind' },
+        { id: 'u-dev', name: 'Dev', contributed: 50, weeklyPledge: 25, status: 'new' },
+      ],
+    },
+  ],
 
   challenges: [
     {
@@ -182,7 +166,7 @@ export const SEED_SNAPSHOT: SemesterSnapshot = {
     {
       id: 'mv-shift',
       deltaDays: 2,
-      title: 'Logged 14 h at the library',
+      title: 'Logged 14 h at work',
       sublabel: '$217 lands Sep 18 → Free to spend',
       positive: true,
     },

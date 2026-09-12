@@ -1,6 +1,11 @@
 import { money, pct } from './format';
 import type { Category, Fund, SemesterSnapshot } from './types';
 
+/** The goal Home features: the one that comes due soonest. */
+export function primaryFund(snapshot: SemesterSnapshot): Fund | undefined {
+  return [...snapshot.funds].sort((a, b) => a.occasion.localeCompare(b.occasion))[0];
+}
+
 /** Spending by category — history plus anything logged today. */
 export interface CategoryBar {
   name: Category;

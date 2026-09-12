@@ -4,7 +4,7 @@ import { ScrollView, View } from 'react-native';
 
 import { shortDate, weekdayDate, weeksBetween } from '../src/domain/dates';
 import { cents, money, signedMoney } from '../src/domain/format';
-import { fundProgress, categoryBars, homeStreaks } from '../src/domain/selectors';
+import { fundProgress, categoryBars, homeStreaks, primaryFund } from '../src/domain/selectors';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
 import { colors, GUTTER } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
@@ -28,10 +28,11 @@ export default function HomeScreen() {
 
   if (!snapshot.setupComplete) return <Redirect href="/onboarding" />;
 
-  const { semester, fund, jobs } = snapshot;
+  const { semester, jobs } = snapshot;
+  const fund = primaryFund(snapshot);
   const bars = categoryBars(snapshot).slice(0, 4);
-  const weeksToTrip = Math.max(0, weeksBetween(semester.today, fund.occasion));
-  const progress = fundProgress(fund, weeksToTrip);
+  const weeksToTrip = fund ? Math.max(0, weeksBetween(semester.today, fund.occasion)) : 0;
+  const progress = fund ? fundProgress(fund, weeksToTrip) : null;
   const { delivery, boba } = homeStreaks(snapshot);
 
   return (
@@ -83,6 +84,7 @@ export default function HomeScreen() {
           <StripAxis start={shortDate(semester.startDate)} end={shortDate(semester.endDate)} />
         </Section>
 
+        {jobs.length ? (
         <Section kicker="Next paychecks" onPress={() => router.push('/jobs')}>
           <View style={{ marginTop: 10, gap: 8 }}>
             {jobs.map((job) => (
@@ -99,6 +101,7 @@ export default function HomeScreen() {
             ))}
           </View>
         </Section>
+        ) : null}
 
         <Section kicker={`Spending · ${money(projection.spent)}`} onPress={() => router.push('/spend')}>
           <View style={{ marginTop: 12, gap: 7 }}>
@@ -114,8 +117,9 @@ export default function HomeScreen() {
           </View>
         </Section>
 
+        {fund && progress ? (
         <Section
-          kicker={`${fund.label} · with ${fund.members.filter((m) => !m.isYou).map((m) => m.name).join(' + ')}`}
+          kicker={fundKicker(fund)}
           onPress={() => router.push('/friends')}>
           <Row align="baseline" gap={10} style={{ marginTop: 8, justifyContent: 'flex-start' }}>
             <T w={800} size={34} tracking={-0.03} lh={1}>
@@ -149,6 +153,7 @@ export default function HomeScreen() {
             </T>
           </T>
         </Section>
+        ) : null}
 
         <Rule />
       </ScrollView>
@@ -184,18 +189,22 @@ export default function HomeScreen() {
                 router.push('/chat');
               },
             },
-            {
-              id: 'fund',
-              icon: '→',
-              title: `Put $20 toward the trip`,
-              sublabel: `${money(projection.safeDaily)}/day becomes ${money(
-                (projection.free - 20) / projection.daysLeft,
-              )}`,
-              onPress: () => {
-                setMenuOpen(false);
-                router.push('/friends');
-              },
-            },
+            ...(fund
+              ? [
+                  {
+                    id: 'fund',
+                    icon: '→',
+                    title: `Put $20 toward ${fund.label}`,
+                    sublabel: `${money(projection.safeDaily)}/day becomes ${money(
+                      (projection.free - 20) / projection.daysLeft,
+                    )}`,
+                    onPress: () => {
+                      setMenuOpen(false);
+                      router.push('/friends');
+                    },
+                  },
+                ]
+              : []),
           ]}
         />
       ) : null}
@@ -203,4 +212,10 @@ export default function HomeScreen() {
       <AddButton open={menuOpen} bottom={96} onToggle={() => setMenuOpen((open) => !open)} />
     </Screen>
   );
+}
+
+/** "Austin trip · with Maya + Dev", or just the label when it's yours alone. */
+function fundKicker(fund: { label: string; members: { name: string; isYou?: boolean }[] }): string {
+  const others = fund.members.filter((m) => !m.isYou).map((m) => m.name);
+  return others.length ? `${fund.label} · with ${others.join(' + ')}` : fund.label;
 }

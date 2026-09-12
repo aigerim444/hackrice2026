@@ -3,12 +3,14 @@ import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { shortDate, weeksBetween } from '../src/domain/dates';
+import type { JobDraft } from '../src/domain/types';
 import { money, rate as formatRate, signedMoney } from '../src/domain/format';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
 import { colors, GUTTER, RULE } from '../src/theme/tokens';
 import { Kicker, T } from '../src/theme/type';
 import { BackLink, InkBlock } from '../src/ui/blocks';
 import { InkSlider, OutlineButton, Segment, SliderAxis } from '../src/ui/controls';
+import { AddRow, JobForm } from '../src/ui/forms';
 import { Row, Screen } from '../src/ui/primitives';
 
 const MAX_HOURS = 24;
@@ -22,11 +24,41 @@ const MAX_HOURS = 24;
  * days is exactly what makes the run-out date wander.
  */
 export default function JobsScreen() {
-  const { snapshot, projection, baseline, setJobHours } = useLoadedRunway();
+  const { snapshot, projection, baseline, setJobHours, addJob } = useLoadedRunway();
   const { jobs, semester, observedDailyPace } = snapshot;
 
   const [selectedId, setSelectedId] = useState(jobs[0]?.id ?? '');
+  const [adding, setAdding] = useState(false);
   const selected = jobs.find((job) => job.id === selectedId) ?? jobs[0];
+
+  const save = async (draft: JobDraft) => {
+    setAdding(false);
+    await addJob(draft);
+    setSelectedId(draft.id);
+  };
+
+  // Nothing to drag until there's a job to drag.
+  if (!selected) {
+    return (
+      <Screen>
+        <BackLink label="Jobs" onPress={() => router.back()} />
+        <ScrollView contentContainerStyle={{ padding: GUTTER, paddingTop: 14, gap: 14 }}>
+          <T w={800} size={30} tracking={-0.02} lh={1.05}>
+            No jobs yet
+          </T>
+          <T w={600} size={14} lh={1.4} color={colors.muted}>
+            Add one and you can drag its hours to see what an extra shift a week does to your
+            run-out date.
+          </T>
+          {adding ? (
+            <JobForm onCancel={() => setAdding(false)} onSave={save} />
+          ) : (
+            <AddRow label="+ Add a job" onPress={() => setAdding(true)} />
+          )}
+        </ScrollView>
+      </Screen>
+    );
+  }
   const others = jobs.filter((job) => job.id !== selected.id);
 
   const paidWeeks = Math.max(1, weeksBetween(semester.today, semester.lastPaidWeek));
@@ -66,9 +98,15 @@ export default function JobsScreen() {
         <Segment
           style={{ marginHorizontal: GUTTER, marginTop: 14 }}
           selectedId={selected.id}
-          onSelect={setSelectedId}
-          options={[...jobs.map((job) => ({ id: job.id, label: job.name })), { id: 'add', label: '+ Add', disabled: true }]}
+          onSelect={(id) => (id === 'add' ? setAdding(true) : setSelectedId(id))}
+          options={[...jobs.map((job) => ({ id: job.id, label: job.name })), { id: 'add', label: '+ Add' }]}
         />
+
+        {adding ? (
+          <View style={{ marginHorizontal: GUTTER, marginTop: 12 }}>
+            <JobForm onCancel={() => setAdding(false)} onSave={save} />
+          </View>
+        ) : null}
 
         <View style={{ marginHorizontal: GUTTER, marginTop: 10, paddingTop: 6 }}>
           <Row align="baseline">
@@ -124,14 +162,16 @@ export default function JobsScreen() {
               borderColor: colors.sand,
             }}>
             <T w={700} size={12} color={colors.muted} nowrap>
-              {others
-                .map(
-                  (job) =>
-                    `${job.name} stays at ${job.hoursPerWeek} h · ${money(
-                      job.hoursPerWeek * job.hourlyRate,
-                    )}/wk`,
-                )
-                .join(' · ')}
+              {others.length
+                ? others
+                    .map(
+                      (job) =>
+                        `${job.name} stays at ${job.hoursPerWeek} h · ${money(
+                          job.hoursPerWeek * job.hourlyRate,
+                        )}/wk`,
+                    )
+                    .join(' · ')
+                : `${selected.baselineHoursPerWeek} h/wk scheduled`}
             </T>
             <T w={700} size={12} color={colors.muted} nowrap>
               All jobs: {totalHours} h

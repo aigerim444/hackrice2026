@@ -54,9 +54,14 @@ export function remainingCharges(bill: Bill, from: ISODate, to: ISODate): number
   return due.length * bill.amount;
 }
 
-/** What the shared fund will have taken out of your runway by the time it's due. */
+/** What one fund will have taken out of your runway by the time it's due. */
 export function fundReserved(fund: Fund, today: ISODate): number {
   return fund.weeklyPledge * Math.max(0, weeksBetween(today, fund.occasion)) + fund.extraContributed;
+}
+
+/** Every goal you're paying into, together. */
+export function fundsReserved(funds: Fund[], today: ISODate): number {
+  return funds.reduce((sum, fund) => sum + fundReserved(fund, today), 0);
 }
 
 /**
@@ -73,7 +78,7 @@ export function futureJobIncome(jobs: Job[], today: ISODate, lastPaidWeek: ISODa
 }
 
 export function project(snapshot: SemesterSnapshot): Projection {
-  const { semester, income, bills, fund, jobs } = snapshot;
+  const { semester, income, bills, funds, jobs } = snapshot;
   const { today, startDate, endDate } = semester;
 
   const totalDays = daysBetween(startDate, endDate) + 1;
@@ -82,7 +87,7 @@ export function project(snapshot: SemesterSnapshot): Projection {
 
   const lump = income.reduce((sum, source) => sum + source.amount, 0);
   const reserved = bills.reduce((sum, bill) => sum + remainingCharges(bill, today, endDate), 0);
-  const fundTotal = fundReserved(fund, today);
+  const fundTotal = fundsReserved(funds, today);
 
   const todaySpent = snapshot.todayExpenses.reduce((sum, e) => sum + e.amount, 0);
   const spent = snapshot.priorFreeSpend + todaySpent;

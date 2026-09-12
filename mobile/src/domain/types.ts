@@ -97,6 +97,8 @@ export interface FundMember {
 export interface Fund {
   id: string;
   label: string;
+  /** True for a fund other people are also paying into. */
+  shared?: boolean;
   occasion: ISODate;
   targetAmount: number;
   members: FundMember[];
@@ -173,7 +175,8 @@ export interface SemesterSnapshot {
   income: IncomeSource[];
   jobs: Job[];
   bills: Bill[];
-  fund: Fund;
+  /** Everything you're setting money aside for. The first is the one Home features. */
+  funds: Fund[];
   challenges: Challenge[];
   /** Everything logged today. Older spend is summarised below. */
   todayExpenses: Expense[];
@@ -195,11 +198,26 @@ export interface SemesterSnapshot {
   setupComplete: boolean;
 }
 
-/** What onboarding collects. */
+/** A job as typed in — the next payday and its amount are derived from cadence. */
+export type JobDraft = Omit<Job, 'nextPayDate' | 'nextPayAmount' | 'baselineHoursPerWeek'>;
+
+/** A bill as typed in. */
+export type BillDraft = Omit<Bill, 'envelope'> & { envelope?: EnvelopeId };
+
+/** A goal as typed in. Yours alone unless someone else is already paying in. */
+export type FundDraft = Omit<Fund, 'members'> & { members?: FundMember[] };
+
+/**
+ * What onboarding collects.
+ *
+ * Jobs, bills and goals are lists the user builds rather than fields over
+ * fixed rows — you can work two campus jobs or none, and the app shouldn't
+ * assume which.
+ */
 export interface SetupInput {
   aidAmount: number;
   summerAmount: number;
-  rentAmount: number;
-  phoneAmount: number;
-  fundWeeklyPledge: number;
+  jobs: JobDraft[];
+  bills: BillDraft[];
+  funds: FundDraft[];
 }

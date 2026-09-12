@@ -3,6 +3,8 @@ import type {
   Category,
   ChatMessage,
   EnvelopeId,
+  FundDraft,
+  JobDraft,
   ParsedReceipt,
   SemesterSnapshot,
   SetupInput,
@@ -32,6 +34,12 @@ export interface RunwayApi {
   /** Re-run setup from the You tab. */
   resetSemester(): Promise<SemesterSnapshot>;
 
+  /** Add a job after setup — a second campus gig mid-term. */
+  addJob(draft: JobDraft): Promise<SemesterSnapshot>;
+
+  /** Start saving for something new. */
+  addFund(draft: FundDraft): Promise<SemesterSnapshot>;
+
   /** Drag a job's hours. Persisted, because a schedule change is a real change. */
   setJobHours(jobId: string, hoursPerWeek: number): Promise<SemesterSnapshot>;
 
@@ -53,8 +61,8 @@ export interface RunwayApi {
   /** Ask the coach a what-if. Appends both turns to the thread. */
   askCoach(text: string): Promise<{ snapshot: SemesterSnapshot; reply: ChatMessage }>;
 
-  /** Move real money into the shared fund, out of your spending money. */
-  contributeToFund(amount: number): Promise<SemesterSnapshot>;
+  /** Move real money into a fund, out of your spending money. */
+  contributeToFund(fundId: string, amount: number): Promise<SemesterSnapshot>;
 
   /** End-of-semester recap. */
   getWrapped(): Promise<WrappedStats>;
