@@ -101,7 +101,11 @@ export function useNarration(stats: WrappedStats | null): Narration {
             if (cancelled) return;
             clips.current.set(index, uri);
           } catch (error) {
-            devWarn('[wrapped] prefetch failed, will fall back per card:', error);
+            // Flip the reported source now rather than waiting for the first
+            // card to fail: the label exists to say which voice you're about
+            // to hear, so it must not claim ElevenLabs when we already know.
+            devWarn('[wrapped] prefetch failed, falling back to the device voice:', error);
+            if (!cancelled) setSource('device');
             break;
           }
         }
