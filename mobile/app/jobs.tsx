@@ -95,7 +95,7 @@ export default function JobsScreen() {
     <Screen>
       <BackLink label="Jobs" onPress={() => router.back()} />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <View style={{ paddingHorizontal: GUTTER, paddingTop: 14 }}>
           <T w={800} size={30} tracking={-0.02} lh={1.05}>
             If I work more…

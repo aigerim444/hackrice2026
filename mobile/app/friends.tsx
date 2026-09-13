@@ -19,6 +19,7 @@ import { T } from '../src/theme/type';
 import { SectionHeading } from '../src/ui/blocks';
 import { MoneyInput, OutlineButton, PrimaryButton } from '../src/ui/controls';
 import { AddRow, ChallengeForm, FriendForm, GoalForm, PeoplePicker } from '../src/ui/forms';
+import { textKeyboardProps } from '../src/ui/keyboard';
 import { Flexible, Row, Screen, Tap } from '../src/ui/primitives';
 import { TabBar } from '../src/ui/TabBar';
 import { Toast } from '../src/ui/Toast';
@@ -223,7 +224,7 @@ export default function FriendsScreen() {
 
   return (
     <Screen>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
         <T w={800} size={22} style={{ paddingHorizontal: GUTTER, paddingTop: 10 }}>
           Friends
         </T>
@@ -541,6 +542,7 @@ function InvitePanel({
                 placeholderTextColor={colors.tan}
                 autoCapitalize="none"
                 autoCorrect={false}
+                {...textKeyboardProps}
                 style={{
                   borderBottomWidth: RULE,
                   borderColor: colors.ink,

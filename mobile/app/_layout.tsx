@@ -14,6 +14,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
 import { OutlineButton } from '../src/ui/controls';
+import { KeyboardDoneBar } from '../src/ui/keyboard';
 import { LoginScreen } from '../src/ui/LoginScreen';
 import { AuthProvider, useAuth } from '../src/state/AuthProvider';
 import { RunwayProvider, useRunway } from '../src/state/RunwayProvider';
@@ -130,6 +131,10 @@ export default function RootLayout() {
                 <Stack.Screen name="scan" options={{ animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="wrapped" options={{ animation: 'slide_from_bottom' }} />
               </Stack>
+              {/* Mounted once, above the Stack: it's addressed by a nativeID
+                  that has to be unique, and iOS shows it over whichever
+                  numeric keyboard is up on any screen. */}
+              <KeyboardDoneBar />
             </Gate>
           </RunwayProvider>
         </AuthGate>

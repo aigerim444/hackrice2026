@@ -3,6 +3,7 @@ import { Pressable, TextInput, View, type StyleProp, type ViewStyle } from 'reac
 
 import { colors, fonts, RULE } from '../theme/tokens';
 import { T } from '../theme/type';
+import { numericKeyboardProps } from './keyboard';
 
 /** The solid ink action. Square, full-width, label left with the chevron right. */
 export function PrimaryButton({
@@ -124,6 +125,7 @@ export function MoneyInput({
         onChangeText={(text) => onChange(Number(text.replace(/[^0-9.]/g, '')) || 0)}
         keyboardType="number-pad"
         selectTextOnFocus
+        {...numericKeyboardProps}
         style={{
           width,
           padding: 0,

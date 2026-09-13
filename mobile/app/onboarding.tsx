@@ -117,7 +117,8 @@ export default function OnboardingScreen() {
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{ paddingHorizontal: GUTTER, paddingTop: 20, paddingBottom: 24 }}
-          keyboardShouldPersistTaps="handled">
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag">
           <StepBack step={step} onBack={goBack} />
 
           {step === 1 ? <MoneyInStep setup={setup} draftSetup={draftSetup} /> : null}

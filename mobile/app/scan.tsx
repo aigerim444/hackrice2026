@@ -15,6 +15,7 @@ import { scaleFont } from '../src/theme/scale';
 import { colors, fonts, GUTTER, RULE } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
 import { PrimaryButton } from '../src/ui/controls';
+import { numericKeyboardProps, textKeyboardProps } from '../src/ui/keyboard';
 import { FadeIn, Flexible, Row } from '../src/ui/primitives';
 
 /** The envelopes a receipt can be dropped into. Rent is offered, and refused. */
@@ -297,6 +298,7 @@ export default function ScanScreen() {
                   onChangeText={setMerchantDraft}
                   placeholder="Merchant"
                   placeholderTextColor={colors.tan}
+                  {...textKeyboardProps}
                   style={{
                     width: '100%',
                     fontFamily: fonts.extrabold,
@@ -319,6 +321,7 @@ export default function ScanScreen() {
                   keyboardType="decimal-pad"
                   placeholder="0.00"
                   placeholderTextColor={colors.tan}
+                  {...numericKeyboardProps}
                   style={{
                     width: 96,
                     fontFamily: fonts.extrabold,

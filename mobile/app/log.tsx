@@ -102,7 +102,8 @@ export default function LogScreen() {
 
         <ScrollView
           contentContainerStyle={{ padding: GUTTER, gap: 16 }}
-          keyboardShouldPersistTaps="handled">
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag">
           <T w={600} size={14} lh={1.4} color={colors.muted}>
             No receipt needed. This lands in the same envelope a scan would, and moves the same
             numbers.

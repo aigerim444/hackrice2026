@@ -20,6 +20,7 @@ import { scaleFont } from '../theme/scale';
 import { T } from '../theme/type';
 import { InkSlider, OutlineButton, PrimaryButton, Segment, SliderAxis } from './controls';
 import { DateField } from './DateField';
+import { numericKeyboardProps, textKeyboardProps } from './keyboard';
 import { Flexible, Row } from './primitives';
 
 /**
@@ -59,6 +60,9 @@ export function Field({
         placeholderTextColor={colors.tan}
         keyboardType={keyboardType}
         autoFocus={autoFocus}
+        // A number pad has no return key, so it gets the Done bar; a text
+        // field has one, so Return is made to actually close the keyboard.
+        {...(keyboardType === 'default' ? textKeyboardProps : numericKeyboardProps)}
         style={{
           borderBottomWidth: RULE,
           borderColor: colors.ink,
