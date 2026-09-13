@@ -16,14 +16,21 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** Read .env without a dependency — we need exactly two keys. */
+/**
+ * Read .env without a dependency — we need exactly two keys.
+ *
+ * Two details that both cause a "your key is invalid" report for a key that is
+ * perfectly fine: split on CRLF as well as LF, because JavaScript's `.` excludes
+ * `\r` and a Windows line ending makes the whole line fail to match; and trim
+ * the value, because a trailing space is sent as part of the key.
+ */
 function loadEnv() {
   for (const file of ['.env.local', '.env']) {
     try {
-      for (const line of readFileSync(join(root, file), 'utf8').split('\n')) {
-        const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+      for (const line of readFileSync(join(root, file), 'utf8').split(/\r?\n/)) {
+        const match = line.match(/^\s*([A-Za-z0-9_]+)\s*=(.*)$/);
         if (match && !process.env[match[1]]) {
-          process.env[match[1]] = match[2].replace(/^["']|["']$/g, '');
+          process.env[match[1]] = match[2].trim().replace(/^["']|["']$/g, '').trim();
         }
       }
     } catch {

@@ -17,13 +17,23 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
+/**
+ * Read `.env.local` the way Expo does.
+ *
+ * The trimming matters more than it looks: a trailing space or a stray `\r`
+ * lands inside the value and gets sent as part of the key, which the API
+ * rejects as simply invalid. The app trims, so a naive reader here reports a
+ * broken key for a setup that actually works — which is worse than useless.
+ */
 function loadEnv() {
   for (const file of ['.env.local', '.env']) {
     try {
-      for (const line of readFileSync(join(root, file), 'utf8').split('\n')) {
-        const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+      // Split on both line endings: JavaScript's `.` excludes `\r`, so a CRLF
+      // file makes `(.*)$` fail outright and the whole line vanish silently.
+      for (const line of readFileSync(join(root, file), 'utf8').split(/\r?\n/)) {
+        const match = line.match(/^\s*([A-Za-z0-9_]+)\s*=(.*)$/);
         if (match && !process.env[match[1]]) {
-          process.env[match[1]] = match[2].replace(/^["']|["']$/g, '');
+          process.env[match[1]] = match[2].trim().replace(/^["']|["']$/g, '').trim();
         }
       }
     } catch {
@@ -55,7 +65,20 @@ if (!key) {
   process.exit(1);
 }
 
-console.log(`✓ Key loaded (…${key.slice(-6)})`);
+console.log(`✓ Key loaded (…${key.slice(-6)}) — ${key.length} chars, starts "${key.slice(0, 3)}"`);
+
+// The three ways a key that was copied correctly still arrives wrong.
+if (!/^sk_/.test(key)) {
+  console.log('  ⚠ ElevenLabs keys normally start "sk_". This may be the wrong value —');
+  console.log('    a key name or an id rather than the secret itself.');
+}
+if (key.length < 40) {
+  console.log('  ⚠ Shorter than an ElevenLabs key usually is. If the middle looks like dots,');
+  console.log('    it was copied from the masked list rather than the creation dialog.');
+}
+if (/[^\x21-\x7e]/.test(key)) {
+  console.log('  ⚠ Contains a space or invisible character — that alone causes a 401.');
+}
 
 const headers = { 'xi-api-key': key };
 
