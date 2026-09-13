@@ -19,10 +19,13 @@ const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta';
 
 /**
  * Override with `EXPO_PUBLIC_GEMINI_MODEL` if this id has moved on — Google
- * rotates them faster than a semester. `npm run gemini:doctor` lists the ids
- * your key can actually reach.
+ * rotates them faster than a semester, and retires the old ones for new keys
+ * without warning. `npm run gemini:doctor` lists the ids your key can reach.
+ *
+ * Was `gemini-2.5-flash`, which Google now 404s for new keys with a message
+ * naming this as the replacement.
  */
-export const GEMINI_MODEL = process.env.EXPO_PUBLIC_GEMINI_MODEL ?? 'gemini-2.5-flash';
+export const GEMINI_MODEL = process.env.EXPO_PUBLIC_GEMINI_MODEL ?? 'gemini-3.6-flash';
 
 /** Read on use, not at import, so tests and tooling can set it up first. */
 export const geminiKey = (): string | null =>
