@@ -8,14 +8,14 @@ into envelopes, gives you one number for what today can cost, and tells you the 
 you run out — and why that date moved.
 
 <p>
-  <img src="docs/screenshots/home.png" alt="Home screen: $34.79 left to spend today, run-out date Nov 15" width="200">
-  <img src="docs/screenshots/runway.png" alt="Runway screen: the run-out date and a ledger of what moved it" width="200">
-  <img src="docs/screenshots/scan.png" alt="Receipt scanner with a parsed $8.65 boba and a streak warning" width="200">
+  <img src="docs/screenshots/06-home.png" alt="Home: what today can cost, and the date the money runs out" width="200">
+  <img src="docs/screenshots/07-runway.png" alt="Runway: the run-out date and a ledger of what moved it" width="200">
+  <img src="docs/screenshots/09-coach.png" alt="The coach pricing a $249 purchase at 5 days of runway" width="200">
 </p>
 <p>
-  <img src="docs/screenshots/jobs.png" alt="Jobs what-if: 19 hours a week moves the date to Dec 4" width="200">
-  <img src="docs/screenshots/coach.png" alt="The coach pricing a $249 purchase at 5 days of runway" width="200">
-  <img src="docs/screenshots/wrapped.png" alt="Semester Wrapped: forecast Nov 14 versus actual Dec 12" width="200">
+  <img src="docs/screenshots/08-log-a-spend.png" alt="Logging a spend by hand, with the consequence shown live" width="200">
+  <img src="docs/screenshots/11-friends.png" alt="Friends: shared goals and streaks, with real invites" width="200">
+  <img src="docs/screenshots/12-wrapped-1.png" alt="Semester Wrapped: the lump you started with" width="200">
 </p>
 
 ## What it does
