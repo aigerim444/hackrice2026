@@ -113,15 +113,21 @@ wrong about money.
 
 ## State of things
 
-`tsc` clean · 35/35 tests, the projection engine pinned to the design’s own figures · iOS,
-Android and web bundles all build · no console errors across any screen.
+`tsc` clean · 42/42 tests, the projection engine pinned to the design’s own figures ·
+iOS, Android and web bundles all build · no console errors across any screen.
+
+**Real:** Supabase behind the same `RunwayApi` contract, with email auth (magic link
+or a 6-digit code), row-level security, cross-user invites you actually accept on a
+second account, and a `pg_cron` daily tick that advances streaks server-side. Switch
+to it with `EXPO_PUBLIC_USE_MOCK=false`; leave it unset and the in-memory mock runs
+instead, which is what the screenshots above show.
+
+**Still stubbed:** **Share** on the Wrapped cards, and Wrapped itself — a fixed
+end-of-term recap rather than one derived from your live semester.
 
 **Picking this up?** [`STATE.md`](STATE.md) is the working handoff: what's real, what's
 stubbed, the known rough edges, and the handful of things that look wrong and aren't.
-
-Stubs behind a real surface: **Share** on the Wrapped cards, auth, and Wrapped itself
-(a fixed end-of-term recap, not yet derived from your live semester). Nothing
-persists across a restart yet — that's Supabase's job, and it isn't built.
+[`docs/demo-script.md`](docs/demo-script.md) is the 90-second walkthrough.
 
 See [`mobile/README.md`](mobile/README.md) for the fuller engineering notes and
 [`HANDOFF.md`](HANDOFF.md) for the original design-handoff instructions.
