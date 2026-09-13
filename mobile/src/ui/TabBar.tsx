@@ -33,9 +33,13 @@ export function TabBar({ current }: { current: TabId }) {
         borderColor: colors.ink,
         backgroundColor: colors.cream,
         flexDirection: 'row',
-        paddingTop: 12,
+        // Sat too close to the bottom edge to hit comfortably, and the labels
+        // read as fine print next to the rest of the app. More air above and
+        // below lifts the row clear of the home indicator without turning the
+        // bar into a slab.
+        paddingTop: 18,
         paddingHorizontal: GUTTER,
-        paddingBottom: insets.bottom > 0 ? insets.bottom + 4 : HOME_INDICATOR_GAP,
+        paddingBottom: insets.bottom > 0 ? insets.bottom + 14 : HOME_INDICATOR_GAP + 12,
       }}>
       {TABS.map((tab) => {
         const focused = tab.id === current;
@@ -48,7 +52,7 @@ export function TabBar({ current }: { current: TabId }) {
             disabled={focused}
             onPress={() => router.replace(tab.href)}
             style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.6 : 1 })}>
-            <T w={700} size={11} tracking={0.06} caps center color={focused ? colors.ink : colors.tan}>
+            <T w={800} size={13} tracking={0.05} caps center color={focused ? colors.ink : colors.tan}>
               {tab.label}
             </T>
           </Pressable>

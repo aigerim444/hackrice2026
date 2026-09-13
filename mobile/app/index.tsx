@@ -44,7 +44,7 @@ export default function HomeScreen() {
   return (
     <Screen>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 168 }}
+        contentContainerStyle={{ paddingBottom: 196 }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.ink} />
@@ -173,14 +173,14 @@ export default function HomeScreen() {
       </ScrollView>
 
       {/* Home is the one screen with a floating +, so the toast clears it. */}
-      {toast ? <Toast message={toast} onDismiss={dismissToast} bottom={168} /> : null}
+      {toast ? <Toast message={toast} onDismiss={dismissToast} bottom={190} /> : null}
 
       <TabBar current="home" />
 
       {/* The menu and its button come last so the scrim dims the tab bar too. */}
       {menuOpen ? (
         <AddMenu
-          bottom={164}
+          bottom={186}
           onDismiss={() => setMenuOpen(false)}
           actions={[
             {
@@ -233,7 +233,7 @@ export default function HomeScreen() {
         />
       ) : null}
 
-      <AddButton open={menuOpen} bottom={96} onToggle={() => setMenuOpen((open) => !open)} />
+      <AddButton open={menuOpen} bottom={118} onToggle={() => setMenuOpen((open) => !open)} />
     </Screen>
   );
 }

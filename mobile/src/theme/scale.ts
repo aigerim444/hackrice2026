@@ -30,12 +30,20 @@ const widthFactor = Math.max(
   Math.min(Dimensions.get('window').width, MAX_WIDTH) / DESIGN_WIDTH,
 );
 
-/** How much of a legibility bump a given size gets, on top of the width factor. */
+/**
+ * How much of a legibility bump a given size gets, on top of the width factor.
+ *
+ * Raised across the board after reading the app on a real phone rather than in
+ * a design frame — everything was a step smaller than comfortable. Body and
+ * caption text moves most, because that's where it hurt; display numbers move
+ * least, since `$1,234.56` at 48pt is already close to the edge of a 402pt
+ * screen and the `fit` prop is what saves it when it isn't.
+ */
 function legibility(size: number): number {
-  if (size <= 13) return 1.15;
-  if (size <= 20) return 1.1;
-  if (size <= 40) return 1.05;
-  return 1;
+  if (size <= 13) return 1.28;
+  if (size <= 20) return 1.2;
+  if (size <= 40) return 1.1;
+  return 1.04;
 }
 
 /** A font size from the design, corrected for this screen. */
@@ -49,7 +57,7 @@ export function scaleFont(size: number): number {
  * columns don't start clipping once the type grows.
  */
 export function scaleWidth(px: number): number {
-  return Math.round(px * widthFactor * 1.1);
+  return Math.round(px * widthFactor * 1.2);
 }
 
 /**
