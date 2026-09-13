@@ -61,6 +61,13 @@ export interface GeminiPart {
   inlineData?: { mimeType: string; data: string };
   functionCall?: { name: string; args: Record<string, unknown> };
   functionResponse?: { name: string; response: Record<string, unknown> };
+  /**
+   * Opaque token a thinking model attaches to its own parts. It has to be
+   * echoed back verbatim on the next request or the call is rejected, so parts
+   * that come *from* the model are passed through rather than rebuilt. Never
+   * construct one.
+   */
+  thoughtSignature?: string;
 }
 
 export interface GeminiContent {

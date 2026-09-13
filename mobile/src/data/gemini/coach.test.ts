@@ -80,6 +80,28 @@ test('a tool call is executed and its real numbers are handed back', async () =>
   assert.equal(result.response.days_of_runway_it_costs, 5);
 });
 
+test("the model's own parts go back verbatim, thought signature included", async () => {
+  // A thinking model rejects the next request if the signature it attached
+  // doesn't come back — "Function call is missing a thought_signature in
+  // functionCall parts" — so the model turn must be passed through, not
+  // rebuilt from name and args.
+  scriptGemini(
+    [
+      {
+        functionCall: { name: 'get_situation', args: {} },
+        thoughtSignature: 'sig-abc123',
+      },
+    ],
+    says('You have $36 a day.'),
+  );
+
+  await askCoachWithGemini(snapshot(), 'how am i doing?');
+
+  const modelTurn = sent[1].contents.find((c: { role: string }) => c.role === 'model');
+  assert.equal(modelTurn.parts[0].thoughtSignature, 'sig-abc123');
+  assert.equal(modelTurn.parts[0].functionCall.name, 'get_situation');
+});
+
 test('the tools are actually offered, with their schemas', async () => {
   scriptGemini(says('Hello.'));
   await askCoachWithGemini(snapshot(), 'hi');

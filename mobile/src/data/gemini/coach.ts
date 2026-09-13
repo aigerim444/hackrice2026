@@ -111,21 +111,27 @@ export async function askCoachWithGemini(
     });
 
     const parts = partsOf(response);
-    const calls = parts.flatMap((part) => (part.functionCall ? [part.functionCall] : []));
+    const callParts = parts.filter((part) => part.functionCall);
 
-    if (!calls.length) {
+    if (!callParts.length) {
       const text = textOf(response);
       if (!text) throw new ApiError('Gemini returned neither an answer nor a tool call');
       return { text, trace };
     }
 
     // Gemini can ask for several at once; run them all and answer in one turn.
-    const outcomes: ToolOutcome[] = calls.map((call) =>
-      runCoachTool(snapshot, call.name, call.args ?? {}),
+    const outcomes: ToolOutcome[] = callParts.map((part) =>
+      runCoachTool(snapshot, part.functionCall!.name, part.functionCall!.args ?? {}),
     );
     outcomes.forEach((outcome) => trace.push(outcome.trace));
 
-    contents.push({ role: 'model', parts: calls.map((call) => ({ functionCall: call })) });
+    // The model's turn goes back **exactly as it arrived**, not rebuilt from
+    // name and args. Thinking models attach a `thoughtSignature` to each
+    // functionCall part and reject the next request if it doesn't come back —
+    // "Function call is missing a thought_signature in functionCall parts".
+    // Reconstructing the part silently drops it, and every field we don't yet
+    // know about, so pass the originals through untouched.
+    contents.push({ role: 'model', parts: callParts });
     contents.push({
       role: 'user',
       parts: outcomes.map((outcome) => ({
