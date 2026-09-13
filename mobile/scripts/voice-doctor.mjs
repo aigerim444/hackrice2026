@@ -59,38 +59,92 @@ console.log(`✓ Key loaded (…${key.slice(-6)})`);
 
 const headers = { 'xi-api-key': key };
 
-const voices = await fetch('https://api.elevenlabs.io/v1/voices', { headers }).catch((error) => {
+/**
+ * Listing voices is a *convenience*, not the feature.
+ *
+ * A key scoped to Text to Speech alone — which is all the app needs — gets a
+ * 401 here while working perfectly. So a failure at this step is a note, never
+ * a verdict: the only thing that settles it is speaking.
+ */
+let list = null;
+const voices = await fetch('https://api.elevenlabs.io/v1/voices', { headers }).catch(() => null);
+
+if (!voices) {
+  console.log('· Could not reach ElevenLabs to list voices (network?).');
+} else if (voices.status === 401) {
+  console.log('· No Voices (Read) permission on this key — can\'t list them.');
+  console.log('  Not a problem by itself: the app only needs Text to Speech.');
+} else if (!voices.ok) {
+  console.log(`· Listing voices failed (${voices.status}). Carrying on to the real test.`);
+} else {
+  ({ voices: list } = await voices.json());
+  console.log(`✓ Reached ElevenLabs — ${list.length} voices available`);
+}
+
+if (list) {
+  if (voiceId) {
+    const match = list.find((voice) => voice.voice_id === voiceId);
+    console.log(
+      match
+        ? `✓ Voice "${match.name}" (${voiceId}) is in your collection`
+        : `✗ Voice id "${voiceId}" is not in your collection — add it in the Voice Library first.`,
+    );
+  }
+  console.log('\nYour voices:');
+  for (const voice of list) {
+    console.log(`  ${voice.voice_id === voiceId ? '→' : ' '} ${voice.voice_id}  ${voice.name}`);
+  }
+}
+
+/**
+ * The actual test: say one word.
+ *
+ * Six characters out of a ~10,000/month allowance, and it's the only check
+ * that proves the thing the app does. Everything above is diagnosis for when
+ * this fails.
+ */
+if (!voiceId) {
+  console.error(`
+✗ No EXPO_PUBLIC_ELEVENLABS_VOICE_ID set — can't test speech without a voice.
+
+  Get one at https://elevenlabs.io/app/voices — ⋯ menu on a voice → Copy voice ID.
+  Then add to mobile/.env.local:
+
+      EXPO_PUBLIC_ELEVENLABS_VOICE_ID=the-id
+`);
+  process.exit(1);
+}
+
+const model = process.env.EXPO_PUBLIC_ELEVENLABS_MODEL?.trim() ?? 'eleven_flash_v2_5';
+console.log(`\nSpeaking one word to test the key end to end (model: ${model})…`);
+
+const spoken = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+  method: 'POST',
+  headers: { ...headers, 'content-type': 'application/json', accept: 'audio/mpeg' },
+  body: JSON.stringify({ text: 'Testing.', model_id: model }),
+}).catch((error) => {
   console.error(`✗ Could not reach ElevenLabs: ${error.message}`);
   process.exit(1);
 });
 
-if (voices.status === 401) {
-  console.error('✗ 401 — the key is wrong, revoked, or lacks the Voices (Read) permission.');
+if (!spoken.ok) {
+  const body = await spoken.text();
+  console.error(`✗ Text to speech failed — ${spoken.status}\n  ${body.slice(0, 400)}\n`);
+  if (spoken.status === 401) {
+    console.error('  A 401 here (unlike on the voices list) does mean the key is bad:');
+    console.error('  wrong, revoked, auto-disabled as leaked, or missing Text to Speech.');
+  }
+  if (spoken.status === 404) {
+    console.error('  A 404 usually means the voice id is wrong, or the model id has moved on.');
+  }
+  if (spoken.status === 429) {
+    console.error('  429 is the quota: this period\'s characters are spent.');
+  }
   process.exit(1);
 }
-if (!voices.ok) {
-  console.error(`✗ ElevenLabs said ${voices.status}: ${(await voices.text()).slice(0, 300)}`);
-  process.exit(1);
-}
 
-const { voices: list = [] } = await voices.json();
-console.log(`✓ Reached ElevenLabs — ${list.length} voices available`);
-
-if (!voiceId) {
-  console.error('\n✗ No EXPO_PUBLIC_ELEVENLABS_VOICE_ID set. Pick one from below.\n');
-} else {
-  const match = list.find((voice) => voice.voice_id === voiceId);
-  console.log(
-    match
-      ? `✓ Voice "${match.name}" (${voiceId}) is available\n`
-      : `\n✗ Voice id "${voiceId}" is not in your collection. Pick one from below,\n  or add it to your voices in the ElevenLabs Voice Library first.\n`,
-  );
-}
-
-console.log('Your voices:');
-for (const voice of list) {
-  console.log(`  ${voice.voice_id === voiceId ? '→' : ' '} ${voice.voice_id}  ${voice.name}`);
-}
+const bytes = (await spoken.arrayBuffer()).byteLength;
+console.log(`✓ Text to speech works — got ${bytes} bytes of audio back.\n`);
 
 // The number that actually ends demos.
 const sub = await fetch('https://api.elevenlabs.io/v1/user/subscription', { headers }).catch(
@@ -106,5 +160,5 @@ if (sub?.ok) {
     console.log('  but editing the script or clearing the app cache will regenerate.');
   }
 } else {
-  console.log('\n(Add the User permission to this key to also see characters remaining.)');
+  console.log('(Add the User permission to this key to also see characters remaining.)');
 }
