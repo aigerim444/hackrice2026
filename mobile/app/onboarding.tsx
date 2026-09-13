@@ -360,7 +360,9 @@ function ReviewStep() {
   const { snapshot, projection } = useLoadedRunway();
   const { semester, bills, jobs, funds } = snapshot;
 
-  const rentBill = bills.find((bill) => bill.id === 'bill-rent');
+  // See you.tsx: matched by envelope, not the mock's literal id — a real
+  // backend's rent bill doesn't carry 'bill-rent' as its row id.
+  const rentBill = bills.find((bill) => bill.envelope === 'rent');
   const rentTotal = rentBill ? remainingCharges(rentBill, semester.today, semester.endDate) : 0;
   const otherBills = projection.reserved - rentTotal;
   const weekly = jobs.reduce((sum, job) => sum + weeklyPay(job), 0);
