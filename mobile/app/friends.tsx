@@ -17,13 +17,14 @@ import { useLoadedRunway } from '../src/state/RunwayProvider';
 import { colors, fonts, GUTTER, RULE } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
 import { SectionHeading } from '../src/ui/blocks';
-import { OutlineButton, PrimaryButton } from '../src/ui/controls';
+import { MoneyInput, OutlineButton, PrimaryButton } from '../src/ui/controls';
 import { AddRow, ChallengeForm, FriendForm, GoalForm, PeoplePicker } from '../src/ui/forms';
 import { Flexible, Row, Screen, Tap } from '../src/ui/primitives';
 import { TabBar } from '../src/ui/TabBar';
 import { Toast } from '../src/ui/Toast';
 
-const MOVE_AMOUNT = 20;
+/** Starting point for the amount picker — not a ceiling, just where it opens. */
+const DEFAULT_MOVE_AMOUNT = 20;
 
 /**
  * Friends.
@@ -143,11 +144,11 @@ export default function FriendsScreen() {
       }
     : undefined;
 
-  const move = async (fundId: string) => {
-    if (moving) return;
+  const move = async (fundId: string, amount: number) => {
+    if (moving || amount <= 0) return;
     setMoving(fundId);
     try {
-      await contributeToFund(fundId, MOVE_AMOUNT);
+      await contributeToFund(fundId, amount);
     } catch (e) {
       flash(e instanceof Error ? e.message : "Couldn't move that — try again.");
     } finally {
@@ -293,7 +294,7 @@ export default function FriendsScreen() {
             today={semester.today}
             dailyAfter={money(projection.safeDaily)}
             busy={moving === featured.id}
-            onMove={() => move(featured.id)}
+            onMove={(amount) => move(featured.id, amount)}
             invitable={isOwnFund(featured) ? invitable(snapshot, featured.members.map((m) => m.id)) : []}
             inviteOpen={inviting === featured.id}
             onToggleInvite={() => {
@@ -329,7 +330,7 @@ export default function FriendsScreen() {
                   fund={fund}
                   today={semester.today}
                   busy={moving === fund.id}
-                  onMove={() => move(fund.id)}
+                  onMove={(amount) => move(fund.id, amount)}
                 />
               ))}
             </View>
@@ -613,7 +614,7 @@ function FeaturedFund({
   today: string;
   dailyAfter: string;
   busy: boolean;
-  onMove: () => void;
+  onMove: (amount: number) => void;
   invitable: Person[];
   inviteOpen: boolean;
   onToggleInvite: () => void;
@@ -626,6 +627,9 @@ function FeaturedFund({
   const progress = fundProgress(fund, weeksLeft);
   const you = fund.members.find((member) => member.isYou);
   const pending = fund.members.filter((member) => member.status === 'invited');
+
+  const [amountOpen, setAmountOpen] = useState(false);
+  const [amount, setAmount] = useState(DEFAULT_MOVE_AMOUNT);
 
   return (
     <>
@@ -698,9 +702,9 @@ function FeaturedFund({
               invite to would fail every time, confusingly. */}
           {!fund.startedBy ? (
             <PrimaryButton
-              label={busy ? 'Moving…' : `Put $${MOVE_AMOUNT} in now`}
+              label={busy ? 'Moving…' : amountOpen ? 'Cancel' : `Put $${DEFAULT_MOVE_AMOUNT} in now`}
               height={44}
-              onPress={onMove}
+              onPress={() => setAmountOpen((open) => !open)}
               style={{ flex: 1 }}
             />
           ) : null}
@@ -720,6 +724,35 @@ function FeaturedFund({
             />
           )}
         </View>
+
+        {amountOpen ? (
+          <View
+            style={{
+              marginTop: 10,
+              borderWidth: RULE,
+              borderColor: colors.ink,
+              backgroundColor: colors.white,
+              padding: 14,
+              gap: 12,
+            }}>
+            <Row gap={10} align="center">
+              <T w={700} size={13} color={colors.muted}>
+                How much?
+              </T>
+              <MoneyInput value={amount} onChange={setAmount} />
+            </Row>
+            <View style={{ opacity: busy || amount <= 0 ? 0.4 : 1 }} pointerEvents={busy || amount <= 0 ? 'none' : 'auto'}>
+              <PrimaryButton
+                label={busy ? 'Moving…' : `Put ${money(amount)} in`}
+                height={40}
+                onPress={() => {
+                  onMove(amount);
+                  setAmountOpen(false);
+                }}
+              />
+            </View>
+          </View>
+        ) : null}
 
         {inviteOpen ? (
           <InvitePanel
@@ -770,10 +803,13 @@ function OtherFund({
   fund: Fund;
   today: string;
   busy: boolean;
-  onMove: () => void;
+  onMove: (amount: number) => void;
 }) {
   const saved = fund.members.reduce((sum, member) => sum + member.contributed, 0);
   const weeksLeft = Math.max(0, weeksBetween(today, fund.occasion));
+
+  const [amountOpen, setAmountOpen] = useState(false);
+  const [amount, setAmount] = useState(DEFAULT_MOVE_AMOUNT);
 
   return (
     <View style={{ borderBottomWidth: RULE, borderColor: colors.ruleSoft, paddingBottom: 12 }}>
@@ -801,12 +837,28 @@ function OtherFund({
 
       {!fund.startedBy ? (
         <Pressable
-          onPress={onMove}
+          onPress={() => setAmountOpen((open) => !open)}
           style={({ pressed }) => ({ marginTop: 10, alignSelf: 'flex-start', opacity: pressed ? 0.6 : 1 })}>
           <T w={800} size={13} color={colors.green}>
-            {busy ? 'Moving…' : `+ Put $${MOVE_AMOUNT} in`}
+            {busy ? 'Moving…' : amountOpen ? 'Cancel' : `+ Put $${DEFAULT_MOVE_AMOUNT} in`}
           </T>
         </Pressable>
+      ) : null}
+
+      {amountOpen ? (
+        <Row gap={10} align="center" style={{ marginTop: 10 }}>
+          <MoneyInput value={amount} onChange={setAmount} width={64} size={16} />
+          <View style={{ opacity: busy || amount <= 0 ? 0.4 : 1 }} pointerEvents={busy || amount <= 0 ? 'none' : 'auto'}>
+            <OutlineButton
+              label={busy ? 'Moving…' : 'Go'}
+              height={32}
+              onPress={() => {
+                onMove(amount);
+                setAmountOpen(false);
+              }}
+            />
+          </View>
+        </Row>
       ) : null}
     </View>
   );
