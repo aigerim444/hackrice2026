@@ -2,10 +2,11 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
-import { isMockApi } from '../src/data/client';
+import { isMockApi, usesSupabase } from '../src/data/client';
 import { getFailureRate, setFailureRate } from '../src/data/mock/mockApi';
 import { shortDate } from '../src/domain/dates';
 import { money, rateCompact } from '../src/domain/format';
+import { useAuth } from '../src/state/AuthProvider';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
 import { colors, GUTTER, RULE } from '../src/theme/tokens';
 import { Kicker, T } from '../src/theme/type';
@@ -23,13 +24,34 @@ import { Toast } from '../src/ui/Toast';
  */
 export default function YouScreen() {
   const { snapshot, resetSemester, toast, flash, dismissToast } = useLoadedRunway();
+  const { signOut } = useAuth();
   const { user, semester, income, jobs, bills } = snapshot;
 
   const [resetting, setResetting] = useState(false);
   const [flaky, setFlaky] = useState(() => getFailureRate() > 0);
+  const [signingOut, setSigningOut] = useState(false);
 
-  const rent = bills.find((b) => b.id === 'bill-rent');
-  const phone = bills.find((b) => b.id === 'bill-phone');
+  const doSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      await signOut();
+      // signedIn flips via onAuthStateChange — AuthGate swaps to the login
+      // screen on its own, nothing to navigate here.
+    } catch (e) {
+      flash(e instanceof Error ? e.message : "Couldn't sign out — try again.");
+    } finally {
+      setSigningOut(false);
+    }
+  };
+
+  // Matched by shape, not id: bills.id is only unique per row, not a stable
+  // "the rent bill" key across backends — a real account's bills don't carry
+  // the mock's literal ids. 'rent' is the one envelope onboarding never lets
+  // a user-added bill claim (BillForm always defaults to 'fees'), so it's
+  // still exactly the seeded rent bill, on any backend.
+  const rent = bills.find((b) => b.envelope === 'rent');
+  const phone = bills.find((b) => b.label === 'Phone');
 
   const redoSetup = async () => {
     if (resetting) return;
@@ -158,6 +180,13 @@ export default function YouScreen() {
               {resetting ? 'Redoing setup…' : 'Redo setup'}
             </T>
           </DashedBox>
+          {usesSupabase ? (
+            <DashedBox onPress={doSignOut}>
+              <T w={800} size={14} color={colors.muted}>
+                {signingOut ? 'Signing out…' : 'Sign out'}
+              </T>
+            </DashedBox>
+          ) : null}
         </View>
 
         {/* Mock-only: a way to actually see the loading/error states without a
