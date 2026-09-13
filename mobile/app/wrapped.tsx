@@ -8,6 +8,7 @@ import { api } from '../src/data/client';
 import { shortDate } from '../src/domain/dates';
 import { money } from '../src/domain/format';
 import type { WrappedStats } from '../src/domain/wrapped';
+import { useNarration } from '../src/state/useNarration';
 import { scaleWidth } from '../src/theme/scale';
 import { alpha, colors, GUTTER, RULE } from '../src/theme/tokens';
 import { Kicker, T } from '../src/theme/type';
@@ -60,6 +61,15 @@ export default function WrappedScreen() {
       cancelled = true;
     };
   }, [attempt]);
+
+  const narration = useNarration(stats);
+
+  // Each card speaks as it lands, and re-speaks if you come back to it. Turning
+  // sound on mid-deck starts from wherever you are rather than the beginning.
+  const { playCard, enabled: narrationOn } = narration;
+  useEffect(() => {
+    if (narrationOn) playCard(index);
+  }, [index, narrationOn, playCard]);
 
   const dark = DARK_CARDS[index];
   const bg = dark ? colors.ink : colors.cream;
@@ -116,12 +126,33 @@ export default function WrappedScreen() {
         ))}
       </Row>
 
-      <Row style={{ paddingHorizontal: GUTTER, paddingTop: 14, zIndex: 3 }}>
-        <Kicker color={fg} opacity={0.65}>
-          {stats.semesterLabel} · Wrapped
-        </Kicker>
+      {/* Three items on one line at 402pt, so the semester label is the one
+          that gives: Flexible lets it shrink and truncate while the two
+          controls keep their full width. React Native defaults flexShrink to
+          0, so without this the row simply runs off the screen. */}
+      <Row style={{ paddingHorizontal: GUTTER, paddingTop: 14, zIndex: 3 }} gap={12}>
+        <Flexible>
+          <Kicker color={fg} opacity={0.65} numberOfLines={1}>
+            {stats.semesterLabel} · Wrapped
+          </Kicker>
+        </Flexible>
+
+        {/* Sound is off until asked for: writing the script costs a model call
+            and a slice of a small monthly speech allowance, and most people who
+            open Wrapped never turn it on. */}
+        <Pressable
+          onPress={narration.toggle}
+          hitSlop={12}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: narration.enabled }}
+          accessibilityLabel={narration.enabled ? 'Turn narration off' : 'Turn narration on'}>
+          <Kicker color={fg} opacity={narration.enabled ? 1 : 0.65} nowrap>
+            {narration.preparing ? 'Writing…' : narration.enabled ? 'Sound ✓' : 'Sound'}
+          </Kicker>
+        </Pressable>
+
         <Pressable onPress={() => router.replace('/you')} hitSlop={12}>
-          <Kicker color={fg} opacity={0.65}>
+          <Kicker color={fg} opacity={0.65} nowrap>
             Close ✕
           </Kicker>
         </Pressable>
