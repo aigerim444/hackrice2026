@@ -2,7 +2,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { isAiEnabled } from '../src/data/client';
@@ -11,7 +11,8 @@ import { projectWithCharge } from '../src/domain/runway';
 import { challengeRivals } from '../src/domain/selectors';
 import type { Category, ParsedReceipt } from '../src/domain/types';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
-import { colors, GUTTER, RULE } from '../src/theme/tokens';
+import { scaleFont } from '../src/theme/scale';
+import { colors, fonts, GUTTER, RULE } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
 import { PrimaryButton } from '../src/ui/controls';
 import { FadeIn, Flexible, Row } from '../src/ui/primitives';
@@ -38,6 +39,8 @@ export default function ScanScreen() {
   const [cameraReady, setCameraReady] = useState(false);
   const [receipt, setReceipt] = useState<ParsedReceipt | null>(null);
   const [category, setCategory] = useState<Category>('Drinks');
+  const [merchantDraft, setMerchantDraft] = useState('');
+  const [amountDraft, setAmountDraft] = useState('');
   const [logging, setLogging] = useState(false);
   const [logError, setLogError] = useState<string | null>(null);
   const [reading, setReading] = useState(false);
@@ -72,6 +75,8 @@ export default function ScanScreen() {
       const parsed = await scanReceipt({ imageUri, base64 });
       setReceipt(parsed);
       setCategory(parsed.suggestedCategory);
+      setMerchantDraft(parsed.merchant);
+      setAmountDraft(String(parsed.amount));
     } catch (e) {
       setReadError(e instanceof Error ? e.message : "Couldn't read that — try again.");
     } finally {
@@ -96,9 +101,14 @@ export default function ScanScreen() {
 
   const boba = snapshot.challenges.find((c) => c.category === 'Drinks');
   const breaksStreak = Boolean(receipt && category === 'Drinks' && boba && !boba.broken);
+  // Tolerate "$12", "12.50 " the way log.tsx's amount field does — this is
+  // the same edit-before-you-confirm field, just pre-filled by Gemini instead
+  // of typed from scratch.
+  const amount = Number(amountDraft.replace(/[^0-9.]/g, ''));
+  const validAmount = Number.isFinite(amount) && amount > 0;
   // Through the engine, not by subtraction: charging today shrinks the daily
   // allowance as well as spending it, so this is the number you'll actually see.
-  const afterToday = receipt ? projectWithCharge(snapshot, receipt.amount).leftToday : 0;
+  const afterToday = receipt && validAmount ? projectWithCharge(snapshot, amount).leftToday : 0;
 
   // The sheet grows with whatever Gemini read off the receipt, and the capture
   // frame above it has to get out of the way.
@@ -106,20 +116,20 @@ export default function ScanScreen() {
   const unsure = Boolean(receipt && receipt.confidence < 0.8);
 
   const drop = async () => {
-    if (!receipt || logging) return;
+    if (!receipt || !validAmount || logging) return;
     setLogging(true);
     setLogError(null);
     try {
       await logExpense({
-        merchant: receipt.merchant,
-        amount: receipt.amount,
+        merchant: merchantDraft.trim() || category,
+        amount,
         category,
         envelope: 'free',
       });
       router.replace('/');
       const [rival] = boba ? challengeRivals(boba) : [];
       flash(
-        `${cents(receipt.amount)} dropped into Free · ${category}.` +
+        `${cents(amount)} dropped into Free · ${category}.` +
           (breaksStreak
             ? rival
               ? ` Streak reset — ${rival.name}'s still at ${rival.streakDays}.`
@@ -282,13 +292,47 @@ export default function ScanScreen() {
                 <T w={700} size={12} color={colors.muted}>
                   Looks like
                 </T>
-                <T w={800} size={22} lh={1.1}>
-                  {receipt.merchant}
-                </T>
+                <TextInput
+                  value={merchantDraft}
+                  onChangeText={setMerchantDraft}
+                  placeholder="Merchant"
+                  placeholderTextColor={colors.tan}
+                  style={{
+                    width: '100%',
+                    fontFamily: fonts.extrabold,
+                    fontSize: scaleFont(22),
+                    lineHeight: scaleFont(22) * 1.1,
+                    color: colors.ink,
+                    borderBottomWidth: RULE,
+                    borderColor: colors.ruleSoft,
+                    paddingVertical: 2,
+                  }}
+                />
               </Flexible>
-              <T w={800} size={34} tracking={-0.03} lh={1} nowrap>
-                {cents(receipt.amount)}
-              </T>
+              <View style={{ flexDirection: 'row', alignItems: 'baseline', flexShrink: 0 }}>
+                <T w={800} size={34} tracking={-0.03} lh={1}>
+                  $
+                </T>
+                <TextInput
+                  value={amountDraft}
+                  onChangeText={setAmountDraft}
+                  keyboardType="decimal-pad"
+                  placeholder="0.00"
+                  placeholderTextColor={colors.tan}
+                  style={{
+                    width: 96,
+                    fontFamily: fonts.extrabold,
+                    fontSize: scaleFont(34),
+                    lineHeight: scaleFont(34),
+                    letterSpacing: -0.03 * scaleFont(34),
+                    color: colors.ink,
+                    borderBottomWidth: RULE,
+                    borderColor: colors.ruleSoft,
+                    textAlign: 'right',
+                    paddingVertical: 2,
+                  }}
+                />
+              </View>
             </Row>
 
             {/* What it read, line by line. Evidence that the total came off the
@@ -402,12 +446,15 @@ export default function ScanScreen() {
             ) : null}
 
             <View style={{ flexDirection: 'row', gap: 10, marginTop: 14 }}>
-              <PrimaryButton
-                label={logging ? 'Dropping…' : 'Drop it in'}
-                height={52}
-                onPress={drop}
-                style={{ flex: 1 }}
-              />
+              <View
+                style={{ flex: 1, opacity: validAmount && !logging ? 1 : 0.4 }}
+                pointerEvents={validAmount && !logging ? 'auto' : 'none'}>
+                <PrimaryButton
+                  label={logging ? 'Dropping…' : 'Drop it in'}
+                  height={52}
+                  onPress={drop}
+                />
+              </View>
               <Pressable
                 onPress={() => router.replace('/')}
                 style={({ pressed }) => ({
