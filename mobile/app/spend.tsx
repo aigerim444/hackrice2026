@@ -78,11 +78,27 @@ export default function SpendScreen() {
             </FadeIn>
           ))}
 
-          <DashedBox onPress={() => router.push('/scan')}>
-            <T w={800} size={14} color={colors.muted}>
-              + Scan a receipt
-            </T>
-          </DashedBox>
+          {/* Both ways in, side by side. This is the screen you're on when you
+              notice a charge is missing, and most charges have no receipt to
+              photograph — a tap at the vending machine, a dinner split over
+              Venmo. Offering only the scanner here quietly implies the app
+              can't take the rest. */}
+          <Row gap={8} align="stretch">
+            <Flexible>
+              <DashedBox onPress={() => router.push('/scan')}>
+                <T w={800} size={14} color={colors.muted} center>
+                  + Scan a receipt
+                </T>
+              </DashedBox>
+            </Flexible>
+            <Flexible>
+              <DashedBox onPress={() => router.push('/log')}>
+                <T w={800} size={14} color={colors.muted} center>
+                  + Enter it
+                </T>
+              </DashedBox>
+            </Flexible>
+          </Row>
         </View>
 
         <View
