@@ -14,9 +14,33 @@ import { generate, GEMINI_MODEL, jsonOf, type GeminiSchema } from './geminiClien
  * decide whether to assert or ask.
  */
 
+/**
+ * Distinguishable read failures, over and above the general "give me a
+ * number" case. The app used to catch every failure the same way and quietly
+ * hand back a canned demo receipt — which meant a genuinely unreadable photo
+ * and a perfectly good one looked identical to the person holding the phone.
+ * Now the model names what's actually wrong, so the sheet can say it.
+ */
+const ISSUES = ['none', 'not_a_receipt', 'total_illegible', 'future_date'] as const;
+type Issue = (typeof ISSUES)[number];
+
+const ISSUE_MESSAGES: Partial<Record<Issue, string>> = {
+  not_a_receipt: 'That doesn’t look like a receipt.',
+  total_illegible: 'The total isn’t legible in that photo.',
+  future_date: 'That receipt is dated in the future — worth a second look.',
+};
+
 const RECEIPT_SCHEMA: GeminiSchema = {
   type: 'object',
   properties: {
+    issue: {
+      type: 'string',
+      enum: [...ISSUES],
+      description:
+        "'not_a_receipt' if the image isn't a receipt at all — a random photo, a menu, a screenshot. " +
+        "'total_illegible' if it is a receipt but the total can't be made out — blurry, cut off, faded. " +
+        "'future_date' if the printed date is after today. 'none' if none of those apply.",
+    },
     merchant: {
       type: 'string',
       description: 'Business name as printed. Include the location if the receipt shows one.',
@@ -50,18 +74,20 @@ const RECEIPT_SCHEMA: GeminiSchema = {
       },
     },
   },
-  required: ['merchant', 'amount', 'suggestedCategory', 'confidence'],
+  required: ['issue', 'merchant', 'amount', 'suggestedCategory', 'confidence'],
 };
 
-const INSTRUCTION = `You read receipts for a student budgeting app.
+function instructionFor(today: string): string {
+  return `You read receipts for a student budgeting app. Today's date is ${today}.
 
 Return the grand total that was actually charged — the bottom line after tax and
 tip, never the subtotal. Amounts are US dollars as a number, so $8.65 is 8.65.
 
-If the image is not a receipt, or the total is not legible, set confidence below
-0.4 and give your best reading anyway. The app asks the student to confirm
-before anything is recorded, so a low-confidence guess is useful and a refusal
-is not.`;
+Set "issue" per its schema description. Even when it isn't "none", still give
+your best guess at merchant, amount and category — the app shows that guess
+alongside the problem, so a low-confidence read is useful context and a
+refusal is not.`;
+}
 
 /**
  * A captured photo, as base64. `expo-camera` hands this back directly with
@@ -69,8 +95,9 @@ is not.`;
  * here and no extra dependency.
  */
 export async function parseReceiptWithGemini(base64: string): Promise<ParsedReceipt> {
+  const today = new Date().toISOString().slice(0, 10);
   const response = await generate(GEMINI_MODEL, {
-    systemInstruction: { parts: [{ text: INSTRUCTION }] },
+    systemInstruction: { parts: [{ text: instructionFor(today) }] },
     contents: [
       {
         role: 'user',
@@ -88,6 +115,7 @@ export async function parseReceiptWithGemini(base64: string): Promise<ParsedRece
   });
 
   const raw = jsonOf<{
+    issue?: unknown;
     merchant?: unknown;
     amount?: unknown;
     suggestedCategory?: unknown;
@@ -95,9 +123,16 @@ export async function parseReceiptWithGemini(base64: string): Promise<ParsedRece
     items?: unknown;
   }>(response);
 
+  const issue = ISSUES.includes(raw.issue as Issue) ? (raw.issue as Issue) : 'none';
+  if (issue !== 'none') {
+    throw new ApiError(ISSUE_MESSAGES[issue] ?? 'Couldn’t read that receipt.');
+  }
+
   const amount = Number(raw.amount);
   if (!Number.isFinite(amount) || amount <= 0) {
-    throw new ApiError('Gemini could not read a total off that image');
+    // The model said "none" but still didn't give a usable number — same
+    // user-facing situation as total_illegible, so it gets the same message.
+    throw new ApiError(ISSUE_MESSAGES.total_illegible ?? 'Couldn’t read that receipt.');
   }
 
   const category = CATEGORIES.includes(raw.suggestedCategory as Category)

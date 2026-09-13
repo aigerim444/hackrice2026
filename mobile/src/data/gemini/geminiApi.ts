@@ -10,7 +10,7 @@ import type {
   SetupInput,
 } from '../../domain/types';
 import type { WrappedStats } from '../../domain/wrapped';
-import type { RunwayApi } from '../api';
+import { ApiError, type RunwayApi } from '../api';
 import { groundedCoachReply } from './coach';
 import { devWarn, hasGemini } from './geminiClient';
 import { parseReceiptWithGemini } from './receipts';
@@ -52,13 +52,19 @@ export class GeminiAugmentedApi implements RunwayApi {
   }
 
   async scanReceipt(input: { imageUri?: string; base64?: string }): Promise<ParsedReceipt> {
+    // No key configured, or nothing was captured (no working camera): there's
+    // no scan attempt to fail, so the demo parse is the right answer, same as
+    // it always was.
     if (!hasGemini() || !input.base64) return this.inner.scanReceipt(input);
     try {
       return await parseReceiptWithGemini(input.base64);
     } catch (error) {
-      // Log loudly in dev, degrade quietly in front of a judge.
-      devWarn('[gemini] receipt scan fell back to the demo parse:', error);
-      return this.inner.scanReceipt(input);
+      // A configured key that still can't read the photo is a real failure to
+      // show — not a reason to quietly hand back a fake demo receipt. Every
+      // case this can throw (offline, timed out, not a receipt, illegible,
+      // future-dated) already carries its own message; see receipts.ts.
+      devWarn('[gemini] receipt scan failed:', error);
+      throw error instanceof ApiError ? error : new ApiError('Couldn’t read that receipt.');
     }
   }
 

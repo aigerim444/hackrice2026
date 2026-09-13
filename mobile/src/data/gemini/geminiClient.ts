@@ -119,7 +119,13 @@ export async function generate(
   } catch (error) {
     if (error instanceof ApiError) throw error;
     if (error instanceof Error && error.name === 'AbortError') {
-      throw new ApiError('Gemini timed out');
+      throw new ApiError('Gemini didn’t respond in time.');
+    }
+    // Both RN ("Network request failed") and web ("Failed to fetch") throw a
+    // bare TypeError when the request never reaches the network at all — a
+    // distinguishable case worth its own message rather than a raw fetch error.
+    if (error instanceof TypeError) {
+      throw new ApiError('No connection right now.');
     }
     throw new ApiError(error instanceof Error ? error.message : 'Gemini request failed');
   } finally {
