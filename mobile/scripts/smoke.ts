@@ -44,8 +44,9 @@ async function main() {
   const stamp = Date.now();
   const userA = { email: `smoke-a-${stamp}@example.com`, password: 'Sm0keTest!A1' };
   const userB = { email: `smoke-b-${stamp}@example.com`, password: 'Sm0keTest!B1' };
+  const userC = { email: `smoke-c-${stamp}@example.com`, password: 'Sm0keTest!C1' };
 
-  console.log('=== setup: creating two throwaway test users ===');
+  console.log('=== setup: creating three throwaway test users ===');
   const { data: createdA, error: createAErr } = await admin.auth.admin.createUser({
     email: userA.email,
     password: userA.password,
@@ -58,12 +59,20 @@ async function main() {
     email_confirm: true,
   });
   if (createBErr) throw createBErr;
+  const { data: createdC, error: createCErr } = await admin.auth.admin.createUser({
+    email: userC.email,
+    password: userC.password,
+    email_confirm: true,
+  });
+  if (createCErr) throw createCErr;
   console.log(`  created ${userA.email} (${createdA.user.id})`);
   console.log(`  created ${userB.email} (${createdB.user.id})`);
+  console.log(`  created ${userC.email} (${createdC.user.id})`);
 
   try {
     const clientA = createClient(url, anonKey, { auth: { persistSession: false } });
     const clientB = createClient(url, anonKey, { auth: { persistSession: false } });
+    const clientC = createClient(url, anonKey, { auth: { persistSession: false } });
 
     console.log('\n=== 1. sign in as test user A ===');
     const { error: signInAErr } = await clientA.auth.signInWithPassword(userA);
@@ -165,26 +174,166 @@ async function main() {
     assert(snapshotB.todayExpenses.length === 0, 'B sees no expenses ("Smoke Test Cafe" not visible)');
     assert(snapshotB.chat.length === 0, "B sees no chat (A's coach reply not visible)");
 
-    console.log('\n=== 5. delete test data ===');
+    console.log('\n=== 5. A creates a fund + challenge and invites B by id ===');
+    const inviteFundId = `smoke-invite-fund-${stamp}`;
+    const inviteChallengeId = `smoke-invite-ch-${stamp}`;
+    snapshot = await apiA.addFund({
+      id: inviteFundId,
+      label: 'Shared trip',
+      occasion: '2026-12-01',
+      targetAmount: 200,
+      weeklyPledge: 10,
+      extraContributed: 0,
+    });
+    snapshot = await apiA.addChallenge({ id: inviteChallengeId, label: 'No delivery', category: 'Delivery' });
+    console.log(`  addFund/addChallenge -> ${inviteFundId}, ${inviteChallengeId} (both owned by A)`);
+
+    // Raw table writes, deliberately not through a supabaseApi method yet —
+    // this commit is proving the schema/RLS/trigger layer on its own, before
+    // any app-level wiring sits on top of it. A owns both rows, so this is
+    // just their existing owner-only insert grant.
+    const { error: inviteFundErr } = await clientA.from('fund_members').insert({
+      fund_id: inviteFundId,
+      member_id: createdB.user.id,
+      user_id: createdA.user.id,
+      invited_user_id: createdB.user.id,
+      name: 'Smoke B',
+      is_you: false,
+      contributed: 0,
+      weekly_pledge: 0,
+      status: 'invited',
+    });
+    if (inviteFundErr) throw inviteFundErr;
+    const { error: inviteChallengeErr } = await clientA.from('challenge_participants').insert({
+      challenge_id: inviteChallengeId,
+      participant_id: createdB.user.id,
+      user_id: createdA.user.id,
+      invited_user_id: createdB.user.id,
+      name: 'Smoke B',
+      is_you: false,
+      streak_days: 0,
+      status: 'invited',
+    });
+    if (inviteChallengeErr) throw inviteChallengeErr;
+    console.log('  invited B (by real user id) to both');
+
+    console.log('\n=== 6. B can see both, but cannot modify A\'s row or the fund/challenge itself ===');
+    const { data: bFundMember, error: bFundMemberErr } = await clientB
+      .from('fund_members')
+      .select('status')
+      .eq('fund_id', inviteFundId)
+      .eq('member_id', createdB.user.id)
+      .single();
+    if (bFundMemberErr) throw bFundMemberErr;
+    assert(bFundMember.status === 'invited', "B sees their own fund_members row, status 'invited'");
+
+    const { data: bFund, error: bFundErr } = await clientB.from('funds').select('label').eq('id', inviteFundId).single();
+    if (bFundErr) throw bFundErr;
+    assert(bFund.label === 'Shared trip', 'B can read the parent fund row, not just their membership row');
+
+    const { data: bChallengeParticipant, error: bChallengeParticipantErr } = await clientB
+      .from('challenge_participants')
+      .select('status')
+      .eq('challenge_id', inviteChallengeId)
+      .eq('participant_id', createdB.user.id)
+      .single();
+    if (bChallengeParticipantErr) throw bChallengeParticipantErr;
+    assert(bChallengeParticipant.status === 'invited', "B sees their own challenge_participants row, status 'invited'");
+
+    const { data: aRowBefore, error: aRowBeforeErr } = await admin
+      .from('fund_members')
+      .select('status')
+      .eq('fund_id', inviteFundId)
+      .eq('member_id', createdA.user.id)
+      .single();
+    if (aRowBeforeErr) throw aRowBeforeErr;
+
+    // B tries to accept on A's own "you" row instead of their own — RLS's
+    // update policy only matches rows where B is the owner or the invited
+    // user, so this affects zero rows rather than erroring.
+    const { data: hijackAttempt, error: hijackErr } = await clientB
+      .from('fund_members')
+      .update({ status: 'on track' })
+      .eq('fund_id', inviteFundId)
+      .eq('member_id', createdA.user.id)
+      .select();
+    if (hijackErr) throw hijackErr;
+    assert(hijackAttempt?.length === 0, "B updating A's own row affects zero rows");
+
+    // B tries to change a column the trigger doesn't allow a non-owner to
+    // touch, on their OWN row — the row is visible/matched, so this is the
+    // trigger's column check firing, not the row-level policy.
+    const { error: columnViolationErr } = await clientB
+      .from('fund_members')
+      .update({ status: 'on track', name: 'Hijacked Name' })
+      .eq('fund_id', inviteFundId)
+      .eq('member_id', createdB.user.id);
+    assert(Boolean(columnViolationErr), "B changing a disallowed column on their own row is rejected");
+
+    console.log('\n=== 7. B accepts — only their own row changes ===');
+    const { error: acceptFundErr } = await clientB
+      .from('fund_members')
+      .update({ status: 'on track' })
+      .eq('fund_id', inviteFundId)
+      .eq('member_id', createdB.user.id);
+    if (acceptFundErr) throw acceptFundErr;
+    const { error: acceptChallengeErr } = await clientB
+      .from('challenge_participants')
+      .update({ status: 'joined' })
+      .eq('challenge_id', inviteChallengeId)
+      .eq('participant_id', createdB.user.id);
+    if (acceptChallengeErr) throw acceptChallengeErr;
+
+    const { data: afterAccept, error: afterAcceptErr } = await admin
+      .from('fund_members')
+      .select('member_id, status')
+      .eq('fund_id', inviteFundId);
+    if (afterAcceptErr) throw afterAcceptErr;
+    const aRow = afterAccept?.find((m) => m.member_id === createdA.user.id);
+    const bRow = afterAccept?.find((m) => m.member_id === createdB.user.id);
+    assert(bRow?.status === 'on track', "B's own row transitioned to 'on track'");
+    assert(aRow?.status === aRowBefore.status, "A's row is untouched by B's accept");
+
+    console.log('\n=== 8. C, with no membership at all, cannot see either ===');
+    const { error: signInCErr } = await clientC.auth.signInWithPassword(userC);
+    if (signInCErr) throw signInCErr;
+    const { data: cFund, error: cFundErr } = await clientC.from('funds').select('id').eq('id', inviteFundId);
+    if (cFundErr) throw cFundErr;
+    assert(cFund?.length === 0, "C cannot see A's fund at all");
+    const { data: cChallenge, error: cChallengeErr } = await clientC
+      .from('challenges')
+      .select('id')
+      .eq('id', inviteChallengeId);
+    if (cChallengeErr) throw cChallengeErr;
+    assert(cChallenge?.length === 0, "C cannot see A's challenge at all");
+    const apiC = new SupabaseRunwayApi(clientC);
+    const snapshotC = await apiC.getSnapshot();
+    assert(snapshotC.funds.length === 0, "C's own getSnapshot() shows no funds either");
+    assert(snapshotC.challenges.length === 0, "C's own getSnapshot() shows no challenges either");
+
+    console.log('\n=== 9. delete test data ===');
     const { error: deleteAErr } = await admin.auth.admin.deleteUser(createdA.user.id);
     if (deleteAErr) throw deleteAErr;
     const { error: deleteBErr } = await admin.auth.admin.deleteUser(createdB.user.id);
     if (deleteBErr) throw deleteBErr;
-    console.log('  deleted both auth users');
+    const { error: deleteCErr } = await admin.auth.admin.deleteUser(createdC.user.id);
+    if (deleteCErr) throw deleteCErr;
+    console.log('  deleted all three auth users');
 
     // Prove the cascade actually removed rows, not just that the users are gone.
     const { data: leftoverBills, error: leftoverError } = await admin
       .from('bills')
       .select('id')
-      .in('user_id', [createdA.user.id, createdB.user.id]);
+      .in('user_id', [createdA.user.id, createdB.user.id, createdC.user.id]);
     if (leftoverError) throw leftoverError;
-    assert(leftoverBills?.length === 0, 'on delete cascade removed every row for both test users');
+    assert(leftoverBills?.length === 0, 'on delete cascade removed every row for all three test users');
 
     console.log('\nSMOKE TEST PASSED');
   } catch (err) {
     console.error('\ncleaning up test users after failure...');
     await admin.auth.admin.deleteUser(createdA.user.id).catch(() => {});
     await admin.auth.admin.deleteUser(createdB.user.id).catch(() => {});
+    await admin.auth.admin.deleteUser(createdC.user.id).catch(() => {});
     throw err;
   }
 }
