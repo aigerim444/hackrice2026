@@ -42,7 +42,7 @@ function loadEnv() {
 loadEnv();
 
 const key = process.env.EXPO_PUBLIC_GEMINI_API_KEY?.trim();
-const wanted = process.env.EXPO_PUBLIC_GEMINI_MODEL?.trim() ?? 'gemini-2.5-flash';
+const wanted = process.env.EXPO_PUBLIC_GEMINI_MODEL?.trim() ?? 'gemini-3.6-flash';
 
 if (!key) {
   console.error(`
