@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet"><style>*,*::before,*::after{box-sizing:border-box}body{margin:0;background:#EFE9DD;font-family:'Baloo 2',system-ui,sans-serif}a{color:#1E1A17}a:hover{color:#C2481F}input[type=range]{accent-color:#1E1A17}input:focus{outline:2px solid #1E1A17;outline-offset:2px}[style*="space-between"]>*{white-space:nowrap}[style*="space-between"]>:first-child:nth-last-child(2){min-width:0;flex:1 1 auto}[style*="space-between"]>:first-child:nth-last-child(2)+*{flex:0 0 auto}@keyframes sr-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}</style></helmet>
+<div style="min-height:100vh;display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start;justify-content:center;padding:32px 24px">
+<div style="width:220px;display:flex;flex-direction:column;gap:8px;color:#1E1A17;padding-top:8px">
+<div style="font-weight:800;font-size:18px;line-height:1.1">Semester Runway</div>
+<div style="font-size:12px;font-weight:600;color:#5E554B;line-height:1.4;margin-bottom:6px">Clickable prototype · envelope system. Everything below is live — tap around in the phone or jump here.</div>
+<button onClick="{{ nav.onboard }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:#fff;border:2px solid #1E1A17;padding:8px 12px;cursor:pointer">Onboarding</button>
+<button onClick="{{ nav.home }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:#fff;border:2px solid #1E1A17;padding:8px 12px;cursor:pointer">Envelopes (home)</button>
+<button onClick="{{ nav.runway }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:#fff;border:2px solid #1E1A17;padding:8px 12px;cursor:pointer">Runway · why it moved</button>
+<button onClick="{{ nav.scan }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:#fff;border:2px solid #1E1A17;padding:8px 12px;cursor:pointer">Scan a receipt</button>
+<button onClick="{{ nav.chat }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:#fff;border:2px solid #1E1A17;padding:8px 12px;cursor:pointer">What if… chat</button>
+<button onClick="{{ nav.jobs }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:#fff;border:2px solid #1E1A17;padding:8px 12px;cursor:pointer">Jobs what-if</button>
+<button onClick="{{ nav.spend }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:#fff;border:2px solid #1E1A17;padding:8px 12px;cursor:pointer">Spend</button>
+<button onClick="{{ nav.friends }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:#fff;border:2px solid #1E1A17;padding:8px 12px;cursor:pointer">Friends</button>
+<button onClick="{{ nav.wrapped }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:#fff;border:2px solid #1E1A17;padding:8px 12px;cursor:pointer">Semester Wrapped</button>
+<button onClick="{{ reset }}" style="text-align:left;font:800 13px 'Baloo 2',sans-serif;background:transparent;border:2px dashed #8A7F72;color:#5E554B;padding:8px 12px;cursor:pointer;margin-top:8px">Reset data</button>
+</div>
+
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ isDark }}" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;background:#FAF6EE;color:#1E1A17;font-family:'Baloo 2',system-ui,sans-serif;position:relative">
+
+<sc-if value="{{ is.onboard }}" hint-placeholder-val="{{ true }}">
+<div style="height:100%;display:flex;flex-direction:column;padding-top:62px">
+<div style="padding:10px 22px 0;display:flex;gap:6px"><div style="flex:1;height:6px;background:#1E1A17"></div><div style="flex:1;height:6px;background:{{ ob.bar1 }};border:2px solid #1E1A17"></div><div style="flex:1;height:6px;background:{{ ob.bar2 }};border:2px solid #1E1A17"></div></div>
+<sc-if value="{{ ob.is0 }}" hint-placeholder-val="{{ true }}">
+<div style="padding:60px 22px 0;flex:1">
+<div style="font-size:15px;font-weight:600;color:#5E554B">Semester Runway</div>
+<div style="font-size:56px;font-weight:800;letter-spacing:-.03em;line-height:1">One lump.<br>111 days.</div>
+<p style="font-size:16px;font-weight:600;color:#5E554B;line-height:1.45;margin:18px 0 0;max-width:320px">Aid refunds and summer money land in August. Budget apps assume a monthly paycheck — you don't have one. We sort the lump into envelopes and tell you what today can cost.</p>
+<div style="margin-top:36px;display:flex;flex-direction:column;gap:8px">
+<div style="border-bottom:2px solid #1E1A17;padding:10px 0;font-weight:700;font-size:14px">Rent · Fees · Trip fund — set aside first</div>
+<div style="padding:10px 0;font-weight:800;font-size:14px">Free to spend — the only envelope that's yours</div>
+</div>
+</div>
+<div style="padding:0 22px 44px"><button onClick="{{ ob.next }}" style="width:100%;height:54px;background:#1E1A17;color:#FAF6EE;border:0;font:800 16px 'Baloo 2',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0 18px">Sort my lump<span>→</span></button></div>
+</sc-if>
+<sc-if value="{{ ob.is1 }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:20px 22px 0">
+<div style="font-size:12px;font-weight:700;color:#5E554B">Step 1 of 2</div>
+<h2 style="font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:4px 0 0">What landed in August?</h2>
+<div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+<label style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;justify-content:space-between;align-items:center;gap:10px"><span><span style="display:block;font-weight:800;font-size:15px">Aid refund</span><span style="font-size:12px;font-weight:600;color:#5E554B">grants after tuition</span></span><span style="display:flex;align-items:baseline;font-weight:800;font-size:20px">$<input type="number" value="{{ aid }}" onChange="{{ set.aid }}" style="width:82px;border:0;border-bottom:2px solid #1E1A17;background:transparent;font:800 20px 'Baloo 2',sans-serif;text-align:right;color:#1E1A17"></span></label>
+<label style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;justify-content:space-between;align-items:center;gap:10px"><span><span style="display:block;font-weight:800;font-size:15px">Summer money</span><span style="font-size:12px;font-weight:600;color:#5E554B">what's left of it</span></span><span style="display:flex;align-items:baseline;font-weight:800;font-size:20px">$<input type="number" value="{{ intern }}" onChange="{{ set.intern }}" style="width:82px;border:0;border-bottom:2px solid #1E1A17;background:transparent;font:800 20px 'Baloo 2',sans-serif;text-align:right;color:#1E1A17"></span></label>
+<div style="background:#DDEDE3;padding:12px 14px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Library desk</div><div style="font-size:12px;font-weight:600;color:#5E554B">$15.50/h · 12 h/wk · biweekly</div></div><div style="font-weight:800;font-size:14px;color:#2F7A57">~$186/wk</div></div>
+<div style="background:#DDEDE3;margin-top:-10px;padding:0 14px 12px;border-top:2px solid #FAF6EE;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Rec center</div><div style="font-size:12px;font-weight:600;color:#5E554B">$14/h · 6 h/wk · monthly</div></div><div style="font-weight:800;font-size:14px;color:#2F7A57">~$84/wk</div></div>
+</div>
+<div style="margin-top:20px;font-size:12px;font-weight:700;color:#5E554B">Bills you already know</div>
+<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<label style="border-bottom:2px solid #1E1A17;padding:8px 0"><span style="font-size:12px;font-weight:600;color:#5E554B">Rent · monthly</span><span style="display:flex;align-items:baseline;font-weight:800;font-size:22px">$<input type="number" value="{{ rent }}" onChange="{{ set.rent }}" style="width:70px;border:0;background:transparent;font:800 22px 'Baloo 2',sans-serif;color:#1E1A17"></span></label>
+<label style="border-bottom:2px solid #1E1A17;padding:8px 0"><span style="font-size:12px;font-weight:600;color:#5E554B">Phone · monthly</span><span style="display:flex;align-items:baseline;font-weight:800;font-size:22px">$<input type="number" value="{{ phone }}" onChange="{{ set.phone }}" style="width:70px;border:0;background:transparent;font:800 22px 'Baloo 2',sans-serif;color:#1E1A17"></span></label>
+<div style="background:#DDEDE3;padding:8px 14px"><div style="font-size:12px;font-weight:600;color:#5E554B">Meal plan</div><div style="font-weight:800;font-size:22px;line-height:1.1">Paid</div></div>
+<div style="border:2px dashed #8A7F72;padding:8px 14px;display:flex;align-items:center;font-weight:800;font-size:14px;color:#5E554B">+ Add a bill</div>
+</div>
+<div style="height:20px"></div>
+</div>
+<div style="margin:0 22px 14px;background:#1E1A17;color:#FAF6EE;padding:14px 20px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Lump</div><div style="font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ lumpLabel }}</div></div><button onClick="{{ ob.next }}" style="height:46px;padding:0 18px;background:#FAF6EE;color:#1E1A17;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Next →</button></div>
+<div style="height:30px"></div>
+</sc-if>
+<sc-if value="{{ ob.is2 }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:20px 22px 0">
+<div style="font-size:12px;font-weight:700;color:#5E554B">Step 2 of 2</div>
+<h2 style="font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:4px 0 0">Anything you're saving for?</h2>
+<p style="font-size:14px;font-weight:600;color:#5E554B;margin:6px 0 0">Set it aside now so it never competes with boba.</p>
+<div style="margin-top:16px;background:#DDEDE3;border:2px solid #1E1A17;padding:12px 16px"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Austin trip · Nov 20</div><div style="font-size:12px;font-weight:600;color:#5E554B">with Maya + Dev</div></div><div style="font-weight:800;font-size:20px">${{ fundWeekly }}<span style="font-size:12px;color:#5E554B">/wk</span></div></div><input type="range" min="0" max="60" step="5" value="{{ fundWeekly }}" onChange="{{ set.fundWeekly }}" style="width:100%;margin:10px 0 0"><div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#5E554B"><span style="flex:none">$0</span><span style="flex:none">10 weeks → {{ fundTotalLabel }}</span><span style="flex:none">$60</span></div></div>
+<div style="margin-top:10px;border:2px dashed #8A7F72;padding:10px 16px;font-weight:800;font-size:14px;color:#5E554B">+ Another goal</div>
+<div style="margin-top:24px;font-size:12px;font-weight:700;color:#5E554B">Your envelopes</div>
+<div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
+<div style="border-bottom:2px solid #E4DCCB;padding:10px 0;display:flex;justify-content:space-between;font-weight:800;font-size:15px"><span>Rent · Sep–Dec</span><span>{{ rentTotalLabel }}</span></div>
+<div style="border-bottom:2px solid #E4DCCB;padding:10px 0;display:flex;justify-content:space-between;font-weight:800;font-size:15px"><span>Phone + fees</span><span>{{ feesTotalLabel }}</span></div>
+<div style="background:#DDEDE3;padding:10px 14px;display:flex;justify-content:space-between;font-weight:800;font-size:15px"><span>Austin trip</span><span>{{ fundTotalLabel }}</span></div>
+</div>
+<div style="height:20px"></div>
+</div>
+<div style="margin:0 22px 14px;background:#1E1A17;color:#FAF6EE;padding:14px 20px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Free to spend</div><div style="font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ safeLabel }}<span style="font-size:14px;opacity:.7">/day</span></div></div><button onClick="{{ ob.finish }}" style="height:46px;padding:0 18px;background:#FAF6EE;color:#1E1A17;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Start →</button></div>
+<div style="height:30px"></div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.home }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;padding-top:62px">
+<div style="flex:1;overflow:auto;padding-bottom:80px">
+<div onClick="{{ nav.runway }}" style="padding:16px 22px 22px;cursor:pointer">
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#5E554B"><span>Fri, Sep 11</span><span>day 19 of 111</span></div>
+<div style="font-size:15px;font-weight:600;color:#5E554B;margin-top:26px">Left to spend today</div>
+<div style="font-size:96px;font-weight:800;letter-spacing:-.05em;line-height:.95">{{ leftTodayLabel }}</div>
+<div style="font-size:15px;font-weight:600;color:#5E554B;margin-top:10px">of {{ safeLabel }} safe · {{ todayLabel }} spent</div>
+</div>
+<div onClick="{{ nav.runway }}" style="padding:18px 22px 18px;border-top:2px solid #1E1A17;cursor:pointer;"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#5E554B">Runway</div><span style="font-weight:800;font-size:14px;color:#8A7F72">→</span></div>
+<div style="display:flex;align-items:baseline;gap:10px;margin-top:8px"><div style="font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1;color:{{ runColorInk }};white-space:nowrap;flex:none">{{ runLabel }}</div><div style="font-size:13px;font-weight:600;color:#5E554B">empties at $50/day</div></div>
+<div style="margin-top:12px;height:8px;display:flex"><div style="width:17%;background:#1E1A17"></div><div style="width:{{ coveredMidPct }};background:#C9BFAF"></div><div style="flex:1;background:repeating-linear-gradient(135deg,#FF9E7A 0 3px,transparent 3px 7px)"></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;font-weight:700;color:#8A7F72"><span>Aug 24</span><span>today</span><span>Dec 12</span></div></div>
+<div onClick="{{ nav.jobs }}" style="padding:18px 22px 18px;border-top:2px solid #1E1A17;cursor:pointer;"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#5E554B">Next paychecks</div><span style="font-weight:800;font-size:14px;color:#8A7F72">→</span></div>
+<div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;font-size:15px;font-weight:600">
+<div style="display:flex;justify-content:space-between"><span>Library desk · {{ hours }} h/wk</span><b style="color:#2F7A57">+$217 · Sep 18</b></div>
+<div style="display:flex;justify-content:space-between"><span>Rec center · {{ hoursRec }} h/wk</span><b style="color:#2F7A57">+$336 · Oct 1</b></div>
+</div></div>
+<div onClick="{{ nav.spend }}" style="padding:18px 22px 18px;border-top:2px solid #1E1A17;cursor:pointer;"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#5E554B">Spending · {{ spentLabel }}</div><span style="font-weight:800;font-size:14px;color:#8A7F72">→</span></div>
+<div style="margin-top:12px;display:flex;flex-direction:column;gap:7px">
+<sc-for list="{{ catsTop }}" as="c" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600"><span style="width:88px">{{ c.name }}</span><div style="flex:1;display:flex"><div style="width:{{ c.pct }};height:10px;background:{{ c.bgSoft }}"></div></div><b style="width:48px;text-align:right">{{ c.label }}</b></div></sc-for>
+</div></div>
+<div onClick="{{ nav.friends }}" style="padding:18px 22px 18px;border-top:2px solid #1E1A17;cursor:pointer;"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#5E554B">Austin trip · with Maya + Dev</div><span style="font-weight:800;font-size:14px;color:#8A7F72">→</span></div>
+<div style="display:flex;align-items:baseline;gap:10px;margin-top:8px"><div style="font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ fundNowLabel }}</div><div style="font-size:13px;font-weight:600;color:#5E554B">of $600 · 10 weeks left</div></div>
+<div style="margin-top:10px;height:8px;background:#E4DCCB;display:flex"><div style="width:{{ fundYouPct }};background:#1E1A17"></div><div style="width:15%;background:#2F7A57"></div><div style="width:8.5%;background:#8A7F72"></div></div>
+<div style="margin-top:12px;font-size:14px;font-weight:600;color:#5E554B">No delivery <b style="color:#2F7A57">6 days</b> · No boba <b style="color:{{ bobaColor }}">{{ bobaStreak }} days</b></div></div>
+<div style="border-top:2px solid #1E1A17"></div>
+</div>
+<div onClick="{{ openSheet }}" style="position:absolute;right:22px;bottom:96px;z-index:4;width:56px;height:56px;background:#1E1A17;color:#FAF6EE;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:30px;line-height:1;cursor:pointer">+</div>
+<div style="border-top:2px solid #1E1A17;background:#FAF6EE;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 22px 30px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span style="cursor:pointer">Home</span><span onClick="{{ nav.spend }}" style="color:#8A7F72;cursor:pointer">Spend</span><span onClick="{{ nav.friends }}" style="color:#8A7F72;cursor:pointer">Friends</span><span onClick="{{ nav.you }}" style="color:#8A7F72;cursor:pointer">You</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasSheet }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(30,26,23,.35);z-index:6"></div>
+<div style="position:absolute;right:22px;bottom:164px;width:280px;background:#FAF6EE;border:2px solid #1E1A17;box-shadow:4px 4px 0 #1E1A17;z-index:7;animation:sr-in .18s ease-out">
+<div onClick="{{ nav.scan }}" style="padding:14px 16px;border-bottom:2px solid #1E1A17;display:flex;align-items:center;gap:12px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E1A17" stroke-width="2.4" style="flex:none"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:16px;line-height:1.1">Scan a receipt</div><div style="font-size:12px;font-weight:600;color:#5E554B">price + envelope read for you</div></div></div>
+<div onClick="{{ nav.chat }}" style="padding:14px 16px;border-bottom:2px solid #1E1A17;display:flex;align-items:center;gap:12px;cursor:pointer"><span style="width:20px;text-align:center;font-weight:800;font-size:18px;flex:none">?</span><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:16px;line-height:1.1">What if I…</div><div style="font-size:12px;font-weight:600;color:#5E554B">ask before you buy</div></div></div>
+<div onClick="{{ nav.friends }}" style="padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer"><span style="width:20px;text-align:center;font-weight:800;font-size:18px;flex:none">→</span><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:16px;line-height:1.1">Put $20 toward the trip</div><div style="font-size:12px;font-weight:600;color:#5E554B">{{ safeLabel }}/day becomes {{ safeAfter20Label }}</div></div></div>
+<div style="position:absolute;right:16px;bottom:-12px;width:20px;height:20px;background:#FAF6EE;border-right:2px solid #1E1A17;border-bottom:2px solid #1E1A17;transform:rotate(45deg)"></div>
+</div>
+<div onClick="{{ closeSheet }}" style="position:absolute;right:22px;bottom:96px;z-index:8;width:56px;height:56px;background:#FAF6EE;color:#1E1A17;border:2px solid #1E1A17;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:30px;line-height:1;cursor:pointer"><span style="display:inline-block;transform:rotate(45deg)">+</span></div>
+</sc-if>
+
+<sc-if value="{{ is.runway }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;padding-top:62px">
+<div onClick="{{ nav.home }}" style="padding:10px 22px 0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;cursor:pointer"><span>←</span>Free-to-spend envelope</div>
+<div style="flex:1;overflow:auto">
+<div style="margin:16px 22px 0;background:#1E1A17;color:#FAF6EE;padding:18px 20px 16px">
+<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">At $50/day this envelope empties</div>
+<div style="font-size:52px;font-weight:800;letter-spacing:-.04em;line-height:1;color:{{ runColor }};white-space:nowrap">{{ runLabel }}</div>
+<div style="margin-top:12px;height:12px;background:rgba(250,246,238,.2);display:flex"><div style="width:17%;background:#FAF6EE"></div><div style="width:{{ coveredMidPct }};background:rgba(250,246,238,.55)"></div><div style="flex:1;background:repeating-linear-gradient(135deg,#FF9E7A 0 3px,transparent 3px 7px)"></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;font-weight:700;opacity:.75"><span>Aug 24</span><span>today</span><span>Dec 12</span></div>
+<div style="margin-top:12px;font-size:14px;font-weight:600;line-height:1.35">{{ runAdvice }}</div>
+</div>
+<div style="margin:22px 22px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:16px">Why it moved this week</span><span style="font-size:12px;font-weight:700;color:#5E554B">net −3 days</span></div>
+<div style="margin:8px 22px 0;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ moves }}" as="m" hint-placeholder-count="4"><div style="background:{{ m.bg }};border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;gap:12px;align-items:center"><div style="min-width:50px;font-weight:800;font-size:15px;color:{{ m.color }}">{{ m.delta }}</div><div style="flex:1"><div style="font-weight:800;font-size:14px">{{ m.title }}</div><div style="font-size:12px;font-weight:600;color:#5E554B">{{ m.sub }}</div></div></div></sc-for>
+</div>
+<div onClick="{{ nav.jobs }}" style="margin:16px 22px 24px;border:2px dashed #8A7F72;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;font-weight:600;line-height:1.35;cursor:pointer"><span style="white-space:normal"><b>Two extra shifts a week</b> refills this envelope to Dec 12.</span><span style="font-size:13px;font-weight:800;background:#1E1A17;color:#FAF6EE;padding:8px 12px;white-space:nowrap">Try it</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.scan }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;background:#1E1A17;color:#FAF6EE;position:relative">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,#26211D 0 10px,#211D19 10px 20px)"></div>
+<div style="position:absolute;left:60px;right:60px;top:130px;bottom:{{ scanBottom }};background:repeating-linear-gradient(0deg,#f6f6f6 0 14px,#ececec 14px 16px);transform:rotate(-2deg);display:flex;align-items:center;justify-content:center;font:12px ui-monospace,Menlo,monospace;color:#777">[ receipt · camera feed ]</div>
+<div style="position:absolute;left:40px;right:40px;top:112px;bottom:{{ scanFrameBottom }};border:2px solid #FAF6EE"></div>
+<div style="position:absolute;top:70px;left:22px;right:22px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:800"><span onClick="{{ nav.home }}" style="opacity:.8;cursor:pointer">Cancel</span><span style="border:2px solid #FAF6EE;padding:3px 10px;font-size:12px">{{ scanStatus }}</span></div>
+<sc-if value="{{ scanReview }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:#FAF6EE;color:#1E1A17;border-top:2px solid #1E1A17;padding:16px 22px 44px;animation:sr-in .25s ease-out">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:12px;font-weight:700;color:#5E554B">Looks like</div><div style="font-weight:800;font-size:22px;line-height:1.1">Tiger Sugar · Village</div></div><div style="font-weight:800;font-size:34px;letter-spacing:-.03em;line-height:1">$8.65</div></div>
+<div style="margin-top:14px;font-size:12px;font-weight:700;color:#5E554B">Envelope</div>
+<div style="margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div onClick="{{ cat.drinks }}" style="background:{{ catBg.drinks }};color:{{ catFg.drinks }};border:2px solid #1E1A17;padding:8px 12px;font-weight:800;font-size:14px;cursor:pointer">Free · Drinks</div>
+<div onClick="{{ cat.eating }}" style="background:{{ catBg.eating }};color:{{ catFg.eating }};border:2px solid #1E1A17;padding:8px 12px;font-weight:800;font-size:14px;cursor:pointer">Free · Eating out</div>
+<div onClick="{{ cat.groceries }}" style="background:{{ catBg.groceries }};color:{{ catFg.groceries }};border:2px solid #1E1A17;padding:8px 12px;font-weight:800;font-size:14px;cursor:pointer">Free · Groceries</div>
+<div style="border:2px dashed #8A7F72;padding:8px 12px;font-weight:800;font-size:14px;color:#5E554B">Rent (don't)</div>
+</div>
+<div style="margin-top:12px;border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;justify-content:space-between;font-size:14px;font-weight:600"><span>Today after this</span><span><b>{{ afterLabel }}</b> left · date unchanged</span></div>
+<sc-if value="{{ bobaWarn }}" hint-placeholder-val="{{ false }}"><div style="margin-top:10px;background:#FFE3D8;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.35">3rd boba this week — breaks your <b>No-boba September</b> streak with Maya (day {{ bobaStreak }}).</div></sc-if>
+<div style="display:flex;gap:10px;margin-top:14px"><button onClick="{{ logReceipt }}" style="flex:1;height:52px;background:#1E1A17;color:#FAF6EE;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Drop it in</button><button onClick="{{ nav.home }}" style="flex:1;height:52px;background:#fff;color:#1E1A17;border:2px solid #1E1A17;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Cancel</button></div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.chat }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;padding-top:62px">
+<div style="padding:8px 22px 10px;border-bottom:2px solid #1E1A17;display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:10px"><span onClick="{{ nav.home }}" style="font-weight:800;cursor:pointer">←</span><div style="width:32px;height:32px;border:2px solid #1E1A17;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">R</div><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:16px;line-height:1.1">Runway</div><div style="font-size:11px;font-weight:700;color:#5E554B;white-space:nowrap">sees envelopes + shifts</div></div></div><div style="font-size:12px;font-weight:700;color:#5E554B;white-space:nowrap">{{ leftTodayLabel }} left today</div></div>
+<div style="flex:1;overflow:auto;padding:14px 18px 0;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ chat }}" as="m" hint-placeholder-count="2">
+<sc-if value="{{ m.user }}" hint-placeholder-val="{{ true }}"><div style="flex:none;align-self:flex-end;max-width:76%;background:#1E1A17;color:#FAF6EE;padding:9px 13px;font-size:15px;font-weight:600;line-height:1.35;animation:sr-in .2s ease-out">{{ m.text }}</div></sc-if>
+<sc-if value="{{ m.bot }}" hint-placeholder-val="{{ false }}"><div style="flex:none;align-self:flex-start;display:flex;gap:8px;max-width:88%;animation:sr-in .2s ease-out"><div style="width:24px;height:24px;border:2px solid #1E1A17;background:#fff;flex:none;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800">R</div><div style="background:#fff;padding:10px 14px;font-size:15px;font-weight:600;line-height:1.35"><span>{{ m.text }}</span><sc-if value="{{ m.hasRoutes }}" hint-placeholder-val="{{ false }}"><div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;font-size:14px"><sc-for list="{{ m.routes }}" as="r" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;gap:10px;background:{{ r.bg }};border:2px solid #1E1A17;padding:6px 10px"><span style="white-space:normal">{{ r.label }}</span><b style="color:{{ r.color }};white-space:nowrap">{{ r.delta }}</b></div></sc-for></div></sc-if></div></div></sc-if>
+</sc-for>
+<div style="height:8px"></div>
+</div>
+<div style="padding:10px 18px 0;display:flex;gap:8px;overflow:auto"><sc-for list="{{ chips }}" as="c" hint-placeholder-count="3"><span onClick="{{ c.onClick }}" style="flex:none;font-size:13px;font-weight:800;background:#fff;border:2px solid #1E1A17;padding:6px 12px;white-space:nowrap;cursor:pointer">{{ c.text }}</span></sc-for></div>
+<div style="padding:10px 18px 44px;display:flex;gap:8px;align-items:center"><div onClick="{{ nav.scan }}" style="width:44px;height:44px;border:2px solid #1E1A17;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1E1A17" stroke-width="2.4"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg></div><input value="{{ draft }}" onChange="{{ setDraft }}" onKeyDown="{{ draftKey }}" placeholder="if I buy… $" style="flex:1;height:44px;background:#fff;border:2px solid #1E1A17;padding:0 12px;font:600 15px 'Baloo 2',sans-serif;color:#1E1A17;min-width:0"><div onClick="{{ send }}" style="width:44px;height:44px;background:#1E1A17;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FAF6EE" stroke-width="3"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg></div></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.jobs }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;padding-top:62px">
+<div onClick="{{ nav.runway }}" style="padding:10px 22px 0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;cursor:pointer"><span>←</span>Jobs</div>
+<div style="flex:1;overflow:auto">
+<div style="padding:14px 22px 0"><h2 style="font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0">If I work more…</h2><p style="font-size:14px;font-weight:600;color:#5E554B;margin:6px 0 0">Pick a job, drag its hours. The envelope refills.</p></div>
+<div style="margin:14px 22px 0;display:flex;border:2px solid #1E1A17"><div onClick="{{ job.lib }}" style="flex:1;padding:8px 0;text-align:center;font-weight:800;font-size:13px;background:{{ jobBg.lib }};color:{{ jobFg.lib }};cursor:pointer">Library desk</div><div onClick="{{ job.rec }}" style="flex:1;padding:8px 0;text-align:center;font-weight:800;font-size:13px;border-left:2px solid #1E1A17;background:{{ jobBg.rec }};color:{{ jobFg.rec }};cursor:pointer">Rec center</div><div style="flex:1;padding:8px 0;text-align:center;font-weight:800;font-size:13px;border-left:2px solid #1E1A17;color:#5E554B">+ Add</div></div>
+<div style="margin:10px 22px 0;padding:6px 0 0">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:12px;font-weight:700;color:#5E554B">{{ jobName }} · hours / week</span><span style="font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1">{{ jobHours }}<span style="font-size:14px;color:#5E554B"> h</span></span></div>
+<input type="range" min="0" max="24" step="1" value="{{ jobHours }}" onChange="{{ setJobHours }}" style="width:100%;margin:8px 0 2px">
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#8A7F72"><span style="flex:none">0 h</span><span style="flex:none">now: {{ jobBase }} h</span><span style="flex:none">24 h max</span></div>
+<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="padding:8px 0"><div style="font-size:11px;font-weight:700;color:#5E554B">Rate</div><div style="font-weight:800;font-size:18px;line-height:1.1">{{ jobRateLabel }}</div></div>
+<div style="background:#DDEDE3;padding:8px 12px"><div style="font-size:11px;font-weight:700;color:#5E554B">Extra / week · all jobs</div><div style="font-weight:800;font-size:18px;line-height:1.1;color:#2F7A57">{{ extraWeeklyLabel }}</div></div>
+</div>
+<div style="margin-top:10px;padding-top:10px;border-top:2px dashed #C9BFAF;display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#5E554B"><span>{{ otherJobLine }}</span><span>All jobs: {{ totalHours }} h</span></div>
+</div>
+<div style="margin:14px 22px 0;background:#1E1A17;color:#FAF6EE;padding:14px 20px">
+<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Free-to-spend empties</div>
+<div style="display:flex;align-items:baseline;gap:12px"><div style="font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1;color:{{ runColor }};white-space:nowrap;flex:none">{{ runLabel }}</div><div style="font-size:14px;font-weight:600;opacity:.8">{{ deltaDays }}</div></div>
+<div style="margin-top:8px;font-size:13px;font-weight:600;line-height:1.35;opacity:.9">{{ jobVerdict }}</div>
+</div>
+<div style="padding:16px 22px 30px"><button onClick="{{ nav.home }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 18px;background:#fff;color:#1E1A17;border:2px solid #1E1A17;font:800 15px 'Baloo 2',sans-serif;cursor:pointer"><span style="white-space:nowrap">Keep this plan</span><span>→</span></button></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.spend }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;padding-top:62px">
+<div style="flex:1;overflow:auto">
+<div style="padding:10px 22px 0;display:flex;justify-content:space-between;align-items:baseline"><div style="font-weight:800;font-size:22px">Spend</div><div style="font-size:12px;font-weight:700;color:#5E554B">19 days · {{ spentLabel }}</div></div>
+<div style="margin:16px 22px 0;display:flex;flex-direction:column;gap:6px">
+<sc-for list="{{ cats }}" as="c" hint-placeholder-count="6"><div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:96px">{{ c.name }}</span><div style="flex:1;display:flex"><div style="width:{{ c.pct }};height:12px;background:{{ c.bgSoft }}"></div></div><span style="width:52px;text-align:right">{{ c.label }}</span></div></sc-for>
+</div>
+<div style="margin:22px 22px 0;font-weight:800;font-size:16px">Today</div>
+<div style="margin:8px 22px 0;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ todayItems }}" as="t" hint-placeholder-count="2"><div style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;justify-content:space-between;align-items:center;animation:sr-in .2s ease-out"><div><div style="font-weight:800;font-size:14px">{{ t.name }}</div><div style="font-size:12px;font-weight:600;color:#5E554B">Free · {{ t.cat }}</div></div><div style="font-weight:800;font-size:16px">{{ t.label }}</div></div></sc-for>
+<div onClick="{{ nav.scan }}" style="border:2px dashed #8A7F72;padding:10px 14px;font-weight:800;font-size:14px;color:#5E554B;cursor:pointer">+ Scan a receipt</div>
+</div>
+<div style="margin:22px 22px 24px;border-top:2px solid #1E1A17;padding:12px 0 0;font-size:14px;font-weight:600;line-height:1.4"><b>Pattern:</b> Fridays cost you $71 on average — 2× a Tuesday. Most of it is delivery after 10 PM.</div>
+</div>
+<div style="border-top:2px solid #1E1A17;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 22px 30px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span onClick="{{ nav.home }}" style="color:#8A7F72;cursor:pointer">Home</span><span>Spend</span><span onClick="{{ nav.friends }}" style="color:#8A7F72;cursor:pointer">Friends</span><span onClick="{{ nav.you }}" style="color:#8A7F72;cursor:pointer">You</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.friends }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;padding-top:62px">
+<div style="flex:1;overflow:auto">
+<div style="padding:10px 22px 0;display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-size:22px">Friends</div><div style="width:36px;height:36px;border:2px solid #1E1A17;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;line-height:1">+</div></div>
+<div style="margin:14px 22px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:16px">Austin trip · Nov 20</span><span style="font-size:12px;font-weight:700;color:#5E554B">shared envelope</span></div>
+<div style="margin:8px 22px 0;background:#DDEDE3;padding:14px 16px 14px">
+<div style="display:flex;align-items:baseline;gap:10px"><div style="font-size:48px;font-weight:800;letter-spacing:-.04em;line-height:1">{{ fundNowLabel }}</div><div style="font-size:14px;font-weight:600;color:#5E554B;line-height:1.3">of $600 · 3 people<br>10 weeks left</div></div>
+<div style="margin-top:10px;height:12px;background:#fff;border:2px solid #1E1A17;display:flex"><div style="width:{{ fundYouPct }};background:#1E1A17"></div><div style="width:15%;background:#2F7A57;border-left:2px solid #1E1A17"></div><div style="width:8.5%;background:#8A7F72;border-left:2px solid #1E1A17"></div></div>
+<div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;font-weight:600;color:#5E554B">
+<div><div style="font-weight:800;font-size:12px;color:#1E1A17">You</div><div style="font-weight:800;font-size:17px;color:#1E1A17">{{ fundYouLabel }}</div><div>${{ fundWeekly }}/wk · {{ fundYouStatus }}</div></div>
+<div><div style="font-weight:800;font-size:12px;color:#1E1A17">Maya</div><div style="font-weight:800;font-size:17px;color:#1E1A17">$90</div><div>$20/wk · behind</div></div>
+<div><div style="font-weight:800;font-size:12px;color:#1E1A17">Dev</div><div style="font-weight:800;font-size:17px;color:#1E1A17">$50</div><div>$25/wk · new</div></div>
+</div>
+<div style="margin-top:12px;display:flex;gap:10px"><button onClick="{{ moveIn }}" style="flex:1;height:44px;background:#1E1A17;color:#FAF6EE;border:0;font:800 13px 'Baloo 2',sans-serif;cursor:pointer">Put $20 in now</button><button onClick="{{ nav.chat }}" style="flex:1;height:44px;background:#fff;color:#1E1A17;border:2px solid #1E1A17;font:800 13px 'Baloo 2',sans-serif;cursor:pointer">Ask the coach</button></div>
+</div>
+<div style="margin:8px 22px 0;font-size:12px;font-weight:600;color:#5E554B;line-height:1.35">{{ moveNote }}</div>
+<div style="margin:22px 22px 0;display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:800;font-size:16px">Challenges</span><span style="font-size:12px;font-weight:700;color:#5E554B">streaks, not dollars</span></div>
+<div style="margin:8px 22px 24px;display:flex;flex-direction:column;gap:8px">
+<div style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;gap:12px;align-items:center"><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:14px">No boba · September</div><div style="font-size:12px;font-weight:600;color:#5E554B">{{ bobaSub }}</div></div><div style="text-align:right;flex:none"><div style="font-weight:800;font-size:16px;color:{{ bobaColor }};white-space:nowrap">{{ bobaStreak }} days</div><div style="font-size:11px;font-weight:600;color:#5E554B">Maya · 11</div></div></div>
+<div style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;gap:12px;align-items:center"><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:14px">No delivery</div><div style="font-size:12px;font-weight:600;color:#5E554B">4 friends · you're longest</div></div><div style="text-align:right;flex:none"><div style="font-weight:800;font-size:16px;color:#2F7A57;white-space:nowrap">6 days</div><div style="font-size:11px;font-weight:600;color:#5E554B">next: Dev · 4</div></div></div>
+<div style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;gap:12px;align-items:center"><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:14px">No new clothes</div><div style="font-size:12px;font-weight:600;color:#5E554B">with Maya · until Thanksgiving</div></div><div style="text-align:right;flex:none"><div style="font-weight:800;font-size:16px;color:#2F7A57;white-space:nowrap">18 days</div><div style="font-size:11px;font-weight:600;color:#5E554B">Maya · 18</div></div></div>
+</div>
+</div>
+<div style="border-top:2px solid #1E1A17;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 22px 30px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span onClick="{{ nav.home }}" style="color:#8A7F72;cursor:pointer">Home</span><span onClick="{{ nav.spend }}" style="color:#8A7F72;cursor:pointer">Spend</span><span>Friends</span><span onClick="{{ nav.you }}" style="color:#8A7F72;cursor:pointer">You</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.you }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;padding-top:62px">
+<div style="flex:1;overflow:auto">
+<div style="padding:10px 22px 0;font-weight:800;font-size:22px">You</div>
+<div style="margin:16px 22px 0;border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Priya N.</div><div style="font-size:12px;font-weight:600;color:#5E554B">Fall 2026 · Aug 24 → Dec 12</div></div><div style="width:40px;height:40px;border:2px solid #1E1A17;display:flex;align-items:center;justify-content:center;font-weight:800">P</div></div>
+<div onClick="{{ nav.wrapped }}" style="margin:12px 22px 0;background:#1E1A17;color:#FAF6EE;padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65">Preview</div><div style="font-size:22px;font-weight:800;line-height:1.1">Semester Wrapped</div><div style="font-size:12px;font-weight:600;opacity:.75;margin-top:2px">7 cards · how Dec 12 would look</div></div><span style="font-size:22px">→</span></div>
+<div style="margin:22px 22px 0;font-weight:800;font-size:16px">Income + jobs</div>
+<div style="margin:8px 22px 0;display:flex;flex-direction:column;gap:8px">
+<div style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;justify-content:space-between;font-weight:700;font-size:14px"><span>Aid refund</span><span>${{ aid }}</span></div>
+<div style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;justify-content:space-between;font-weight:700;font-size:14px"><span>Summer money</span><span>${{ intern }}</span></div>
+<div onClick="{{ nav.jobs }}" style="background:#DDEDE3;padding:12px 14px;display:flex;justify-content:space-between;font-weight:700;font-size:14px;cursor:pointer"><span>Library desk · {{ hours }} h/wk</span><span>$15.50/h →</span></div>
+<div onClick="{{ nav.jobs }}" style="background:#DDEDE3;padding:12px 14px;display:flex;justify-content:space-between;font-weight:700;font-size:14px;cursor:pointer"><span>Rec center · {{ hoursRec }} h/wk</span><span>$14/h →</span></div>
+</div>
+<div style="margin:22px 22px 0;font-weight:800;font-size:16px">Bills</div>
+<div style="margin:8px 22px 24px;display:flex;flex-direction:column;gap:8px">
+<div style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;justify-content:space-between;font-weight:700;font-size:14px"><span>Rent · 1st of month</span><span>${{ rent }}</span></div>
+<div style="border-bottom:2px solid #E4DCCB;padding:12px 0;display:flex;justify-content:space-between;font-weight:700;font-size:14px"><span>Phone · 15th</span><span>${{ phone }}</span></div>
+<div onClick="{{ nav.onboard }}" style="border:2px dashed #8A7F72;padding:10px 14px;font-weight:800;font-size:14px;color:#5E554B;cursor:pointer">Redo setup</div>
+</div>
+</div>
+<div style="border-top:2px solid #1E1A17;display:grid;grid-template-columns:repeat(4,1fr);padding:12px 22px 30px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center"><span onClick="{{ nav.home }}" style="color:#8A7F72;cursor:pointer">Home</span><span onClick="{{ nav.spend }}" style="color:#8A7F72;cursor:pointer">Spend</span><span onClick="{{ nav.friends }}" style="color:#8A7F72;cursor:pointer">Friends</span><span>You</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.wrapped }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;background:{{ wrapBg }};color:{{ wrapFg }};padding-top:62px;position:relative">
+<div style="position:absolute;left:0;top:120px;bottom:120px;width:40%;cursor:pointer" onClick="{{ wrap.prev }}"></div>
+<div style="position:absolute;right:0;top:120px;bottom:120px;width:60%;cursor:pointer" onClick="{{ wrap.next }}"></div>
+<div style="padding:10px 22px 0;display:flex;gap:4px"><sc-for list="{{ wrapDots }}" as="d" hint-placeholder-count="7"><div style="flex:1;height:4px;background:{{ d.bg }}"></div></sc-for></div>
+<div style="padding:14px 22px 0;display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65"><span>Fall 2026 · Wrapped</span><span onClick="{{ nav.you }}" style="cursor:pointer;position:relative;z-index:2">Close ✕</span></div>
+<div style="flex:1;display:flex;flex-direction:column;animation:sr-in .25s ease-out" key="{{ wrapIdx }}">
+<sc-if value="{{ wrap.is0 }}" hint-placeholder-val="{{ true }}">
+<div style="padding:44px 22px 0"><div style="font-size:15px;font-weight:600;opacity:.7">On Aug 24 you had</div><div style="font-size:96px;font-weight:800;letter-spacing:-.05em;line-height:.95">{{ lumpLabel }}</div><div style="font-size:15px;font-weight:600;line-height:1.4;margin-top:12px;max-width:300px;opacity:.7">and 111 days to make it last. No paycheck coming — just this.</div></div>
+<div style="margin:48px 22px 0;display:flex;height:72px;border:2px solid #1E1A17"><div style="width:61%;background:#1E1A17;color:#FAF6EE;padding:8px 10px;font-size:12px;font-weight:700;line-height:1.2">Aid refund<br><span style="font-size:18px;font-weight:800">${{ aid }}</span></div><div style="flex:1;background:#fff;color:#1E1A17;padding:8px 10px;font-size:12px;font-weight:700;line-height:1.2;border-left:2px solid #1E1A17">Summer<br><span style="font-size:18px;font-weight:800">${{ intern }}</span></div></div>
+<div style="margin:12px 22px 0;font-size:15px;font-weight:600;opacity:.7;line-height:1.4">+ two campus jobs that added <b style="color:#2F7A57">$3,024</b> along the way — but you didn't know that yet.</div>
+</sc-if>
+<sc-if value="{{ wrap.is1 }}" hint-placeholder-val="{{ false }}">
+<div style="padding:30px 22px 0"><div style="font-size:15px;font-weight:600;opacity:.8">Sep 11 we said you'd run out</div><div style="font-size:80px;font-weight:800;letter-spacing:-.04em;line-height:1;color:#FF9E7A">Nov 14</div><div style="font-size:15px;font-weight:600;opacity:.8;margin-top:26px">You ended with</div><div style="font-size:80px;font-weight:800;letter-spacing:-.04em;line-height:1;color:#9FD3B5">Dec 12</div></div>
+<div style="margin:32px 22px 0"><div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.65"><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span></div><div style="margin-top:8px;position:relative;height:96px;border-bottom:2px solid rgba(250,246,238,.35)"><div style="position:absolute;left:0;bottom:14px;width:12%;height:2px;background:#FF9E7A"></div><div style="position:absolute;left:12%;bottom:10px;width:16%;height:2px;background:#FF9E7A"></div><div style="position:absolute;left:28%;bottom:26px;width:18%;height:2px;background:#FAF6EE"></div><div style="position:absolute;left:46%;bottom:22px;width:14%;height:2px;background:#FAF6EE"></div><div style="position:absolute;left:60%;bottom:44px;width:20%;height:2px;background:#9FD3B5"></div><div style="position:absolute;left:80%;bottom:58px;width:20%;height:2px;background:#9FD3B5"></div><div style="position:absolute;left:28%;bottom:2px;font-size:10px;font-weight:700;opacity:.8;white-space:nowrap">↑ picked up rec shifts</div><div style="position:absolute;left:60%;bottom:30px;font-size:10px;font-weight:700;opacity:.8;white-space:nowrap">↑ no-delivery October</div></div></div>
+<div style="margin:28px 22px 0;font-size:17px;font-weight:600;line-height:1.4;opacity:.9">The date moved 14 times. Twelve of them were shifts you logged.</div>
+</sc-if>
+<sc-if value="{{ wrap.is2 }}" hint-placeholder-val="{{ false }}">
+<div style="padding:30px 22px 0"><div style="font-size:15px;font-weight:600;opacity:.7">Your envelopes, emptied</div><div style="font-size:72px;font-weight:800;letter-spacing:-.04em;line-height:.95">Dec 12</div><div style="font-size:15px;font-weight:600;line-height:1.4;margin-top:10px;opacity:.7">$61 left in Free-to-spend.</div></div>
+<div style="margin:28px 22px 0;display:flex;flex-direction:column;gap:8px">
+<div style="background:#fff;color:#1E1A17;border:2px solid #1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Rent · 4 months</div><div style="font-size:12px;font-weight:600;color:#5E554B">never late</div></div><div style="font-weight:800;font-size:18px">$2,080</div></div>
+<div style="background:#fff;color:#1E1A17;border:2px solid #1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Austin trip</div><div style="font-size:12px;font-weight:600;color:#5E554B">funded Nov 18 · 2 days early</div></div><div style="font-weight:800;font-size:18px">$200</div></div>
+<div style="background:#DDEDE3;color:#1E1A17;border:2px solid #1E1A17;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Two campus jobs</div><div style="font-size:12px;font-weight:600;color:#5E554B">18 extra shifts · earned</div></div><div style="font-weight:800;font-size:18px;color:#2F7A57">+$3,024</div></div>
+<div style="border:2px dashed #8A7F72;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:15px">Fewer bobas than August</div><div style="font-size:12px;font-weight:600;opacity:.7">11 of 16 weeks · saved</div></div><div style="font-weight:800;font-size:18px">~$180</div></div>
+</div>
+</sc-if>
+<sc-if value="{{ wrap.is3 }}" hint-placeholder-val="{{ false }}">
+<div style="padding:30px 22px 0"><div style="font-size:15px;font-weight:600;opacity:.7">Your biggest envelope after rent</div><div style="font-size:56px;font-weight:800;letter-spacing:-.04em;line-height:1">Eating out</div><div style="display:flex;align-items:baseline;gap:10px;margin-top:6px"><div style="font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1">$1,140</div><div style="font-size:14px;font-weight:600;opacity:.7">· 97 receipts · $11.75 avg</div></div></div>
+<div style="margin:28px 22px 0;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Eating out</span><div style="flex:1;height:22px;background:#FAF6EE"></div><span style="width:56px;text-align:right">$1,140</span></div>
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Groceries</span><div style="flex:1;display:flex"><div style="width:76%;height:22px;border:2px solid #FAF6EE"></div></div><span style="width:56px;text-align:right">$868</span></div>
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Delivery</span><div style="flex:1;display:flex"><div style="width:38%;height:22px;border:2px solid #FAF6EE"></div></div><span style="width:56px;text-align:right">$436</span></div>
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Drinks</span><div style="flex:1;display:flex"><div style="width:27%;height:22px;border:2px solid #FAF6EE"></div></div><span style="width:56px;text-align:right">$312</span></div>
+<div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700"><span style="width:100px">Books + fees</span><div style="flex:1;display:flex"><div style="width:27%;height:22px;border:2px solid #FAF6EE"></div></div><span style="width:56px;text-align:right">$313</span></div>
+</div>
+<div style="margin:24px 22px 0;border:2px solid #FAF6EE;padding:12px 14px;font-size:14px;font-weight:600;line-height:1.4"><b>Most-visited:</b> the taqueria on Kirby, 23 times. Tuesdays, mostly.</div>
+</sc-if>
+<sc-if value="{{ wrap.is4 }}" hint-placeholder-val="{{ false }}">
+<div style="padding:30px 22px 0"><div style="font-size:15px;font-weight:600;opacity:.7">Your expensive day is</div><div style="font-size:72px;font-weight:800;letter-spacing:-.04em;line-height:1">Friday</div><div style="font-size:15px;font-weight:600;opacity:.7;margin-top:8px">$71 on average — 2× a Tuesday.</div></div>
+<div style="margin:30px 22px 0;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:130px"><div style="background:#C9BFAF;height:44%"></div><div style="background:#C9BFAF;height:40%"></div><div style="background:#C9BFAF;height:52%"></div><div style="background:#C9BFAF;height:58%"></div><div style="background:#1E1A17;height:100%"></div><div style="background:#C9BFAF;height:82%"></div><div style="background:#C9BFAF;height:48%"></div></div>
+<div style="margin:6px 22px 0;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;font-size:11px;font-weight:700;text-align:center;opacity:.7"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+<div style="margin:26px 22px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px"><div style="border:2px solid #1E1A17;padding:10px 12px"><div style="font-size:11px;font-weight:700;opacity:.65">Latest receipt</div><div style="font-size:18px;font-weight:800;line-height:1.1">2:41 AM</div><div style="font-size:12px;font-weight:600;opacity:.7">Oct 30 · delivery</div></div><div style="border:2px solid #1E1A17;padding:10px 12px"><div style="font-size:11px;font-weight:700;opacity:.65">Cheapest week</div><div style="font-size:18px;font-weight:800;line-height:1.1">$142</div><div style="font-size:12px;font-weight:600;opacity:.7">Oct 6–12 · midterms</div></div></div>
+</sc-if>
+<sc-if value="{{ wrap.is5 }}" hint-placeholder-val="{{ false }}">
+<div style="padding:30px 22px 0"><div style="font-size:15px;font-weight:600;opacity:.7">Austin trip envelope</div><div style="font-size:64px;font-weight:800;letter-spacing:-.04em;line-height:1">Funded</div><div style="font-size:15px;font-weight:600;opacity:.7;margin-top:8px">$600 by Nov 18 — two days early. Dev caught up in the last week.</div></div>
+<div style="margin:24px 22px 0;display:flex;height:48px;border:2px solid #FAF6EE"><div style="width:33.3%;background:#FAF6EE;color:#1E1A17;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">You $200</div><div style="width:33.3%;background:#9FD3B5;color:#1E1A17;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border-left:2px solid #FAF6EE">Maya $200</div><div style="flex:1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border-left:2px solid #FAF6EE">Dev $200</div></div>
+<div style="margin:28px 22px 0;font-size:12px;font-weight:700;opacity:.65">Longest streaks</div>
+<div style="margin:8px 22px 0;display:flex;flex-direction:column;gap:8px">
+<div style="border:2px solid #FAF6EE;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="min-width:0"><div style="font-weight:800;font-size:14px">No delivery</div><div style="font-size:12px;font-weight:600;opacity:.7">you · Oct 1–Nov 3</div></div><div style="flex:none;white-space:nowrap;font-weight:800;font-size:18px;color:#9FD3B5">34 days</div></div>
+<div style="border:2px solid #FAF6EE;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="min-width:0"><div style="font-weight:800;font-size:14px">No new clothes</div><div style="font-size:12px;font-weight:600;opacity:.7">Maya · the whole semester</div></div><div style="flex:none;white-space:nowrap;font-weight:800;font-size:18px;color:#9FD3B5">111 days</div></div>
+<div style="border:2px solid #FAF6EE;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="min-width:0"><div style="font-weight:800;font-size:14px">No boba</div><div style="font-size:12px;font-weight:600;opacity:.7">you · best of 4 tries</div></div><div style="flex:none;white-space:nowrap;font-weight:800;font-size:18px">9 days</div></div>
+</div>
+</sc-if>
+<sc-if value="{{ wrap.is6 }}" hint-placeholder-val="{{ false }}">
+<div style="margin:22px 22px 0;background:#1E1A17;color:#FAF6EE;padding:22px 20px 20px">
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65;white-space:nowrap"><span>Semester Runway</span><span>Fall 2026</span></div>
+<div style="font-size:15px;font-weight:600;opacity:.7;margin-top:22px">Priya made {{ lumpLabel }} last</div>
+<div style="font-size:64px;font-weight:800;letter-spacing:-.04em;line-height:.95">111 days</div>
+<div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px 16px">
+<div><div style="font-size:11px;font-weight:700;opacity:.65">Forecast · Sep 11</div><div style="font-size:20px;font-weight:800;line-height:1.1;color:#FF9E7A">Nov 14</div></div>
+<div><div style="font-size:11px;font-weight:700;opacity:.65">Actual</div><div style="font-size:20px;font-weight:800;line-height:1.1;color:#9FD3B5">Dec 12</div></div>
+<div><div style="font-size:11px;font-weight:700;opacity:.65">Earned on campus</div><div style="font-size:20px;font-weight:800;line-height:1.1">$3,024</div></div>
+<div><div style="font-size:11px;font-weight:700;opacity:.65">Longest streak</div><div style="font-size:20px;font-weight:800;line-height:1.1">34 days</div></div>
+</div>
+<div style="margin-top:20px;display:flex;height:12px;border:2px solid #FAF6EE"><div style="width:33%;background:#FAF6EE"></div><div style="width:5%;background:#FAF6EE;opacity:.6"></div><div style="width:3%;background:#9FD3B5;border-left:2px solid #FAF6EE"></div><div style="flex:1;border-left:2px solid #FAF6EE"></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;font-weight:700;opacity:.65;white-space:nowrap"><span>Rent</span><span>Fees</span><span>Trip</span><span>Free to spend</span></div>
+</div>
+<div style="margin:28px 22px 0;font-size:14px;font-weight:600;line-height:1.4;opacity:.8">Spring lump lands Jan 12. Want your envelopes pre-sorted from this semester?</div>
+<div style="flex:1"></div>
+<div style="display:flex;gap:10px;padding:0 22px 0;position:relative;z-index:2"><button style="flex:1;height:52px;background:#1E1A17;color:#FAF6EE;border:0;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Share card</button><button onClick="{{ nav.onboard }}" style="flex:1;height:52px;background:transparent;color:#1E1A17;border:2px solid #1E1A17;font:800 15px 'Baloo 2',sans-serif;cursor:pointer">Set up spring</button></div>
+</sc-if>
+</div>
+<div style="padding:12px 22px 44px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;opacity:.75"><span>{{ wrapHint }}</span><span style="font-weight:800;border:2px solid currentColor;padding:6px 12px">Share</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:22px;right:22px;bottom:110px;background:#1E1A17;color:#FAF6EE;padding:12px 14px;font-size:14px;font-weight:600;line-height:1.35;animation:sr-in .25s ease-out;z-index:5">{{ toast }}</div></sc-if>
+</div>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startAt&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;onboard&quot;,&quot;options&quot;:[&quot;onboard&quot;,&quot;home&quot;,&quot;runway&quot;,&quot;scan&quot;,&quot;chat&quot;,&quot;jobs&quot;,&quot;spend&quot;,&quot;friends&quot;,&quot;you&quot;,&quot;wrapped&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = this.fresh();
+  }
+  fresh() {
+    return {
+      screen: this.props.startAt ?? 'onboard', obStep: 0,
+      aid: 3800, intern: 2440, rent: 520, phone: 45, fees: 195, fundWeekly: 20,
+      spentBefore: 880, today: [{ name: 'Vending · Fondren', amt: 0.75, cat: 'Other' }],
+      hours: 12, hoursRec: 6, job: 'lib',
+      fundYou: 120, fundExtra: 0, bobaStreak: 11, bobaBroken: false,
+      receiptCat: 'Drinks', scanReview: false,
+      chat: [
+        { user: true, text: 'can i afford the $40 concert sat?' },
+        { bot: true, text: 'Yep — that\u2019s under a day of runway. Want me to hold $40 from Free-to-spend so it doesn\u2019t leak out as boba?' },
+      ],
+      draft: '', wrapIdx: 0, toast: null, sheet: false,
+    };
+  }
+  go(screen) {
+    clearTimeout(this._scanT);
+    const next = { screen, toast: null, sheet: false };
+    if (screen === 'scan') { next.scanReview = false; this._scanT = setTimeout(() => this.setState({ scanReview: true }), 1100); }
+    if (screen === 'onboard') next.obStep = 0;
+    if (screen === 'wrapped') next.wrapIdx = 0;
+    this.setState(next);
+  }
+  flash(msg) { this.setState({ toast: msg }); clearTimeout(this._toastT); this._toastT = setTimeout(() => this.setState({ toast: null }), 3200); }
+  reply(text) {
+    const m = text.match(/\$?\s?(\d+(?:\.\d+)?)/);
+    const pace = 50;
+    let bot;
+    if (!m) bot = { bot: true, text: 'Give me a price and I\u2019ll tell you what it does to your date. Or snap the tag.' };
+    else {
+      const amt = +m[1]; const days = Math.max(1, Math.round(amt / pace));
+      const out = this.calc().runIdx; const fmt = i => new Date(2026, 7, 24 + i).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const routes = amt >= 60 ? [
+        { label: 'Wait 2 paychecks (Oct 2) \u2014 then it costs ' + Math.max(1, Math.round(days / 4)) + ' d', delta: '\u2212' + Math.max(1, Math.round(days / 4)) + ' d', bg: '#DDEDE3', color: '#2F7A57' },
+        { label: 'Refurb / used \u00b7 ~$' + Math.round(amt * .76), delta: '\u2212' + Math.max(1, Math.round(days * .76)) + ' d', bg: '#fff', color: '#1E1A17' },
+        { label: 'Student price + trade-in', delta: '\u2212' + Math.max(1, Math.round(days * .6)) + ' d', bg: '#fff', color: '#1E1A17' },
+      ] : [
+        { label: 'Take it from today\u2019s $' + this.calc().safe.toFixed(0) + ' \u2014 skip the drink', delta: '0 d', bg: '#DDEDE3', color: '#2F7A57' },
+        { label: 'Log it, keep the date', delta: '\u2212' + days + ' d', bg: '#fff', color: '#1E1A17' },
+      ];
+      bot = { bot: true, text: (amt >= 200 ? 'Big swing. ' : amt >= 60 ? 'Doable, but it shows. ' : 'Small. ') + '$' + amt + ' out of Free-to-spend moves your empty date from ' + fmt(out) + ' to ' + fmt(Math.max(19, out - days)) + ' \u2014 ' + days + (days === 1 ? ' day' : ' days') + ' of runway.', routes, hasRoutes: true };
+    }
+    this.setState(s => ({ chat: [...s.chat, { user: true, text }], draft: '' }));
+    setTimeout(() => this.setState(s => ({ chat: [...s.chat, bot] })), 600);
+  }
+  calc() {
+    const s = this.state;
+    const lump = s.aid + s.intern;
+    const reserved = s.rent * 3 + s.phone * 3 + s.fees;
+    const fund = s.fundWeekly * 10 + s.fundExtra;
+    const todaySpent = s.today.reduce((a, t) => a + t.amt, 0);
+    const spent = s.spentBefore + todaySpent;
+    const free = lump - reserved - fund - spent;
+    const safe = free / 92;
+    const pace = 50;
+    const futureJob = ((s.hours - 12) * 15.5 + (s.hoursRec - 6) * 14) * 9;
+    const runIdx = Math.max(19, Math.min(110, 18 + Math.floor((free + futureJob) / pace)));
+    return { lump, reserved, fund, todaySpent, spent, free, safe, pace, futureJob, runIdx };
+  }
+  renderVals() {
+    const s = this.state, c = this.calc();
+    const fmt = i => new Date(2026, 7, 24 + i).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const money = n => '$' + Math.round(n).toLocaleString('en-US');
+    const cents = n => '$' + n.toFixed(2);
+    const madeIt = c.runIdx >= 110;
+    const runLabel = madeIt ? 'Dec 12 \u2713' : fmt(c.runIdx);
+    const base = { 'Eating out': 318, Groceries: 212, Delivery: 164, Books: 118, Drinks: 96, Other: 32 };
+    s.today.forEach(t => { base[t.cat] = (base[t.cat] || 0) + t.amt; });
+    const max = Math.max(...Object.values(base));
+    const cats = Object.entries(base).sort((a, b) => b[1] - a[1]).map(([name, v], i) => ({ name, label: money(v), pct: Math.max(4, Math.round(v / max * 100)) + '%', bg: i === 0 ? '#1E1A17' : '#fff', bgSoft: i === 0 ? '#1E1A17' : '#C9BFAF' }));
+    const nav = {}; ['onboard', 'home', 'runway', 'scan', 'chat', 'jobs', 'spend', 'friends', 'you', 'wrapped'].forEach(k => nav[k] = () => this.go(k));
+    const is = {}; Object.keys(nav).forEach(k => is[k] = s.screen === k);
+    const num = k => e => this.setState({ [k]: +e.target.value || 0 });
+    const jobHours = s.job === 'lib' ? s.hours : s.hoursRec;
+    const delta = c.runIdx - 83;
+    const extraWeekly = (s.hours - 12) * 15.5 + (s.hoursRec - 6) * 14;
+    const wrapBgs = ['#FAF6EE', '#1E1A17', '#1E1A17', '#1E1A17', '#FAF6EE', '#1E1A17', '#FAF6EE'];
+    const wrapDark = wrapBgs[s.wrapIdx] === '#1E1A17';
+    const wrapHints = ['Tap \u2192 2 of 7: the forecast', 'Tap \u2192 3 of 7: envelopes emptied', 'Tap \u2192 4 of 7: top category', 'Tap \u2192 5 of 7: your rhythm', 'Tap \u2192 6 of 7: friends', 'Tap \u2192 7 of 7: your card', 'That\u2019s the semester.'];
+    const catKeys = { drinks: 'Drinks', eating: 'Eating out', groceries: 'Groceries' };
+    const catBg = {}, catFg = {}, cat = {};
+    Object.entries(catKeys).forEach(([k, v]) => { const on = s.receiptCat === v; catBg[k] = on ? '#1E1A17' : '#fff'; catFg[k] = on ? '#FAF6EE' : '#1E1A17'; cat[k] = () => this.setState({ receiptCat: v }); });
+    const bobaWarn = s.receiptCat === 'Drinks' && !s.bobaBroken;
+    return {
+      is, nav, isDark: s.screen === 'scan' || (s.screen === 'wrapped' && wrapDark),
+      reset: () => { clearTimeout(this._scanT); this.setState(this.fresh()); },
+      aid: s.aid, intern: s.intern, rent: s.rent, phone: s.phone, fundWeekly: s.fundWeekly, hours: s.hours, hoursRec: s.hoursRec,
+      set: { aid: num('aid'), intern: num('intern'), rent: num('rent'), phone: num('phone'), fundWeekly: num('fundWeekly') },
+      ob: { is0: s.obStep === 0, is1: s.obStep === 1, is2: s.obStep === 2, bar1: s.obStep >= 1 ? '#1E1A17' : '#FAF6EE', bar2: s.obStep >= 2 ? '#1E1A17' : '#FAF6EE',
+        next: () => this.setState(st => ({ obStep: Math.min(2, st.obStep + 1) })), finish: () => { this.go('home'); this.flash('Envelopes set. ' + money(c.safe) + ' a day is yours \u2014 everything else is spoken for.'); } },
+      lumpLabel: money(c.lump), rentTotalLabel: money(s.rent * 3), feesTotalLabel: money(s.phone * 3 + s.fees), fundTotalLabel: money(c.fund),
+      spentLabel: money(c.spent), freeLabel: money(c.free), safeLabel: money(c.safe), todayLabel: cents(c.todaySpent),
+      leftTodayLabel: cents(Math.max(0, c.safe - c.todaySpent)), afterLabel: cents(Math.max(0, c.safe - c.todaySpent - 8.65)),
+      coveredPct: Math.round(c.runIdx / 110 * 100) + '%', coveredMidPct: Math.max(0, Math.round((c.runIdx - 18) / 110 * 100)) + '%',
+      runLabel, runColor: madeIt ? '#9FD3B5' : '#FF9E7A',
+      runAdvice: madeIt ? 'You\u2019re covered through finals. Daily stays at ' + money(c.safe) + '.' : 'Hold ' + money(c.safe) + '/day and it lasts to Dec 12. That\u2019s ' + (110 - c.runIdx) + ' more days to cover at today\u2019s pace.',
+      moves: [
+        { delta: '\u22122 d', color: '#C2481F', bg: '#fff', title: 'Dipped into Rent \u00b7 $84', sub: 'Sep 3 \u00b7 groceries came out of the wrong envelope' },
+        { delta: '\u22122 d', color: '#C2481F', bg: '#fff', title: 'Delivery \u00d73 \u00b7 $71', sub: 'Tue\u2013Thu \u00b7 $19 of it was fees' },
+        { delta: '+2 d', color: '#2F7A57', bg: '#DDEDE3', title: 'Logged 14 h at the library', sub: '$217 lands Sep 18 \u2192 Free to spend' },
+        { delta: '\u22121 d', color: '#C2481F', bg: '#fff', title: 'Textbook \u00b7 $118', sub: 'One-off \u00b7 bounces back if you stay on pace' },
+      ],
+      scanReview: s.scanReview, scanStatus: s.scanReview ? 'Read \u2713' : 'Reading\u2026', scanBottom: s.scanReview ? '400px' : '220px', scanFrameBottom: s.scanReview ? '382px' : '200px',
+      cat, catBg, catFg, bobaWarn, bobaStreak: s.bobaStreak,
+      logReceipt: () => {
+        const broke = s.receiptCat === 'Drinks';
+        this.setState(st => ({ today: [...st.today, { name: 'Tiger Sugar \u00b7 Village', amt: 8.65, cat: st.receiptCat }], bobaStreak: broke ? 0 : st.bobaStreak, bobaBroken: broke || st.bobaBroken }));
+        this.go('home'); this.flash('$8.65 dropped into Free \u00b7 ' + s.receiptCat + '.' + (broke ? ' No-boba streak reset \u2014 Maya\u2019s still at 11.' : ' Date unchanged.'));
+      },
+      chat: s.chat, draft: s.draft, setDraft: e => this.setState({ draft: e.target.value }),
+      draftKey: e => { if (e.key === 'Enter' && s.draft.trim()) this.reply(s.draft.trim()); },
+      send: () => { if (s.draft.trim()) this.reply(s.draft.trim()); },
+      chips: [
+        { text: 'if I buy AirPods Pro $249?', onClick: () => this.reply('if i buy the AirPods Pro for $249?') },
+        { text: '$18 sushi tonight?', onClick: () => this.reply('$18 sushi tonight?') },
+        { text: 'a $90 concert in Oct?', onClick: () => this.reply('a $90 concert in Oct?') },
+      ],
+      job: { lib: () => this.setState({ job: 'lib' }), rec: () => this.setState({ job: 'rec' }) },
+      jobBg: { lib: s.job === 'lib' ? '#1E1A17' : '#fff', rec: s.job === 'rec' ? '#1E1A17' : '#fff' },
+      jobFg: { lib: s.job === 'lib' ? '#FAF6EE' : '#1E1A17', rec: s.job === 'rec' ? '#FAF6EE' : '#1E1A17' },
+      jobName: s.job === 'lib' ? 'Library' : 'Rec center', jobHours, jobBase: s.job === 'lib' ? 12 : 6, jobRateLabel: s.job === 'lib' ? '$15.50 / h' : '$14 / h',
+      setJobHours: e => this.setState(s.job === 'lib' ? { hours: +e.target.value } : { hoursRec: +e.target.value }),
+      extraWeeklyLabel: (extraWeekly >= 0 ? '+' : '\u2212') + money(Math.abs(extraWeekly)),
+      otherJobLine: s.job === 'lib' ? 'Rec center stays at ' + s.hoursRec + ' h \u00b7 $' + (s.hoursRec * 14) + '/wk' : 'Library stays at ' + s.hours + ' h \u00b7 $' + (s.hours * 15.5).toFixed(0) + '/wk',
+      totalHours: s.hours + s.hoursRec,
+      deltaDays: delta === 0 ? 'same as now' : (delta > 0 ? '+' : '') + delta + ' days vs now',
+      jobVerdict: madeIt ? 'That covers you through finals, with ' + money(c.free + c.futureJob - 50 * 92) + ' to spare.' : delta > 0 ? 'Closer. About ' + Math.ceil((110 - c.runIdx) * 50 / (15.5 * 9)) + ' more hours a week and you clear Dec 12.' : delta < 0 ? 'Fewer shifts pulls the date toward Halloween. Pair it with a no-delivery week to offset.' : 'Current schedule. Bump either slider to see what two extra shifts do.',
+      cats, todayItems: s.today.map(t => ({ ...t, label: cents(t.amt) })).reverse(),
+      fundNowLabel: money(s.fundYou + 90 + 50), fundYouLabel: money(s.fundYou), fundYouPct: Math.round(s.fundYou / 600 * 100) + '%',
+      fundYouStatus: s.fundYou >= 140 ? 'ahead' : 'on track',
+      moveIn: () => { this.setState(st => ({ fundYou: st.fundYou + 20, fundExtra: st.fundExtra + 20 })); this.flash('$20 set aside for the trip. Your daily spending money is now ' + money((c.free - 20) / 92) + '.'); },
+      moveNote: s.fundExtra ? 'You\u2019ve put an extra ' + money(s.fundExtra) + ' toward the trip this week. It came out of your spending money, so your daily number is now ' + money(c.safe) + '.' : 'Your $' + s.fundWeekly + '/wk is already taken out before we calculate your daily number.',
+      safeAfter20Label: money((c.free - 20) / 92),
+      bobaSub: s.bobaBroken ? 'with Maya \u00b7 you broke yours today (Tiger Sugar)' : 'with Maya \u00b7 day 11, tied', bobaColor: s.bobaBroken ? '#C2481F' : '#2F7A57',
+      wrapIdx: s.wrapIdx, wrapBg: wrapBgs[s.wrapIdx], wrapFg: wrapDark ? '#FAF6EE' : '#1E1A17', wrapHint: wrapHints[s.wrapIdx],
+      wrapDots: wrapBgs.map((_, i) => ({ bg: i <= s.wrapIdx ? (wrapDark ? '#FAF6EE' : '#1E1A17') : (wrapDark ? 'rgba(250,246,238,.3)' : '#C9BFAF') })),
+      wrap: { is0: s.wrapIdx === 0, is1: s.wrapIdx === 1, is2: s.wrapIdx === 2, is3: s.wrapIdx === 3, is4: s.wrapIdx === 4, is5: s.wrapIdx === 5, is6: s.wrapIdx === 6,
+        next: () => this.setState(st => ({ wrapIdx: Math.min(6, st.wrapIdx + 1) })), prev: () => this.setState(st => ({ wrapIdx: Math.max(0, st.wrapIdx - 1) })) },
+      hasToast: !!s.toast, toast: s.toast,
+      runColorInk: madeIt ? '#2F7A57' : '#C2481F',
+      hasSheet: s.sheet, openSheet: () => this.setState({ sheet: true }), closeSheet: () => this.setState({ sheet: false }),
+      reservedLabel: money(c.reserved + c.fund),
+      envRentPct: Math.round(s.rent * 3 / c.lump * 100) + '%', envFeesPct: Math.round((s.phone * 3 + s.fees) / c.lump * 100) + '%',
+      envFundPct: Math.round(c.fund / c.lump * 100) + '%', envSpentPct: Math.round(c.spent / c.lump * 100) + '%',
+      catsTop: cats.slice(0, 4),
+      recent: [
+        ...s.today.slice().reverse().map(t => ({ name: t.name, sub: 'Free · ' + t.cat, label: '−' + cents(t.amt), color: '#1E1A17', when: 'today', bg: '#fff' })),
+        { name: 'Rent · September', sub: 'Rent envelope', label: '−' + money(s.rent), color: '#1E1A17', when: 'Sep 1', bg: '#1E1A17' },
+        { name: 'Library desk paycheck', sub: '→ Free to spend', label: '+$186', color: '#2F7A57', when: 'Sep 4', bg: '#DDEDE3' },
+      ].slice(0, 4),
+    };
+  }
+}
+</script>
+</body>
+</html>

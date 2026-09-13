@@ -1,0 +1,16 @@
+{
+  "//": "Compiles scripts/ plus the non-RN layers they depend on (domain, data/api.ts, data/mock/seed.ts, data/supabase) so they can run under plain `node`.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "moduleResolution": "node10",
+    "ignoreDeprecations": "6.0",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "build-scripts",
+    "rootDir": ".",
+    "types": ["node"]
+  },
+  "include": ["scripts/**/*.ts", "src/domain/**/*.ts", "src/data/api.ts", "src/data/mock/seed.ts", "src/data/supabase/**/*.ts"]
+}
