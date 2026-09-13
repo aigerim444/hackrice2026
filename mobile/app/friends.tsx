@@ -1,7 +1,8 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
+import { supabaseExtras, usesSupabase } from '../src/data/client';
 import { shortDate, weeksBetween } from '../src/domain/dates';
 import { money, pct } from '../src/domain/format';
 import {
@@ -13,7 +14,7 @@ import {
 } from '../src/domain/selectors';
 import type { Challenge, ChallengeDraft, Fund, FundDraft, Person } from '../src/domain/types';
 import { useLoadedRunway } from '../src/state/RunwayProvider';
-import { colors, GUTTER, RULE } from '../src/theme/tokens';
+import { colors, fonts, GUTTER, RULE } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
 import { SectionHeading } from '../src/ui/blocks';
 import { OutlineButton, PrimaryButton } from '../src/ui/controls';
@@ -48,8 +49,9 @@ export default function FriendsScreen() {
     toast,
     dismissToast,
     flash,
+    refetch,
   } = useLoadedRunway();
-  const { challenges, semester, funds, people } = snapshot;
+  const { semester, people } = snapshot;
 
   const [moving, setMoving] = useState<string | null>(null);
   const [addingGoal, setAddingGoal] = useState(false);
@@ -66,9 +68,80 @@ export default function FriendsScreen() {
   const [challengeError, setChallengeError] = useState<string | null>(null);
   const [invitingBusy, setInvitingBusy] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
+  const [accepting, setAccepting] = useState<string | null>(null);
+  const [acceptError, setAcceptError] = useState<string | null>(null);
 
-  const featured = primaryFund(snapshot);
+  // A fund/challenge whose only visible member is me, still 'invited', is
+  // one I haven't accepted — an owner's own row never starts 'invited'
+  // (hydrateFund/addChallenge always give it 'on track'/'joined'), so this
+  // is reliable without a separate "who owns this" field on either type.
+  const isPendingFund = (fund: Fund) => fund.members.find((m) => m.isYou)?.status === 'invited';
+  const isPendingChallenge = (challenge: Challenge) =>
+    challenge.participants.find((p) => p.isYou)?.status === 'invited';
+
+  // Challenge has no startedBy field to declare (unlike Fund) — supabaseApi
+  // still attaches one informally for exactly this read (see loadSnapshot).
+  // Mock snapshots never set it, so this is always undefined there — every
+  // mock challenge is "owned", which already matches how mock has always
+  // behaved.
+  const startedByOf = (challenge: Challenge) => (challenge as Challenge & { startedBy?: string }).startedBy;
+  const isOwnFund = (fund: Fund) => !fund.startedBy;
+  const isOwnChallenge = (challenge: Challenge) => !startedByOf(challenge);
+
+  const pendingFunds = snapshot.funds.filter(isPendingFund);
+  const pendingChallenges = snapshot.challenges.filter(isPendingChallenge);
+  const funds = snapshot.funds.filter((f) => !isPendingFund(f));
+  const challenges = snapshot.challenges.filter((c) => !isPendingChallenge(c));
+
+  // primaryFund is a domain selector (untouched) — it has no idea what
+  // "pending" means, so it only ever sees funds that are already mine to
+  // act on. A fund I haven't accepted yet can't become "the" featured fund
+  // with a live contribute button on it.
+  const featured = primaryFund({ ...snapshot, funds });
   const others = funds.filter((fund) => fund.id !== featured?.id);
+
+  const acceptFund = async (fundId: string) => {
+    if (!supabaseExtras || accepting) return;
+    setAccepting(fundId);
+    setAcceptError(null);
+    try {
+      await supabaseExtras.acceptFundInvite(fundId);
+      await refetch();
+    } catch (e) {
+      setAcceptError(e instanceof Error ? e.message : "Couldn't accept — try again.");
+    } finally {
+      setAccepting(null);
+    }
+  };
+
+  const acceptChallenge = async (challengeId: string) => {
+    if (!supabaseExtras || accepting) return;
+    setAccepting(challengeId);
+    setAcceptError(null);
+    try {
+      await supabaseExtras.acceptChallengeInvite(challengeId);
+      await refetch();
+    } catch (e) {
+      setAcceptError(e instanceof Error ? e.message : "Couldn't accept — try again.");
+    } finally {
+      setAccepting(null);
+    }
+  };
+
+  const extras = supabaseExtras;
+  const inviteUserToFund = extras
+    ? async (fundId: string, userId: string) => {
+        await extras.inviteUserToFund(fundId, userId);
+        await refetch();
+      }
+    : undefined;
+
+  const inviteUserToChallenge = extras
+    ? async (challengeId: string, userId: string) => {
+        await extras.inviteUserToChallenge(challengeId, userId);
+        await refetch();
+      }
+    : undefined;
 
   const move = async (fundId: string) => {
     if (moving) return;
@@ -178,6 +251,42 @@ export default function FriendsScreen() {
           )}
         </View>
 
+        {usesSupabase && (pendingFunds.length || pendingChallenges.length) ? (
+          <>
+            <SectionHeading title="Invited you" style={{ marginTop: 22 }} />
+            <View style={{ marginHorizontal: GUTTER, marginTop: 8, gap: 8 }}>
+              {pendingFunds.map((fund) => (
+                <PendingInviteRow
+                  key={fund.id}
+                  label={fund.label}
+                  sublabel={
+                    (fund.startedBy ? `${fund.startedBy} started this · ` : '') +
+                    `${money(fund.targetAmount)} goal`
+                  }
+                  busy={accepting === fund.id}
+                  onAccept={() => acceptFund(fund.id)}
+                />
+              ))}
+              {pendingChallenges.map((challenge) => (
+                <PendingInviteRow
+                  key={challenge.id}
+                  label={challenge.label}
+                  sublabel={
+                    startedByOf(challenge) ? `${startedByOf(challenge)} started this streak` : 'a streak challenge'
+                  }
+                  busy={accepting === challenge.id}
+                  onAccept={() => acceptChallenge(challenge.id)}
+                />
+              ))}
+              {acceptError ? (
+                <T w={600} size={13} lh={1.35} color={colors.red}>
+                  {acceptError}
+                </T>
+              ) : null}
+            </View>
+          </>
+        ) : null}
+
         {featured ? (
           <FeaturedFund
             fund={featured}
@@ -185,7 +294,7 @@ export default function FriendsScreen() {
             dailyAfter={money(projection.safeDaily)}
             busy={moving === featured.id}
             onMove={() => move(featured.id)}
-            invitable={invitable(snapshot, featured.members.map((m) => m.id))}
+            invitable={isOwnFund(featured) ? invitable(snapshot, featured.members.map((m) => m.id)) : []}
             inviteOpen={inviting === featured.id}
             onToggleInvite={() => {
               setInviteError(null);
@@ -194,6 +303,9 @@ export default function FriendsScreen() {
             onInvite={(ids) => sendFundInvites(featured.id, ids)}
             inviteBusy={invitingBusy}
             inviteError={inviteError}
+            onInviteById={
+              isOwnFund(featured) && inviteUserToFund ? (userId) => inviteUserToFund(featured.id, userId) : undefined
+            }
           />
         ) : !addingGoal ? (
           <T
@@ -250,7 +362,9 @@ export default function FriendsScreen() {
             <ChallengeRow
               key={challenge.id}
               challenge={challenge}
-              invitable={invitable(snapshot, challenge.participants.map((p) => p.id))}
+              invitable={
+                isOwnChallenge(challenge) ? invitable(snapshot, challenge.participants.map((p) => p.id)) : []
+              }
               inviteOpen={inviting === challenge.id}
               onToggleInvite={() => {
                 setInviteError(null);
@@ -259,6 +373,11 @@ export default function FriendsScreen() {
               onInvite={(ids) => sendChallengeInvites(challenge.id, ids)}
               inviteBusy={invitingBusy}
               inviteError={inviteError}
+              onInviteById={
+                isOwnChallenge(challenge) && inviteUserToChallenge
+                  ? (userId) => inviteUserToChallenge(challenge.id, userId)
+                  : undefined
+              }
             />
           ))}
 
@@ -339,15 +458,35 @@ function InvitePanel({
   onInvite,
   busy,
   error,
+  onInviteById,
 }: {
   people: Person[];
   onCancel: () => void;
   onInvite: (ids: string[]) => void;
   busy?: boolean;
   error?: string | null;
+  /** Real accounts (found by id, never email) — Supabase mode only. */
+  onInviteById?: (userId: string) => Promise<void>;
 }) {
   const [selected, setSelected] = useState<string[]>([]);
+  const [rawId, setRawId] = useState('');
+  const [idBusy, setIdBusy] = useState(false);
+  const [idError, setIdError] = useState<string | null>(null);
   const canSend = selected.length > 0 && !busy;
+
+  const sendById = async () => {
+    if (!onInviteById || !rawId.trim() || idBusy) return;
+    setIdBusy(true);
+    setIdError(null);
+    try {
+      await onInviteById(rawId.trim());
+      setRawId('');
+    } catch (e) {
+      setIdError(e instanceof Error ? e.message : "Couldn't invite that id — try again.");
+    } finally {
+      setIdBusy(false);
+    }
+  };
 
   return (
     <View
@@ -386,7 +525,72 @@ function InvitePanel({
           />
         </View>
       </View>
+
+      {onInviteById ? (
+        <View style={{ borderTopWidth: RULE, borderColor: colors.ruleSoft, paddingTop: 12, gap: 8 }}>
+          <T w={700} size={12} color={colors.muted}>
+            Or invite a real account by user id
+          </T>
+          <Row gap={8}>
+            <Flexible>
+              <TextInput
+                value={rawId}
+                onChangeText={setRawId}
+                placeholder="user id"
+                placeholderTextColor={colors.tan}
+                autoCapitalize="none"
+                autoCorrect={false}
+                style={{
+                  borderBottomWidth: RULE,
+                  borderColor: colors.ink,
+                  paddingVertical: 6,
+                  fontFamily: fonts.semibold,
+                  fontSize: 14,
+                  color: colors.ink,
+                }}
+              />
+            </Flexible>
+            <View style={{ opacity: rawId.trim() && !idBusy ? 1 : 0.4 }} pointerEvents={rawId.trim() && !idBusy ? 'auto' : 'none'}>
+              <PrimaryButton label={idBusy ? 'Inviting…' : 'Invite'} height={40} onPress={() => void sendById()} />
+            </View>
+          </Row>
+          {idError ? (
+            <T w={600} size={13} lh={1.35} color={colors.red}>
+              {idError}
+            </T>
+          ) : null}
+        </View>
+      ) : null}
     </View>
+  );
+}
+
+/** A fund or challenge you haven't accepted yet — one line, one button. */
+function PendingInviteRow({
+  label,
+  sublabel,
+  busy,
+  onAccept,
+}: {
+  label: string;
+  sublabel: string;
+  busy: boolean;
+  onAccept: () => void;
+}) {
+  return (
+    <Row gap={12} style={{ backgroundColor: colors.sage, paddingHorizontal: 14, paddingVertical: 12 }}>
+      <Flexible>
+        <T w={800} size={15}>
+          {label}
+        </T>
+        <T w={600} size={12} color={colors.muted}>
+          {sublabel}
+        </T>
+      </Flexible>
+      <View style={{ opacity: busy ? 0.5 : 1 }} pointerEvents={busy ? 'none' : 'auto'}>
+        <OutlineButton label={busy ? 'Accepting…' : 'Accept'} height={36} onPress={onAccept} />
+      </View>
+    </Row>
   );
 }
 
@@ -403,6 +607,7 @@ function FeaturedFund({
   onInvite,
   inviteBusy,
   inviteError,
+  onInviteById,
 }: {
   fund: Fund;
   today: string;
@@ -415,6 +620,7 @@ function FeaturedFund({
   onInvite: (ids: string[]) => void;
   inviteBusy?: boolean;
   inviteError?: string | null;
+  onInviteById?: (userId: string) => Promise<void>;
 }) {
   const weeksLeft = Math.max(0, weeksBetween(today, fund.occasion));
   const progress = fundProgress(fund, weeksLeft);
@@ -487,13 +693,18 @@ function FeaturedFund({
         </View>
 
         <View style={{ marginTop: 12, flexDirection: 'row', gap: 10 }}>
-          <PrimaryButton
-            label={busy ? 'Moving…' : `Put $${MOVE_AMOUNT} in now`}
-            height={44}
-            onPress={onMove}
-            style={{ flex: 1 }}
-          />
-          {canInvite.length || inviteOpen ? (
+          {/* contributeToFund only ever moves the owner's own row today (see
+              supabaseApi.ts) — offering it on a fund I've merely accepted an
+              invite to would fail every time, confusingly. */}
+          {!fund.startedBy ? (
+            <PrimaryButton
+              label={busy ? 'Moving…' : `Put $${MOVE_AMOUNT} in now`}
+              height={44}
+              onPress={onMove}
+              style={{ flex: 1 }}
+            />
+          ) : null}
+          {canInvite.length || inviteOpen || onInviteById ? (
             <OutlineButton
               label={inviteOpen ? 'Close' : 'Invite'}
               height={44}
@@ -517,6 +728,7 @@ function FeaturedFund({
             onInvite={onInvite}
             busy={inviteBusy}
             error={inviteError}
+            onInviteById={onInviteById}
           />
         ) : null}
       </View>
@@ -587,13 +799,15 @@ function OtherFund({
         <View style={{ width: pct(saved, fund.targetAmount, 0), backgroundColor: colors.ink }} />
       </View>
 
-      <Pressable
-        onPress={onMove}
-        style={({ pressed }) => ({ marginTop: 10, alignSelf: 'flex-start', opacity: pressed ? 0.6 : 1 })}>
-        <T w={800} size={13} color={colors.green}>
-          {busy ? 'Moving…' : `+ Put $${MOVE_AMOUNT} in`}
-        </T>
-      </Pressable>
+      {!fund.startedBy ? (
+        <Pressable
+          onPress={onMove}
+          style={({ pressed }) => ({ marginTop: 10, alignSelf: 'flex-start', opacity: pressed ? 0.6 : 1 })}>
+          <T w={800} size={13} color={colors.green}>
+            {busy ? 'Moving…' : `+ Put $${MOVE_AMOUNT} in`}
+          </T>
+        </Pressable>
+      ) : null}
     </View>
   );
 }
@@ -607,6 +821,7 @@ function ChallengeRow({
   onInvite,
   inviteBusy,
   inviteError,
+  onInviteById,
 }: {
   challenge: Challenge;
   invitable: Person[];
@@ -615,6 +830,7 @@ function ChallengeRow({
   onInvite: (ids: string[]) => void;
   inviteBusy?: boolean;
   inviteError?: string | null;
+  onInviteById?: (userId: string) => Promise<void>;
 }) {
   const sub = [challengeWith(challenge), challenge.sublabel].filter(Boolean).join(' · ');
 
@@ -639,7 +855,7 @@ function ChallengeRow({
         </View>
       </Row>
 
-      {canInvite.length || inviteOpen ? (
+      {canInvite.length || inviteOpen || onInviteById ? (
         <Tap onPress={onToggleInvite} hitSlop={8} style={{ marginTop: 8, alignSelf: 'flex-start' }}>
           <T w={800} size={13} color={colors.green}>
             {inviteOpen ? 'Close' : '+ Invite someone'}
@@ -654,6 +870,7 @@ function ChallengeRow({
           onInvite={onInvite}
           busy={inviteBusy}
           error={inviteError}
+          onInviteById={onInviteById}
         />
       ) : null}
     </View>

@@ -294,7 +294,48 @@ async function main() {
     assert(bRow?.status === 'on track', "B's own row transitioned to 'on track'");
     assert(aRow?.status === aRowBefore.status, "A's row is untouched by B's accept");
 
-    console.log('\n=== 8. C, with no membership at all, cannot see either ===');
+    console.log('\n=== 8. the API-level path: inviteUserToFund/acceptFundInvite, through getSnapshot() itself ===');
+    const apiFundId = `smoke-api-fund-${stamp}`;
+    const apiChallengeId = `smoke-api-ch-${stamp}`;
+    await apiA.addFund({
+      id: apiFundId,
+      label: 'API-invited trip',
+      occasion: '2026-12-15',
+      targetAmount: 300,
+      weeklyPledge: 15,
+      extraContributed: 0,
+    });
+    await apiA.addChallenge({ id: apiChallengeId, label: 'No eating out', category: 'Eating out' });
+    await apiA.inviteUserToFund(apiFundId, createdB.user.id);
+    await apiA.inviteUserToChallenge(apiChallengeId, createdB.user.id);
+    console.log('  A: addFund/addChallenge + inviteUserToFund/inviteUserToChallenge (by id)');
+
+    const beforeAccept = await apiB.getSnapshot();
+    const invitedFund = beforeAccept.funds.find((f) => f.id === apiFundId);
+    const invitedChallenge = beforeAccept.challenges.find((c) => c.id === apiChallengeId);
+    assert(!!invitedFund, "B's own getSnapshot() includes the fund A invited them to");
+    const aProfileName = userA.email.split('@')[0];
+    assert(invitedFund?.startedBy === aProfileName, `invited fund's startedBy ("${invitedFund?.startedBy}") is A's profile name, not A's raw id`);
+    assert(invitedFund?.members[0]?.status === 'invited', "the member row inside it is B's own, status 'invited'");
+    assert(invitedFund?.members[0]?.isYou === true, "isYou is true for B's own row, not the owner's stored value");
+    assert(!!invitedChallenge && invitedChallenge.participants[0]?.status === 'invited', 'same for the invited challenge');
+
+    await apiB.acceptFundInvite(apiFundId);
+    await apiB.acceptChallengeInvite(apiChallengeId);
+    const afterAcceptB = await apiB.getSnapshot();
+    const acceptedFund = afterAcceptB.funds.find((f) => f.id === apiFundId);
+    const acceptedChallenge = afterAcceptB.challenges.find((c) => c.id === apiChallengeId);
+    assert(acceptedFund?.members[0]?.status === 'on track', "after acceptFundInvite, B's own getSnapshot() shows 'on track'");
+    assert(acceptedChallenge?.participants[0]?.status === 'joined', "after acceptChallengeInvite, B's own getSnapshot() shows 'joined'");
+
+    const afterAcceptA = await apiA.getSnapshot();
+    const aOwnedFund = afterAcceptA.funds.find((f) => f.id === apiFundId);
+    assert(
+      aOwnedFund?.members.find((m) => m.id === createdB.user.id)?.status === 'on track',
+      "A's own view of the fund also shows B's accepted status",
+    );
+
+    console.log('\n=== 9. C, with no membership at all, cannot see either ===');
     const { error: signInCErr } = await clientC.auth.signInWithPassword(userC);
     if (signInCErr) throw signInCErr;
     const { data: cFund, error: cFundErr } = await clientC.from('funds').select('id').eq('id', inviteFundId);
@@ -311,7 +352,7 @@ async function main() {
     assert(snapshotC.funds.length === 0, "C's own getSnapshot() shows no funds either");
     assert(snapshotC.challenges.length === 0, "C's own getSnapshot() shows no challenges either");
 
-    console.log('\n=== 9. delete test data ===');
+    console.log('\n=== 10. delete test data ===');
     const { error: deleteAErr } = await admin.auth.admin.deleteUser(createdA.user.id);
     if (deleteAErr) throw deleteAErr;
     const { error: deleteBErr } = await admin.auth.admin.deleteUser(createdB.user.id);
