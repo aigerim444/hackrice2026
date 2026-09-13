@@ -122,6 +122,12 @@ second account, and a `pg_cron` daily tick that advances streaks server-side. Sw
 to it with `EXPO_PUBLIC_USE_MOCK=false`; leave it unset and the in-memory mock runs
 instead, which is what the screenshots above show.
 
+Signing in with a real email needs a verified sending domain on the email provider
+(Resend) — without one, mail only delivers to the account's own test address, not to
+an arbitrary stranger's inbox. Until that's set up, `EXPO_PUBLIC_USE_MOCK=false` is
+there to demonstrate the real backend exists (schema, RLS, auth wiring), not
+something every visitor can sign into with their own email yet.
+
 **Still stubbed:** **Share** on the Wrapped cards, and Wrapped itself — a fixed
 end-of-term recap rather than one derived from your live semester.
 
