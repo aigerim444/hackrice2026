@@ -145,9 +145,25 @@ export default function WrappedScreen() {
           hitSlop={12}
           accessibilityRole="switch"
           accessibilityState={{ checked: narration.enabled }}
-          accessibilityLabel={narration.enabled ? 'Turn narration off' : 'Turn narration on'}>
+          accessibilityLabel={
+            narration.enabled
+              ? `Turn narration off. Currently using the ${
+                  narration.source === 'elevenlabs' ? 'ElevenLabs voice' : "device's own voice"
+                }.`
+              : 'Turn narration on'
+          }>
+          {/* Names the voice you're actually hearing. The fallback to the
+              device's own speech is deliberate and works well enough to be
+              mistaken for the real thing — which makes a broken key look like
+              a working one unless the label says otherwise. */}
           <Kicker color={fg} opacity={narration.enabled ? 1 : 0.65} nowrap>
-            {narration.preparing ? 'Writing…' : narration.enabled ? 'Sound ✓' : 'Sound'}
+            {narration.preparing
+              ? 'Writing…'
+              : !narration.enabled
+                ? 'Sound'
+                : narration.source === 'elevenlabs'
+                  ? 'Sound ✓'
+                  : 'Device voice'}
           </Kicker>
         </Pressable>
 
