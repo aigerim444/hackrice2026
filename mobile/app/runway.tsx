@@ -63,6 +63,12 @@ export default function RunwayScreen() {
         />
 
         <View style={{ marginHorizontal: GUTTER, marginTop: 8, gap: 8 }}>
+          {moves.length === 0 ? (
+            <T w={600} size={14} lh={1.4} color={colors.muted}>
+              Nothing has moved the date yet. Log a spend or drag your hours on Jobs and it&apos;ll
+              show up here.
+            </T>
+          ) : null}
           {moves.map((move) => (
             <Row
               key={move.id}

@@ -32,13 +32,23 @@ export default function ChatScreen() {
   const insets = useSafeAreaInsets();
   const { snapshot, projection, askCoach, coachThinking } = useLoadedRunway();
   const [draft, setDraft] = useState('');
+  const [sendError, setSendError] = useState<string | null>(null);
   const scroller = useRef<ScrollView>(null);
 
-  const send = (text: string) => {
+  const send = async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed) return;
     setDraft('');
-    void askCoach(trimmed);
+    setSendError(null);
+    try {
+      await askCoach(trimmed);
+    } catch (e) {
+      // Put it back rather than losing it — the optimistic bubble already
+      // shows it was sent, so retyping on top of that would read as a
+      // duplicate, not a retry.
+      setDraft(trimmed);
+      setSendError(e instanceof Error ? e.message : "Couldn't reach the coach — try again.");
+    }
   };
 
   return (
@@ -111,9 +121,20 @@ export default function ChatScreen() {
             alignItems: 'center',
           }}>
           {QUICK_ASKS.map((ask) => (
-            <Chip key={ask.text} label={ask.text} onPress={() => send(ask.send)} />
+            <Chip key={ask.text} label={ask.text} onPress={() => void send(ask.send)} />
           ))}
         </ScrollView>
+
+        {sendError ? (
+          <T
+            w={600}
+            size={12}
+            lh={1.35}
+            color={colors.red}
+            style={{ paddingHorizontal: 18, paddingTop: 8 }}>
+            {sendError}
+          </T>
+        ) : null}
 
         <View
           style={{
@@ -142,7 +163,7 @@ export default function ChatScreen() {
           <TextInput
             value={draft}
             onChangeText={setDraft}
-            onSubmitEditing={() => send(draft)}
+            onSubmitEditing={() => void send(draft)}
             returnKeyType="send"
             placeholder="if I buy… $"
             placeholderTextColor={colors.tan}
@@ -161,7 +182,7 @@ export default function ChatScreen() {
           />
 
           <Pressable
-            onPress={() => send(draft)}
+            onPress={() => void send(draft)}
             style={({ pressed }) => ({
               width: 44,
               height: 44,

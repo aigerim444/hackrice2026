@@ -13,6 +13,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { colors } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
+import { OutlineButton } from '../src/ui/controls';
 import { RunwayProvider, useRunway } from '../src/state/RunwayProvider';
 
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -27,7 +28,7 @@ SplashScreen.preventAutoHideAsync().catch(() => {
  * until the faces are in.
  */
 function Gate({ ready, children }: { ready: boolean; children: React.ReactNode }) {
-  const { loading, error } = useRunway();
+  const { loading, error, refetch } = useRunway();
   const canRender = ready && !loading;
 
   useEffect(() => {
@@ -50,6 +51,9 @@ function Gate({ ready, children }: { ready: boolean; children: React.ReactNode }
         <T w={600} size={15} color={colors.muted} center lh={1.4} style={{ marginTop: 8 }}>
           {error}
         </T>
+        <View style={{ marginTop: 20, alignSelf: 'stretch', maxWidth: 220 }}>
+          <OutlineButton label="Try again" onPress={() => void refetch()} height={48} />
+        </View>
       </View>
     );
   }

@@ -11,6 +11,7 @@ import type { WrappedStats } from '../src/domain/wrapped';
 import { scaleWidth } from '../src/theme/scale';
 import { alpha, colors, GUTTER, RULE } from '../src/theme/tokens';
 import { Kicker, T } from '../src/theme/type';
+import { OutlineButton } from '../src/ui/controls';
 import { FadeIn, Flexible, Row } from '../src/ui/primitives';
 
 /**
@@ -40,22 +41,53 @@ const HINTS = [
 export default function WrappedScreen() {
   const insets = useSafeAreaInsets();
   const [stats, setStats] = useState<WrappedStats | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    api.getWrapped().then((next) => {
-      if (!cancelled) setStats(next);
-    });
+    setError(null);
+    api
+      .getWrapped()
+      .then((next) => {
+        if (!cancelled) setStats(next);
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Couldn't load your recap.");
+      });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
   const dark = DARK_CARDS[index];
   const bg = dark ? colors.ink : colors.cream;
   const fg = dark ? colors.cream : colors.ink;
   const isLast = index === CARD_COUNT - 1;
+
+  if (error) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.cream,
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 32,
+        }}>
+        <T w={800} size={20} center>
+          Couldn&apos;t load Wrapped
+        </T>
+        <T w={600} size={14} color={colors.muted} center lh={1.4} style={{ marginTop: 8 }}>
+          {error}
+        </T>
+        <View style={{ marginTop: 18, alignSelf: 'stretch', maxWidth: 200 }}>
+          <OutlineButton label="Try again" height={46} onPress={() => setAttempt((n) => n + 1)} />
+        </View>
+      </View>
+    );
+  }
 
   if (!stats) {
     return (

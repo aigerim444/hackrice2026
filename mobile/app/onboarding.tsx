@@ -36,6 +36,7 @@ export default function OnboardingScreen() {
   const { snapshot, projection, setup, draftSetup, completeSetup, flash } = useLoadedRunway();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const today = snapshot.semester.today;
   const onLastStep = step === LAST_STEP;
@@ -56,12 +57,15 @@ export default function OnboardingScreen() {
 
   const finish = async () => {
     setSaving(true);
+    setSaveError(null);
     try {
       await completeSetup(setup);
       router.replace('/');
       flash(
         `Envelopes set. ${money(projection.safeDaily)} a day is yours — everything else is spoken for.`,
       );
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Couldn't set up your envelopes — try again.");
     } finally {
       setSaving(false);
     }
@@ -123,6 +127,16 @@ export default function OnboardingScreen() {
             <GoalsStep setup={setup} draftSetup={draftSetup} today={today} />
           ) : null}
           {step === 5 ? <ReviewStep /> : null}
+          {step === 5 && saveError ? (
+            <T
+              w={600}
+              size={13}
+              lh={1.35}
+              color={colors.red}
+              style={{ marginTop: 14 }}>
+              {saveError}
+            </T>
+          ) : null}
         </ScrollView>
 
         <StepFooter

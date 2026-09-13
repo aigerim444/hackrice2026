@@ -73,7 +73,14 @@ export function Field({
   );
 }
 
-/** The frame every form sits in: a sage panel with Cancel / Save. */
+/**
+ * The frame every form sits in: a sage panel with Cancel / Save.
+ *
+ * `saving` and `error` are optional because most forms here also run inside
+ * onboarding, where adding a job or a goal only edits a local draft — there's
+ * nothing to await, so nothing to be busy about. The screens that call a real
+ * mutation (Friends, Jobs) pass both.
+ */
 function FormCard({
   title,
   children,
@@ -81,6 +88,8 @@ function FormCard({
   onSave,
   saveLabel,
   canSave,
+  saving,
+  error,
 }: {
   title: string;
   children: React.ReactNode;
@@ -88,7 +97,10 @@ function FormCard({
   onSave: () => void;
   saveLabel: string;
   canSave: boolean;
+  saving?: boolean;
+  error?: string | null;
 }) {
+  const disabled = !canSave || saving;
   return (
     <View
       style={{
@@ -102,9 +114,16 @@ function FormCard({
         {title}
       </T>
       {children}
+      {error ? (
+        <T w={600} size={13} lh={1.35} color={colors.red}>
+          {error}
+        </T>
+      ) : null}
       <View style={{ flexDirection: 'row', gap: 10 }}>
-        <OutlineButton label="Cancel" height={44} onPress={onCancel} style={{ flex: 1 }} />
-        <View style={{ flex: 1, opacity: canSave ? 1 : 0.4 }} pointerEvents={canSave ? 'auto' : 'none'}>
+        <View style={{ flex: 1, opacity: saving ? 0.5 : 1 }} pointerEvents={saving ? 'none' : 'auto'}>
+          <OutlineButton label="Cancel" height={44} onPress={onCancel} />
+        </View>
+        <View style={{ flex: 1, opacity: disabled ? 0.4 : 1 }} pointerEvents={disabled ? 'none' : 'auto'}>
           <PrimaryButton label={saveLabel} height={44} onPress={onSave} />
         </View>
       </View>
@@ -206,10 +225,14 @@ export function JobForm({
   onCancel,
   onSave,
   initial,
+  saving,
+  error,
 }: {
   onCancel: () => void;
   onSave: (draft: JobDraft) => void;
   initial?: JobDraft;
+  saving?: boolean;
+  error?: string | null;
 }) {
   const [name, setName] = useState(initial?.name ?? '');
   const [rate, setRate] = useState(initial ? String(initial.hourlyRate) : '');
@@ -225,7 +248,9 @@ export function JobForm({
       title={initial ? 'Edit job' : 'Add a job'}
       onCancel={onCancel}
       canSave={canSave}
-      saveLabel={initial ? 'Save' : 'Add job'}
+      saving={saving}
+      error={error}
+      saveLabel={saving ? 'Saving…' : initial ? 'Save' : 'Add job'}
       onSave={() =>
         onSave({
           id: initial?.id ?? draftId('job'),
@@ -330,12 +355,16 @@ export function GoalForm({
   today,
   people = [],
   inviteNote,
+  saving,
+  error,
 }: {
   onCancel: () => void;
   onSave: (draft: FundDraft) => void;
   today: string;
   people?: Person[];
   inviteNote?: string | null;
+  saving?: boolean;
+  error?: string | null;
 }) {
   const [invites, setInvites] = useState<string[]>([]);
   const [label, setLabel] = useState('');
@@ -354,7 +383,9 @@ export function GoalForm({
       title="Add a goal"
       onCancel={onCancel}
       canSave={canSave}
-      saveLabel="Add goal"
+      saving={saving}
+      error={error}
+      saveLabel={saving ? 'Adding…' : 'Add goal'}
       onSave={() =>
         onSave({
           id: draftId('fund'),
@@ -494,12 +525,16 @@ export function ChallengeForm({
   today,
   people = [],
   inviteNote,
+  saving,
+  error,
 }: {
   onCancel: () => void;
   onSave: (draft: ChallengeDraft) => void;
   today: string;
   people?: Person[];
   inviteNote?: string | null;
+  saving?: boolean;
+  error?: string | null;
 }) {
   const [invites, setInvites] = useState<string[]>([]);
   const [label, setLabel] = useState('');
@@ -513,7 +548,9 @@ export function ChallengeForm({
       title="Add a challenge"
       onCancel={onCancel}
       canSave={canSave}
-      saveLabel="Start streak"
+      saving={saving}
+      error={error}
+      saveLabel={saving ? 'Starting…' : 'Start streak'}
       onSave={() =>
         onSave({ id: draftId('ch'), label: label.trim(), category, until, inviteIds: invites })
       }>
@@ -589,11 +626,15 @@ export function FriendForm({
   known = [],
   onCancel,
   onSave,
+  saving,
+  error,
 }: {
   /** Names already added, so the same person isn't suggested twice. */
   known?: string[];
   onCancel: () => void;
   onSave: (name: string) => void;
+  saving?: boolean;
+  error?: string | null;
 }) {
   const [name, setName] = useState('');
   const canSave = name.trim().length > 0;
@@ -607,7 +648,9 @@ export function FriendForm({
       title="Add a friend"
       onCancel={onCancel}
       canSave={canSave}
-      saveLabel="Add friend"
+      saving={saving}
+      error={error}
+      saveLabel={saving ? 'Adding…' : 'Add friend'}
       onSave={() => onSave(name.trim())}>
       <Field label="Their name" value={name} onChange={setName} placeholder="Maya" autoFocus />
 
