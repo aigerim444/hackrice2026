@@ -117,6 +117,10 @@ export default function RootLayout() {
               {/* The status bar sits on cream on most screens and on ink for the
                   camera and the dark Wrapped cards; those screens set it themselves. */}
               <StatusBar style="dark" />
+              {/* A definite positioning context, so the keyboard chip's
+                  absolute placement resolves against the screen rather than
+                  whatever expo-router happens to render around the Stack. */}
+              <View style={{ flex: 1 }}>
               <Stack
                 screenOptions={{
                   headerShown: false,
@@ -131,10 +135,10 @@ export default function RootLayout() {
                 <Stack.Screen name="scan" options={{ animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="wrapped" options={{ animation: 'slide_from_bottom' }} />
               </Stack>
-              {/* Mounted once, above the Stack: it's addressed by a nativeID
-                  that has to be unique, and iOS shows it over whichever
-                  numeric keyboard is up on any screen. */}
+              {/* Mounted once, over the Stack: it floats above whichever
+                  keyboard is up, on any screen, on every platform. */}
               <KeyboardDoneBar />
+              </View>
             </Gate>
           </RunwayProvider>
         </AuthGate>

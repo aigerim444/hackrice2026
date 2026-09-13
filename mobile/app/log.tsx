@@ -12,6 +12,7 @@ import { colors, GUTTER, RULE } from '../src/theme/tokens';
 import { T } from '../src/theme/type';
 import { OutlineButton, PrimaryButton } from '../src/ui/controls';
 import { Field } from '../src/ui/forms';
+import { DismissKeyboardArea } from '../src/ui/keyboard';
 import { Flexible, Row, Screen } from '../src/ui/primitives';
 
 /**
@@ -82,6 +83,7 @@ export default function LogScreen() {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <DismissKeyboardArea>
         <Row
           style={{
             paddingHorizontal: GUTTER,
@@ -219,6 +221,7 @@ export default function LogScreen() {
             />
           </View>
         </ScrollView>
+        </DismissKeyboardArea>
       </KeyboardAvoidingView>
     </Screen>
   );

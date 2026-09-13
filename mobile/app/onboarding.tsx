@@ -12,6 +12,7 @@ import { colors, GUTTER, HOME_INDICATOR_GAP, RULE } from '../src/theme/tokens';
 import { Kicker, T } from '../src/theme/type';
 import { MoneyInput, PrimaryButton } from '../src/ui/controls';
 import { AddRow, BillForm, EditableRow, GoalForm, JobForm } from '../src/ui/forms';
+import { DismissKeyboardArea } from '../src/ui/keyboard';
 import { Flexible, Row, Screen, Tap } from '../src/ui/primitives';
 
 /**
@@ -114,6 +115,7 @@ export default function OnboardingScreen() {
       <StepMeter step={step} />
 
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <DismissKeyboardArea>
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{ paddingHorizontal: GUTTER, paddingTop: 20, paddingBottom: 24 }}
@@ -147,6 +149,7 @@ export default function OnboardingScreen() {
           action={onLastStep ? (saving ? 'Setting up…' : 'Start →') : 'Next →'}
           onPress={onLastStep ? (saving ? undefined : finish) : goNext}
         />
+        </DismissKeyboardArea>
       </KeyboardAvoidingView>
     </Screen>
   );
