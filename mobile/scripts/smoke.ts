@@ -352,7 +352,84 @@ async function main() {
     assert(snapshotC.funds.length === 0, "C's own getSnapshot() shows no funds either");
     assert(snapshotC.challenges.length === 0, "C's own getSnapshot() shows no challenges either");
 
-    console.log('\n=== 10. delete test data ===');
+    console.log('\n=== 10. daily streak tick: advances a clean joined row, skips the rest ===');
+    const tickChallengeId = `smoke-tick-ch-${stamp}`;
+    const endedChallengeId = `smoke-tick-ended-${stamp}`;
+    // Books, deliberately not Drinks — A already logged a Drinks expense in
+    // step 2, so re-using that category here would correctly, but
+    // confusingly, look like "evidence found" rather than "clean day".
+    await apiA.addChallenge({ id: tickChallengeId, label: 'No new books streak', category: 'Books' });
+    await apiA.addChallenge({ id: endedChallengeId, label: 'Already ended', category: 'Books', until: '2020-01-01' });
+
+    // A people-only stub, still 'invited' — never accepted, so there's no
+    // account to check and the status filter alone should skip it anyway.
+    const { error: pendingErr } = await clientA.from('challenge_participants').insert({
+      challenge_id: tickChallengeId,
+      participant_id: `person-pending-${stamp}`,
+      user_id: createdA.user.id,
+      name: 'Pending Friend',
+      is_you: false,
+      streak_days: 0,
+      status: 'invited',
+    });
+    if (pendingErr) throw pendingErr;
+
+    const { data: semesterA, error: semesterAErr } = await admin
+      .from('semesters')
+      .select('today')
+      .eq('user_id', createdA.user.id)
+      .single();
+    if (semesterAErr) throw semesterAErr;
+    console.log(`  seeded a clean 'joined' row, an 'invited' row, and a challenge ended on 2020-01-01 (today is ${semesterA.today})`);
+
+    const readBack = async () => {
+      const { data: tickRow, error: tickRowErr } = await admin
+        .from('challenge_participants')
+        .select('streak_days, streak_last_ticked_on')
+        .eq('challenge_id', tickChallengeId)
+        .eq('participant_id', createdA.user.id)
+        .single();
+      if (tickRowErr) throw tickRowErr;
+      const { data: pendingRow, error: pendingRowErr } = await admin
+        .from('challenge_participants')
+        .select('streak_days')
+        .eq('challenge_id', tickChallengeId)
+        .eq('participant_id', `person-pending-${stamp}`)
+        .single();
+      if (pendingRowErr) throw pendingRowErr;
+      const { data: tickChallenge, error: tickChallengeErr } = await admin
+        .from('challenges')
+        .select('you_streak_days')
+        .eq('id', tickChallengeId)
+        .single();
+      if (tickChallengeErr) throw tickChallengeErr;
+      const { data: endedRow, error: endedRowErr } = await admin
+        .from('challenge_participants')
+        .select('streak_days')
+        .eq('challenge_id', endedChallengeId)
+        .eq('participant_id', createdA.user.id)
+        .single();
+      if (endedRowErr) throw endedRowErr;
+      return { tickRow, pendingRow, tickChallenge, endedRow };
+    };
+
+    const { error: tickErr1 } = await admin.rpc('tick_challenge_streaks');
+    if (tickErr1) throw tickErr1;
+    const after1 = await readBack();
+    assert(after1.tickRow.streak_days === 1, "clean 'joined' row advanced by exactly 1");
+    assert(after1.tickRow.streak_last_ticked_on === semesterA.today, 'streak_last_ticked_on stamped to the semester\'s today');
+    assert(after1.tickChallenge.you_streak_days === 1, "the challenge's own you_streak_days advanced in step with it");
+    assert(after1.pendingRow.streak_days === 0, "the still-'invited' row was skipped, untouched");
+    assert(after1.endedRow.streak_days === 0, 'the challenge past its until_date was skipped, untouched');
+
+    // Run it again immediately — same simulated "today", so streak_last_ticked_on
+    // should make this a no-op rather than a second increment.
+    const { error: tickErr2 } = await admin.rpc('tick_challenge_streaks');
+    if (tickErr2) throw tickErr2;
+    const after2 = await readBack();
+    assert(after2.tickRow.streak_days === 1, 'a second tick on the same day does not double-count');
+
+    console.log('\n=== 11. delete test data ===');
     const { error: deleteAErr } = await admin.auth.admin.deleteUser(createdA.user.id);
     if (deleteAErr) throw deleteAErr;
     const { error: deleteBErr } = await admin.auth.admin.deleteUser(createdB.user.id);
