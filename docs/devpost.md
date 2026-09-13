@@ -8,45 +8,68 @@ working.
 
 ## Elevator pitch (one line, ~200 chars)
 
-> Aid money lands as one lump in August and students are broke by November.
-> Semester Runway gives you one number for what today can cost, and a run-out
-> date that explains itself.
+> Rent comes every month, but student money arrives in two lumps a year.
+> Semester Runway tells you what today can actually cost — so you can say yes to
+> dinner without running out in November.
 
-Alternates if you want shorter:
+Alternates:
 
-- `One lump in August. 111 days to make it last. One number for what today can cost.`
-- `Budget apps assume a monthly paycheck. Students get one pile in August — this is built for that.`
+- `Your friends want dinner. Can you afford it? Semester Runway answers that in one number, and tells you what it costs you in days.`
+- `Budget apps assume a monthly paycheck. Scholarships and summer internships don't work that way — this is built for money that arrives all at once.`
 
 ---
 
 ## About the project (paste as Markdown)
 
-## The problem nobody builds for
+## Why we built it
 
-Financial aid refunds and summer earnings arrive as **one lump sum in August**.
-Then nothing comes in for four months.
+I moved off campus for the first time this year. That meant rent — a real
+recurring bill, due every single month, which I'd never had before.
 
-Every budgeting app on the market assumes a monthly paycheck. They ask you to
-set a monthly budget and reset it on the 1st — which is exactly wrong when your
-income already happened and can never happen again. So students do the only
-thing the tools allow: they eyeball it, feel fine in September, and are broke by
-November.
+Meanwhile the money coming *in* didn't work like that at all. I had an
+internship over the summer, and scholarship money that landed at the start of
+the semester. Two big deposits, months apart, and then nothing for the rest of
+the term.
 
-We wanted to build the app for that specific shape of money.
+So my money has two completely different shapes at once: **fixed costs that
+repeat every month, and income that already happened and isn't happening
+again.** Every budgeting app I tried assumes both are monthly. They ask for a
+monthly budget and reset on the 1st. That's fine if you get paid on the 1st.
+It's useless when your income arrived in June and August and your rent is due
+in September, October, November and December.
+
+And the question I actually needed answered was never "am I over budget." It
+was: **my friends want to get dinner tonight — can I say yes?**
+
+College spending is spontaneous. Nobody plans a coffee run. The hangouts *are*
+the eating out, the dessert place, someone's birthday, a last-minute trip. I
+didn't want an app that told me to stop doing those things — those are the point
+of being here. I wanted one that could tell me how much I could spend on them
+this week without being broke in November.
+
+That's the whole app: one honest number for what today can cost, after rent and
+everything else that's already spoken for.
 
 ## What it does
 
-**One number, not a budget.** *Left to spend today* is your free envelope
-divided by the days remaining. It shrinks correctly as the term goes on, because
-the denominator is real.
+**One number, not a budget.** *Left to spend today* is what's genuinely yours
+after everything else is accounted for, divided by the days remaining. It's the
+number you check before saying yes to dinner. It shrinks correctly as the term
+goes on, because the denominator is real.
+
+**Recurring and one-off, handled as different things.** Rent every month, phone
+on the 15th, a one-time campus fee, a scholarship that already landed, an
+internship paycheque that isn't coming again. The projection knows which is
+which and counts the charges that actually still fall inside your term — not a
+flat multiplier.
+
+**Envelopes first.** Rent, fees and anything you're saving for are carved out
+*before* the daily number exists. The trip fund never competes with a coffee
+run, because they were never in the same pot.
 
 **A run-out date that explains itself.** "Nov 15" on its own is just an
 accusation, so every movement is attributed: dipped into rent (−2 days), picked
 up 14 hours at the library (+2 days).
-
-**Envelopes first.** Rent, fees and anything you're saving for are carved out
-*before* the daily number exists. The trip fund never competes with boba,
-because it was never in the same pot.
 
 **Point the camera at a receipt.** Gemini reads the merchant, the total and the
 line items, guesses the envelope, and shows you what the charge does to today
@@ -159,16 +182,25 @@ do* — it's *what should the model be allowed to decide*. Splitting "which
 question is this" from "what's the answer" gave us a coach that's both
 conversational and provably correct, and it made the whole thing easier to test.
 
-Also: pure functions pay for themselves. Because the projection engine has no
-side effects, the jobs slider, the coach and the confirmation sheets all run it
+Pure functions pay for themselves. Because the projection engine has no side
+effects, the jobs slider, the coach and the confirmation sheets all run it
 against a modified copy of the same snapshot rather than reimplementing the
 arithmetic — so nothing in the app can disagree with anything else.
 
+And building something we personally needed changed what we argued about. Most
+of our design disagreements weren't technical, they were about tone: whether the
+app should ever call a purchase irresponsible (it doesn't), whether a streak
+should be worth dollars (it isn't — cutting out boba isn't the same as saving
+up for a trip, and pretending otherwise is the kind of lie that makes people
+stop trusting a budgeting app). We knew those were wrong because we'd have been
+annoyed by them ourselves.
+
 ## What's next
 
-- Bank/card import, so the ledger fills itself
+- Bank and card import, so the ledger fills itself instead of asking you to scan
+- Splitting a bill with the people you're actually out with, in the moment
 - Wrapped derived from your live semester rather than a completed one
-- A shared household version — the same envelope model works for roommates
+- Roommates: rent is already the biggest recurring cost, and it's usually split
 
 ---
 
