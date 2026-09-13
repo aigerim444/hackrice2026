@@ -88,7 +88,12 @@ function setupFrom(snapshot: SemesterSnapshot | null): SetupInput {
     summerAmount: snapshot.income.find((i) => i.kind === 'summer')?.amount ?? 0,
     jobs: snapshot.jobs.map(({ nextPayDate, nextPayAmount, baselineHoursPerWeek, ...draft }) => draft),
     bills: snapshot.bills,
-    funds: snapshot.funds,
+    // `startedBy` is only ever set on a fund merged in because I was invited
+    // to it (see supabaseApi's loadSnapshot) — never on one I actually own.
+    // Onboarding's draft has to stay owned-funds-only: completeSetup deletes
+    // and re-inserts everything in it, and re-inserting someone else's fund
+    // id is a duplicate-key error, not a no-op.
+    funds: snapshot.funds.filter((fund) => !fund.startedBy),
   };
 }
 

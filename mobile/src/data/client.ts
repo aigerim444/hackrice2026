@@ -41,5 +41,14 @@ export const isMockApi = useMock && !baseUrl;
 /** True when the app needs a signed-in Supabase session to do anything. */
 export const usesSupabase = !useMock;
 
+/**
+ * The extra, Supabase-only capabilities `RunwayApi` has no room for — real
+ * cross-user invites need a second real account to invite, which mock/http
+ * have no equivalent of. null outside Supabase mode; screens check
+ * `usesSupabase` before ever reading this, same as every other Supabase-only
+ * affordance.
+ */
+export const supabaseExtras: SupabaseRunwayApi | null = store instanceof SupabaseRunwayApi ? store : null;
+
 /** True when the AI paths are live. Screens badge themselves honestly with it. */
 export const isAiEnabled = hasGemini();

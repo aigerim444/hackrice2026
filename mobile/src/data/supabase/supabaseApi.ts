@@ -220,8 +220,10 @@ export class SupabaseRunwayApi implements RunwayApi {
   private async loadSnapshot(userId: string): Promise<SemesterSnapshot> {
     const semester = await this.ensureSemester(userId);
 
-    const [income, jobs, bills, people, funds, fundMembers, challenges, participants, todayExpenses, priorExpenses, moves, chat] =
-      await Promise.all([
+    const [
+      income, jobs, bills, people, funds, fundMembers, challenges, participants, todayExpenses, priorExpenses, moves, chat,
+      invitedFundRows, invitedChallengeRows,
+    ] = await Promise.all([
         this.client.from('income_sources').select('*').eq('semester_id', semester.id),
         this.client.from('jobs').select('*').eq('semester_id', semester.id),
         this.client.from('bills').select('*').eq('semester_id', semester.id),
@@ -238,13 +240,114 @@ export class SupabaseRunwayApi implements RunwayApi {
           .lt('occurred_on', semester.today),
         this.client.from('moves').select('*').eq('semester_id', semester.id),
         this.client.from('chat_messages').select('*').eq('semester_id', semester.id).order('created_at'),
+        // Funds/challenges I don't own but was invited to — these live under
+        // someone else's semester_id, so the queries above never see them.
+        // RLS only lets this come back with my own membership row embedded
+        // with its parent (see 0002_invites.sql), never anyone else's.
+        this.client.from('fund_members').select('*, funds(*)').eq('invited_user_id', userId),
+        this.client.from('challenge_participants').select('*, challenges(*)').eq('invited_user_id', userId),
       ]);
 
     for (const result of [
       income, jobs, bills, people, funds, fundMembers, challenges, participants, todayExpenses, priorExpenses, moves, chat,
+      invitedFundRows, invitedChallengeRows,
     ]) {
       if (result.error) throw new ApiError(result.error.message);
     }
+
+    // The invited rows only carry an id for whoever started the fund/
+    // challenge — profiles is the name-only lookup for that (0002_invites.sql),
+    // never a query against auth.users directly.
+    const ownerIds = new Set<string>();
+    for (const row of invitedFundRows.data ?? []) if (row.funds) ownerIds.add(row.funds.user_id);
+    for (const row of invitedChallengeRows.data ?? []) if (row.challenges) ownerIds.add(row.challenges.user_id);
+    let ownerNames = new Map<string, string>();
+    if (ownerIds.size > 0) {
+      const { data: profileRows, error: profileError } = await this.client
+        .from('profiles')
+        .select('id, name')
+        .in('id', [...ownerIds]);
+      if (profileError) throw new ApiError(profileError.message);
+      ownerNames = new Map((profileRows ?? []).map((p) => [p.id, p.name as string]));
+    }
+
+    // Only my own membership row is visible for a fund/challenge I don't
+    // own (RLS), so isYou is unconditionally true here — unlike the owned
+    // funds below, where the stored is_you column already reflects the
+    // owner's own perspective correctly and multiple members are visible.
+    const invitedFunds: SemesterSnapshot['funds'] = (invitedFundRows.data ?? []).flatMap((row) => {
+      const f = row.funds;
+      if (!f) return [];
+      return [
+        {
+          id: f.id,
+          label: f.label,
+          shared: f.shared,
+          occasion: f.occasion,
+          targetAmount: Number(f.target_amount),
+          members: [
+            {
+              id: row.member_id,
+              name: row.name,
+              isYou: true,
+              contributed: Number(row.contributed),
+              weeklyPledge: Number(row.weekly_pledge),
+              status: row.status,
+            },
+          ],
+          // Not this viewer's own pledge — runway.ts's fundsReserved() sums
+          // fund-level weeklyPledge/extraContributed straight into *this*
+          // viewer's reserved total, with no idea whose fund it actually is.
+          // Zeroing them here is what keeps an invite from silently taking a
+          // bite out of someone else's daily number before they've even
+          // accepted it. The member row above still carries their own real
+          // weeklyPledge/contributed, for once there's a UI that shows it.
+          weeklyPledge: 0,
+          extraContributed: 0,
+          startedBy: ownerNames.get(f.user_id) ?? 'someone else',
+        },
+      ];
+    });
+
+    // youStreakDays/broken stay at their just-invited defaults rather than
+    // the owner's — there's no per-participant "broken" tracking today (see
+    // STATE.md §5.4, untouched by this change), so an invited challenge
+    // simply hasn't been broken from the invitee's own side yet.
+    //
+    // `startedBy` isn't a field Challenge declares (unlike Fund, which has
+    // exactly this for exactly this reason) — src/domain/types.ts is
+    // untouchable, so it can't gain one. Attaching it here anyway, on an
+    // intentionally wider local type, is how friends.tsx tells "a challenge
+    // I own" from "one I've accepted an invite to" apart, since nothing in
+    // the declared Challenge shape can: a challenge you created and one
+    // you've joined both settle at participants.length === 1, status
+    // 'joined'. It's structurally still a valid Challenge wherever the
+    // stricter type is expected — this is a widening, not a workaround.
+    const invitedChallenges: (Challenge & { startedBy?: string })[] = (invitedChallengeRows.data ?? []).flatMap((row) => {
+      const c = row.challenges;
+      if (!c) return [];
+      return [
+        {
+          id: c.id,
+          label: c.label,
+          sublabel: c.sublabel ?? undefined,
+          category: c.category ?? undefined,
+          until: c.until_date ?? undefined,
+          participants: [
+            {
+              id: row.participant_id,
+              name: row.name,
+              isYou: true,
+              streakDays: row.streak_days,
+              status: row.status,
+            },
+          ],
+          youStreakDays: row.streak_days,
+          startedBy: ownerNames.get(c.user_id) ?? 'someone else',
+          broken: false,
+        },
+      ];
+    });
 
     const membersByFund = new Map<string, FundMember[]>();
     for (const m of fundMembers.data ?? []) {
@@ -322,27 +425,33 @@ export class SupabaseRunwayApi implements RunwayApi {
         dueDate: b.due_date ?? undefined,
         prepaid: b.prepaid,
       })),
-      funds: (funds.data ?? []).map((f) => ({
-        id: f.id,
-        label: f.label,
-        shared: f.shared,
-        occasion: f.occasion,
-        targetAmount: Number(f.target_amount),
-        members: membersByFund.get(f.id) ?? [],
-        weeklyPledge: Number(f.weekly_pledge),
-        extraContributed: Number(f.extra_contributed),
-        startedBy: f.started_by ?? undefined,
-      })),
-      challenges: (challenges.data ?? []).map((c) => ({
-        id: c.id,
-        label: c.label,
-        sublabel: c.sublabel ?? undefined,
-        category: c.category ?? undefined,
-        until: c.until_date ?? undefined,
-        participants: participantsByChallenge.get(c.id) ?? [],
-        youStreakDays: c.you_streak_days,
-        broken: c.broken,
-      })),
+      funds: [
+        ...(funds.data ?? []).map((f) => ({
+          id: f.id,
+          label: f.label,
+          shared: f.shared,
+          occasion: f.occasion,
+          targetAmount: Number(f.target_amount),
+          members: membersByFund.get(f.id) ?? [],
+          weeklyPledge: Number(f.weekly_pledge),
+          extraContributed: Number(f.extra_contributed),
+          startedBy: f.started_by ?? undefined,
+        })),
+        ...invitedFunds,
+      ],
+      challenges: [
+        ...(challenges.data ?? []).map((c) => ({
+          id: c.id,
+          label: c.label,
+          sublabel: c.sublabel ?? undefined,
+          category: c.category ?? undefined,
+          until: c.until_date ?? undefined,
+          participants: participantsByChallenge.get(c.id) ?? [],
+          youStreakDays: c.you_streak_days,
+          broken: c.broken,
+        })),
+        ...invitedChallenges,
+      ],
       todayExpenses: (todayExpenses.data ?? []).map(rowToExpense),
       priorCategoryTotals,
       priorFreeSpend,
@@ -648,6 +757,99 @@ export class SupabaseRunwayApi implements RunwayApi {
       }
     }
 
+    return this.loadSnapshot(userId);
+  }
+
+  // ——— real cross-user invites — additive, not on RunwayApi ———
+  //
+  // Everything above invites from the owner's own `people` table, which
+  // mock/http both have their own version of. These four don't: a second
+  // real Supabase account (found by id, named via `profiles`, never email)
+  // is a Supabase-only concept, so they live only on this class. friends.tsx
+  // reaches them via `supabaseExtras` in client.ts, guarded by `usesSupabase`.
+
+  /** Invite a real account by user id — not a `people` row. */
+  async inviteUserToFund(fundId: string, inviteeUserId: string): Promise<SemesterSnapshot> {
+    const userId = await this.userId();
+    const { data: profile, error: profileError } = await this.client
+      .from('profiles')
+      .select('name')
+      .eq('id', inviteeUserId)
+      .maybeSingle();
+    if (profileError) throw new ApiError(profileError.message);
+    if (!profile) throw new ApiError('No account with that id.');
+
+    const { error } = await this.client.from('fund_members').insert({
+      fund_id: fundId,
+      member_id: inviteeUserId,
+      user_id: userId,
+      invited_user_id: inviteeUserId,
+      name: profile.name,
+      is_you: false,
+      contributed: 0,
+      weekly_pledge: 0,
+      status: 'invited',
+    });
+    if (error) throw new ApiError(error.message);
+
+    const { error: sharedError } = await this.client.from('funds').update({ shared: true }).eq('id', fundId);
+    if (sharedError) throw new ApiError(sharedError.message);
+
+    return this.loadSnapshot(userId);
+  }
+
+  /** Invite a real account by user id — not a `people` row. */
+  async inviteUserToChallenge(challengeId: string, inviteeUserId: string): Promise<SemesterSnapshot> {
+    const userId = await this.userId();
+    const { data: profile, error: profileError } = await this.client
+      .from('profiles')
+      .select('name')
+      .eq('id', inviteeUserId)
+      .maybeSingle();
+    if (profileError) throw new ApiError(profileError.message);
+    if (!profile) throw new ApiError('No account with that id.');
+
+    const { error } = await this.client.from('challenge_participants').insert({
+      challenge_id: challengeId,
+      participant_id: inviteeUserId,
+      user_id: userId,
+      invited_user_id: inviteeUserId,
+      name: profile.name,
+      is_you: false,
+      streak_days: 0,
+      status: 'invited',
+    });
+    if (error) throw new ApiError(error.message);
+
+    return this.loadSnapshot(userId);
+  }
+
+  /**
+   * The invited user's own accept. Only `status` moves — RLS's update policy
+   * scopes this to a row where the caller is the invited user (or the
+   * owner), and 0002_invites.sql's trigger rejects any other column changing
+   * on a non-owner's update, so there's nothing else this method needs to
+   * guard against client-side.
+   */
+  async acceptFundInvite(fundId: string): Promise<SemesterSnapshot> {
+    const userId = await this.userId();
+    const { error } = await this.client
+      .from('fund_members')
+      .update({ status: 'on track' })
+      .eq('fund_id', fundId)
+      .eq('member_id', userId);
+    if (error) throw new ApiError(error.message);
+    return this.loadSnapshot(userId);
+  }
+
+  async acceptChallengeInvite(challengeId: string): Promise<SemesterSnapshot> {
+    const userId = await this.userId();
+    const { error } = await this.client
+      .from('challenge_participants')
+      .update({ status: 'joined' })
+      .eq('challenge_id', challengeId)
+      .eq('participant_id', userId);
+    if (error) throw new ApiError(error.message);
     return this.loadSnapshot(userId);
   }
 
